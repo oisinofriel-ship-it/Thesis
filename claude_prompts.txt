@@ -1,0 +1,8 @@
+Read memory.md, CLAUDE.md, and skills.md before starting
+
+
+git add .
+
+git commit -m "update"
+
+git push
