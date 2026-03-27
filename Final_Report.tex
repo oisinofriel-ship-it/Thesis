@@ -1,0 +1,945 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{times}
+\usepackage{geometry}
+\geometry{a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm}
+\usepackage{setspace}
+\doublespacing
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\normalfont\Large\bfseries}{Chapter \thechapter}{16pt}{\Large}
+\titlespacing*{\chapter}{0pt}{20pt}{20pt}
+
+\begin{document}
+
+%% ============================================================
+%%  TITLE PAGE
+%% ============================================================
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\LARGE\bfseries Realised Variance of U.S.\ Assets during\\[6pt]
+Macroeconomic Announcement vs Non-Announcement Days\par}
+\vspace{2cm}
+{\large Ois\'in O'Friel\par}
+\vspace{0.4cm}
+{\large School of Mechanical and Materials Engineering\par}
+{\large MEEN30180 Professional Engineering Project (Mechanical)\par}
+\vspace{0.4cm}
+{\large Final Report\par}
+\vspace{0.4cm}
+{\large Supervisor: Di Nguyen\par}
+\vspace{0.4cm}
+{\large University College Dublin\par}
+\vspace{0.4cm}
+{\large 2026\par}
+\end{titlepage}
+
+%% ============================================================
+%%  DECLARATION
+%% ============================================================
+\chapter*{Declaration of Authorship}
+\addcontentsline{toc}{chapter}{Declaration of Authorship}
+\\\begin{center}
+    \textbf{Report Submission Form}
+\end{center}
+
+
+This form should be completed and signed. It should be incorporated into your submission (PDF and hard copy versions) and should appear as a single page immediately after the title page.
+
+\textbf{Student Name: }Oisín O’Friel
+
+\textbf{Student Number: }22330126 
+
+\textbf{Report Title: }Realised Variance of US Assets during Macroeconomic Announcement vs Non-Announcement Days
+
+\textbf{Plagiarism}
+
+Plagiarism is a serious academic offence and is comprehensively dealt with on UCD’s Registry website (\href{https://www.ucd.ie/governance/resources/policypage-plagiarismpolicy}{https://www.ucd.ie/governance/resources/policypage-plagiarismpolicy}). It is a student’s responsibility to be familiar with the University’s policy on plagiarism. All students are encouraged, if in doubt, to seek guidance from an academic member of staff on this issue. The UCD policy document on plagiarism states that “the University understands plagiarism to be the inclusion of another person’s writings or ideas or works, in any formally presented work (including essays, theses, projects, laboratory reports, examinations, oral, poster or slide presentations) which form part of the assessment requirements for a module or programme of study, without due acknowledgement either wholly or in part of the original source of the material through appropriate citation. Plagiarism is a form of academic dishonesty, where ideas are presented falsely, either implicitly or explicitly, as being the original work of the author. While plagiarism may be easy to commit unintentionally, it is defined by the act not the intention. The University advocates a developmental approach to plagiarism and encourages students to adopt good academic practice by maintaining academic integrity in the presentation of all academic work”.
+
+\textbf{Declaration of Authorship}
+
+I declare that all material in this submission is my own work except where there is clear acknowledgement and appropriate reference to the work of others.
+
+
+\vspace{2cm}
+\noindent Signature: \hfill Date: 25/01/2026
+
+\newpage
+
+%% ============================================================
+%%  TABLE OF CONTENTS / LOF / LOT
+%% ============================================================
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+Financial market volatility varies substantially over time, particularly around periods of concentrated information arrival such as macroeconomic announcements. This study examines how scheduled U.S. macroeconomic announcements influence financial market volatility by comparing realised variance (RV) dynamics on announcement and non-announcement trading days across equities, foreign exchange, and commodities. Volatility is measured using RV constructed from high-frequency intraday price data obtained from Bloomberg, providing a non-parametric and efficient estimator of integrated variance that captures short-lived announcement-driven effects (Andersen and Bollerslev, 1998). To model volatility persistence across multiple time horizons, the study employs the Heterogeneous Autoregressive model of Realised Volatility (HAR-RV), which decomposes volatility into daily, weekly, and monthly components within a parsimonious and economically interpretable framework (Corsi, 2009). Macroeconomic announcement days are identified using a calendar of key U.S. economic releases, including Federal Open Market Committee (FOMC) decisions, inflation announcements, and employment reports. The HAR-RV framework is augmented with macroeconomic event dummies, expected-versus-surprise decompositions, and macro category classifications to evaluate whether conditioning on announcement information improves volatility forecasting. Additional comparisons are drawn using Random Forest and neural network models. The analysis spans the S\&P 500 index (SPX), the GBP/USD exchange rate (GBP), and gold (XAU) over the period July 2025 to February 2026, providing a cross-asset assessment of how macroeconomic information affects short-term volatility dynamics.
+
+\chapter*{Nomenclature}
+\addcontentsline{toc}{chapter}{Nomenclature}
+\section{Parameters and Variables}
+\noindent Intraday log-return at intraday interval on day\\
+\noindent Asset price at intraday interval on day\\
+\noindent Daily realised variance on trading day\\
+\noindent Daily realised variance component\\
+\noindent Weekly realised variance component, defined as the average of past daily realised variance over a weekly horizon\\
+\noindent Monthly realised variance component, defined as the average of past daily realised variance over a monthly horizon\\
+\noindent Error term in the HAR-RV regression model\\
+\noindent Coefficients associated with daily, weekly, and monthly realised variance components in the HAR-RV model\\
+\noindent Intercept term in the HAR-RV model\\
+\section{Subscripts}
+\noindent The following subscripts denote time periods within the corresponding measurement horizons:\\
+\noindent Trading day index\\
+\noindent Intraday interval index\\
+\noindent Daily horizon\\
+\noindent Weekly horizon\\
+\noindent Monthly horizon\\
+\section{Acronyms}
+\noindent RV  --  Realised Variance\\
+\noindent HAR-RV  --  Heterogeneous Autoregressive Model of Realised Volatility\\
+\noindent ARCH  --  Autoregressive Conditional Heteroskedasticity\\
+\noindent GARCH  --  Generalised Autoregressive Conditional Heteroskedasticity\\
+\noindent ARIMA  --  Autoregressive Integrated Moving Average\\
+\noindent ARFIMA  --  Autoregressive Fractionally Integrated Moving Average\\
+\noindent FOMC  --  Federal Open Market Committee\\
+\noindent CPI  --  Consumer Price Index\\
+\noindent PPI  --  Producer Price Index\\
+\noindent PCE  --  Personal Consumption Expenditure\\
+\noindent NFP  --  Non-Farm Payrolls\\
+\noindent BLS  --  Bureau of Labor Statistics\\
+\noindent BOE  --  Bank of England\\
+\noindent FX  --  Foreign Exchange\\
+\noindent SPX  --  S\&P 500 Index\\
+\noindent GBP/USD  --  Great British Pound against the U.S. Dollar\\
+\noindent XAU/USD  --  Gold price quoted in U.S. Dollars\\
+\noindent OLS  --  Ordinary Least Squares\\
+\noindent HAC  --  Heteroskedasticity and Autocorrelation Consistent\\
+\noindent RMSE  --  Root Mean Squared Error\\
+\noindent MAE  --  Mean Absolute Error\\
+\chapter{Introduction}
+\section{Introduction, Context, Background, and Motivation}
+Financial markets exhibit pronounced time variation in volatility, reflecting the continuous arrival of information and the heterogeneous behaviour of market participants. While asset prices respond to new information through changes in returns, volatility captures the intensity and uncertainty of these responses and is therefore a central object of interest in empirical finance (Poon and Granger, 2003). Understanding volatility dynamics is particularly important around macroeconomic announcements, which concentrate information releases and often generate sharp and short-lived increases in market uncertainty.
+
+In the U.S., key macroeconomic announcements such as FOMC policy decisions, inflation releases, and employment reports play a central role in shaping expectations about monetary policy and economic conditions (Bernanke and Kuttner, 2005). These events can trigger significant volatility across asset classes as market participants revise expectations and adjust positions. Accurate measurement and modelling of volatility around such announcements is therefore essential for applications in risk management, asset pricing, and market analysis.
+
+Traditional volatility measures based on daily returns are poorly suited to capturing announcement-driven dynamics because they obscure intraday price fluctuations. The increasing availability of high-frequency data has enabled the construction of RV, a non-parametric estimator of integrated variance that aggregates intraday squared returns (Andersen and Bollerslev, 1998). RV provides a more precise representation of true volatility, particularly in settings characterised by discrete information arrivals.
+
+From a modelling perspective, many standard volatility frameworks struggle to capture the persistent and multi-horizon nature of realised volatility, while more flexible approaches often sacrifice economic interpretability. The HAR-RV model provides a parsimonious framework that approximates long-memory behaviour while remaining interpretable and computationally tractable (Corsi, 2009).
+
+Motivated by these considerations, this study examines RV dynamics across major U.S. asset classes on macroeconomic announcement and non-announcement days. In this context, an "announcement day" is defined as any trading day on which a scheduled U.S. macroeconomic release occurs, including FOMC interest rate decisions, CPI releases, Non-Farm Payroll (NFP) reports, and TARIFF announcements. Non-announcement days are all remaining trading days in the sample. By combining high-frequency volatility measurement with a multi-horizon modelling framework, the study aims to improve understanding of how macroeconomic information affects volatility and how these effects differ across markets.
+
+\section{Research Question, Relevance, and Overall Project Aim}
+This study examines how scheduled U.S. macroeconomic announcements influence financial market volatility across different asset classes, with a focus on differences between announcement and non-announcement trading days. The central research question is whether macroeconomic announcement days exhibit systematically different RV dynamics compared with non-announcement days across major U.S. asset classes.
+
+The relevance of this study lies in both its practical and academic contributions. Volatility forecasts are central to risk management, derivative pricing, portfolio allocation, and market making, and periods surrounding macroeconomic announcements are often characterised by heightened uncertainty and elevated risk (Andersen, Bollerslev, Diebold, and Labys, 2003). Accurately measuring and modelling volatility during these periods is therefore important for market participants operating across different investment horizons. From an academic perspective, the study contributes to the literature on information arrival and volatility by combining high-frequency RV measures with a multi-horizon modelling framework. By directly comparing announcement and non-announcement days across equities, foreign exchange, and commodities within a unified empirical setting, the analysis provides a structured assessment of how macroeconomic information affects volatility dynamics.
+
+The overall aim of the project is to analyse and compare RV behaviour on macroeconomic announcement and non-announcement days using high-frequency data and an economically interpretable volatility model. In doing so, the study seeks to improve understanding of the magnitude, persistence, and cross-asset nature of volatility responses to macroeconomic information.
+
+\section{Research Questions and Hypotheses}
+The empirical investigation is structured around five research questions, each accompanied by a corresponding testable hypothesis.
+
+Research Question 1
+
+Do macroeconomic announcement days exhibit systematically elevated realised variance relative to non-announcement trading days across U.S. equity, foreign exchange, and commodity markets?
+
+H$_{1}$$_{0}$ (Null): Macroeconomic announcement days do not produce a statistically significant difference in realised variance relative to non-announcement days.
+
+H$_{1}$$_{1}$ (Alternative): Realised variance is significantly higher on macroeconomic announcement days than on non-announcement days, consistent with the information arrival hypothesis (Andersen et al., 2003; Fleming and Remolona, 1999).
+
+Research Question 2
+
+Does conditioning on macroeconomic announcement information improve out-of-sample volatility forecasting accuracy relative to the baseline HAR-RV model?
+
+H$_{2}$$_{0}$ (Null): Augmenting the HAR-RV model with macroeconomic announcement dummies does not yield a statistically or economically meaningful improvement in out-of-sample forecast accuracy relative to the baseline specification.
+
+H$_{2}$$_{1}$ (Alternative): Macro-augmented HAR-RV specifications produce lower out-of-sample RMSE and MAE than the baseline HAR-RV model, indicating that announcement information contains incremental forecasting content beyond historical volatility persistence.
+
+Research Question 3
+
+Does the magnitude of the announcement innovation influence the magnitude of the realised variance response in a monotonically increasing fashion?
+
+H$_{3}$$_{0}$ (Null): The RV response does not differ systematically across announcement innovation categories; the coefficients δ$_{0}$, δ$_{1}$, and δ$_{2}$ associated with anticipated, marginal, and significant announcement innovations are not monotonically ordered.
+
+H$_{3}$$_{1}$ (Alternative): The RV response increases monotonically with the magnitude of the announcement innovation (δ$_{0}$ \textless{} δ$_{1}$ \textless{} δ$_{2}$), consistent with the notion that unanticipated information generates larger volatility responses than fully anticipated releases (Balduzzi et al., 2001; Bernanke and Kuttner, 2005).
+
+Research Question 4
+
+Do unscheduled tariff announcements generate realised variance responses that are statistically significant and of comparable or greater magnitude to those produced by scheduled macroeconomic releases?
+
+H$_{4}$$_{0}$ (Null): Tariff announcement days are not associated with significantly elevated realised variance beyond the level explained by the autoregressive volatility structure and scheduled macroeconomic event dummies.
+
+H$_{4}$$_{1}$ (Alternative): Tariff announcements produce a positive and statistically significant increment in realised variance (λ \textgreater{} 0), reflecting the role of unscheduled policy uncertainty shocks as a distinct driver of short-term volatility (Baker, Bloom, and Davis, 2016).
+
+Research Question 5
+
+Are the RV responses to macroeconomic announcements heterogeneous across asset classes, and do equity, foreign exchange, and commodity markets exhibit different sensitivities to the same information events?
+
+H$_{5}$$_{0}$ (Null): The magnitude and statistical significance of volatility responses to macroeconomic announcements are uniform across SPX, GBP/USD, and XAU/USD.
+
+H$_{5}$$_{1}$ (Alternative): Volatility responses differ systematically across asset classes, reflecting differences in the direct relevance of U.S. macroeconomic releases to each market's underlying fundamentals (Andersen, Bollerslev, Diebold, and Vega, 2007).
+
+\section{Scope}
+This study is delimited along four primary dimensions: asset coverage, sample period, data frequency, and model framework.
+
+In terms of asset coverage, the analysis is restricted to three representative instruments spanning distinct asset classes: the S\&P 500 index (SPX) for U.S. equities, the GBP/USD exchange rate (GBP) for foreign exchange, and gold (XAU/USD) for commodities. These assets are selected on the basis of their liquidity, data availability, and their established sensitivity to U.S. macroeconomic releases in the empirical literature. The analysis does not extend to fixed income instruments, cryptocurrencies, or individual equities.
+
+The sample period spans from 22 July 2025 to 20 March 2026, yielding 164 complete trading days following the removal of U.S. market holidays and shortened sessions. The effective estimation window is further reduced to approximately 140 trading days once the twenty-two-day warm-up period required for the monthly RV component has been accounted for. The analysis is confined to scheduled U.S. macroeconomic releases --- specifically FOMC interest rate decisions, CPI releases, and NFP reports as the primary event types --- alongside unscheduled tariff announcements classified using a weighted severity scoring scheme.
+
+Volatility is measured exclusively using daily realised variance (RV) constructed from five-minute intraday returns recorded during regular U.S. equity trading hours (09:30 to 16:00 Eastern Time). The modelling framework is centred on the HAR-RV specification and its augmented variants, with Random Forest and neural network models estimated as non-linear benchmarks. The study does not examine intraday volatility patterns, bid-ask spreads, or order flow dynamics.
+
+\section{Limitations}
+Several limitations of the present study should be acknowledged.
+
+Sample length. The estimation window of approximately 140 trading days is relatively short by the standards of the realised volatility literature, where samples typically span several years. The short sample constrains statistical power, increases the sensitivity of results to individual influential observations, and means that the monthly RV component reflects short-to-medium-horizon persistence rather than the long-memory behaviour typically documented over multi-year samples (Corsi, 2009; Andersen et al., 2003). Out-of-sample forecast evaluation is consequently based on a limited number of observations, which reduces the reliability of performance metric comparisons across model specifications.
+
+Sample period atypicality. The study period coincides with an episode of unusually elevated U.S. trade policy uncertainty, characterised by a series of tariff announcements that generated pronounced volatility responses across asset classes. This renders the sample period atypical relative to normal market conditions and limits the extent to which the findings can be generalised to other periods or market regimes.
+
+Exclusion of overnight returns. RV is constructed solely from intraday returns recorded during the active trading session. Overnight price movements --- which may themselves contain announcement-relevant information arriving outside trading hours --- are excluded from the RV measure. This is standard practice in the five-minute RV literature but implies that the volatility estimates do not capture the full information content of the trading day where pre-market or after-hours releases occur.
+
+U.S.-centric event coverage. The macroeconomic event calendar is restricted to U.S. releases. For GBP, the Bank of England Monetary Policy Committee decision is included as a secondary event, but other UK-specific releases and European macroeconomic announcements are not incorporated. To the extent that non-U.S. events influence GBP/USD volatility, the model may understate the explanatory power of macroeconomic information for foreign exchange markets.
+
+Three-tier classification subjectivity. The assignment of macroeconomic releases to announcement innovation categories (anticipated, marginal, and significant) is based on fixed, rule-based thresholds applied uniformly across event types. The thresholds are informed by the historical distribution of forecast errors over the period January 2023 to February 2026 but are not derived through a formal statistical procedure. Alternative threshold definitions could yield different categorisations and, consequently, different coefficient estimates in the augmented model specifications.
+
+Tariff severity scoring. The Weighted Severity Score (WSS) used to identify tariff event days is based on a qualitative assessment of each announcement's expected market impact. While the scoring methodology is applied consistently, it introduces an element of subjectivity that is absent from the scheduled macro event calendar. The binary nature of the tariff dummy further aggregates events of potentially heterogeneous market impact.
+
+Linearity assumption. The HAR-RV framework and its augmented variants are linear in parameters. Non-linear interactions between macroeconomic announcements, tariff events, and volatility persistence are not explicitly modelled within the econometric specifications. The machine learning benchmarks partially address this limitation by allowing for non-linear relationships, but their black-box nature limits economic interpretability.
+
+Single data source and sampling frequency. All intraday price data are sourced exclusively from the Bloomberg Terminal and sampled at a fixed five-minute frequency. Results may be sensitive to the choice of sampling frequency, particularly if microstructure noise dynamics differ across assets. Robustness to alternative sampling frequencies (e.g., one-minute or fifteen-minute intervals) is not examined.
+
+This study makes contributions across three dimensions: empirical, methodological, and practical.
+
+\section{Empirical Contribution}
+The study provides the first empirical analysis of realised variance dynamics around macroeconomic announcements over the period from July 2025 to March 2026. This sample window is structurally distinct from those examined in the existing literature: it captures a post-hiking-cycle plateau in U.S. monetary policy, a period of acute trade policy uncertainty driven by a series of tariff announcements, and cross-asset volatility dynamics that have not previously been documented at the daily realised variance level. The analysis is conducted simultaneously across three asset classes --- U.S. equities (SPX), foreign exchange (GBP/USD), and commodities (XAU/USD) --- using an identical modelling pipeline applied to each asset over the same sample period. This unified cross-asset framework enables direct comparison of announcement sensitivity and model improvement across fundamentally different markets, extending beyond the predominantly single-asset focus of prior HAR-RV studies.
+
+A further empirical contribution lies in the explicit treatment of unscheduled trade policy shocks alongside scheduled macroeconomic releases. Tariff announcements are incorporated as a formal model component through a binary event dummy constructed from a Weighted Severity Score, distinguishing high-impact trade policy events from background noise. This represents a departure from the standard practice of omitting or absorbing such events into the error term, and provides a more complete characterisation of the information environment during the sample period.
+
+\section{Methodological Contribution}
+The study introduces two methodological extensions to the standard HAR-RV framework that have not been combined in prior work.
+
+First, a three-tier announcement innovation classification scheme is proposed and implemented. Existing studies typically employ a binary expected-versus-surprise decomposition, distinguishing only between releases that match the consensus forecast and those that deviate from it. The present study refines this approach by partitioning releases into three mutually exclusive categories --- anticipated (zero forecast error), marginal announcement innovation (non-zero but bounded deviation), and significant announcement innovation (deviation exceeding an empirically determined threshold) calibrated on the historical distribution of forecast errors from January 2023 to February 2026. This finer decomposition allows the volatility response to be modelled as an increasing function of announcement information content and is applied consistently across FOMC interest rate decisions, CPI releases, and NFP reports within a single unified specification.
+
+Second, an adjusted lag specification is proposed to address a distortion in standard HAR-RV estimation that has received limited attention in the literature. On days immediately following a macroeconomic announcement or tariff event, the daily RV lag incorporates announcement-driven volatility that is not representative of the underlying persistence process. The adjusted specification replaces this lag with the realised variance from the most recent non-event trading day, isolating the autoregressive structure from the transient effects of information arrivals. This modification directly improves the separation between volatility persistence and announcement-driven spikes in the model's regressor set.
+
+\section{Practical Contribution}
+The study provides a structured forecast evaluation framework that is directly relevant to practitioners operating in risk management, derivatives pricing, and portfolio construction. Out-of-sample forecast performance is assessed under both 75:25 and 90:10 train-test splits, offering evidence on model behaviour under both standard and data-constrained conditions, a scenario of particular relevance when models must be deployed using limited historical data. By comparing the baseline HAR-RV model against macro-augmented specifications and machine learning benchmarks across multiple assets and split configurations, the study provides actionable evidence on when conditioning on announcement information materially improves short-term volatility forecasts and when the additional complexity does not justify the incremental gain.
+
+Taken together, these contributions advance understanding of how scheduled and unscheduled macroeconomic information shapes short-term volatility dynamics across asset classes, and provide both a refined modelling framework and an empirical benchmark for the July 2025 to March 2026 period.
+
+
+\section{Project Objectives}
+If successfully completed, this project will achieve the following objectives:
+
+\begin{itemize}
+\item Develop an accurate volatility forecasting framework by conditioning on macroeconomic announcement information.
+\item Quantify the impact of macroeconomic announcements on RV levels and persistence.
+\item Demonstrate whether classifying trading days by macroeconomic announcements improves volatility predictability.
+\item Establish whether volatility responses to macroeconomic announcements differ across equities, foreign exchange, and commodities.
+\item Provide an economically interpretable assessment of how information arrival influences volatility dynamics across multiple time horizons.
+\end{itemize}
+\section{Methodology and Approach}
+This study adopts an empirical approach to modelling financial market volatility that combines high-frequency data with an economically interpretable volatility framework. The methodology is designed to assess whether conditioning on macroeconomic announcements improves volatility measurement and prediction.
+
+Volatility is measured using RV constructed from intraday price data obtained from Bloomberg for representative assets across equities (SPX), foreign exchange (GBP/USD), and commodities (XAU/USD). RV provides a more accurate proxy for volatility than daily return-based measures, particularly around periods of concentrated information arrival (Andersen and Bollerslev, 1998). Intraday data are cleaned and aligned to active trading periods to ensure consistency across assets. The data cleaning process involves removing inactive trading periods, duplicate price observations, and irregular timestamps. Trading hours are standardised across assets to ensure consistent intraday sampling, which is critical for avoiding bias in RV construction. Early market closes and public holidays are explicitly handled.
+
+Daily RV is computed as the sum of squared intraday log-returns. A natural logarithmic transformation is applied to RV to reduce skewness and stabilise variance. The resulting log-RV series is then aggregated into weekly (five-day rolling average) and monthly (twenty-two-day rolling average) components, each lagged by one day to prevent look-ahead bias. These three components form the core regressors for the HAR-RV model.
+
+To capture volatility dynamics operating at different time scales, the study employs the HAR-RV model (Corsi, 2009), chosen for its ability to approximate long-memory behaviour while remaining parsimonious and interpretable. The baseline HAR-RV model is estimated using OLS with HAC standard errors to account for serial dependence in the residuals.
+
+The HAR-RV framework is then augmented in several ways to assess the incremental explanatory power of macroeconomic information. First, binary dummy variables for individual macro events (FOMC, NFP, CPI, PPI, PCE, and others) are added to the baseline specification. Second, an expected-versus-surprise decomposition is implemented, separating the consensus forecast from the actual release to test whether the surprise component drives volatility responses. Third, macro events are classified into categories (in-line, moderate surprise, and large surprise) to assess non-linear effects. Fourth, an adjusted HAR-RV specification removes the daily RV lag on announcement days to evaluate whether announcement-day volatility distorts forecasts on subsequent days.
+
+In addition to the econometric models, Random Forest and neural network models are estimated as machine-learning benchmarks to assess whether non-linear methods improve out-of-sample forecast accuracy relative to the HAR-RV framework.
+
+Macroeconomic announcement days are identified using a calendar of key U.S. economic releases related to monetary policy. Trading days are classified into announcement and non-announcement categories, allowing RV dynamics to be compared across different information environments. The sample is divided into in-sample (75 per cent) and out-of-sample (25 per cent) periods, with an alternative 90:10 split tested for robustness. Forecast performance is evaluated using R-squared, RMSE, and MAE.
+
+\section{Report Layout}
+The remainder of this report is structured as follows. Chapter 2 presents the technical foundations and literature review underpinning the study. It reviews the economic background of volatility and macroeconomic announcements, discusses RV as a volatility measure, and critically evaluates existing volatility modelling approaches, motivating the selection of the HAR-RV framework.
+
+Chapter 3 describes the data sources, construction of RV measures, macroeconomic event classification, and model implementation in detail. Chapter 4 presents the empirical results, including estimation outcomes, out-of-sample forecast comparisons, and cross-asset analysis. Chapter 5 provides a discussion of the findings in the context of the existing literature, and Chapter 6 concludes with a summary of contributions, limitations, and directions for future research.
+
+\chapter{Technical Foundations and Literature Review}
+This chapter provides the conceptual and theoretical foundations for the empirical analysis conducted in this study. It is organised into four sections. Section 2.1 introduces the economic and financial context relevant to volatility analysis, including an overview of financial markets, macroeconomic policy, and the measurement of volatility. Section 2.2 reviews the principal econometric approaches to volatility modelling and highlights their key limitations. Section 2.3 presents the HAR-RV framework in detail, including its specification, economic interpretation, empirical evidence, and limitations. Section 2.4 examines the relationship between information arrival and volatility, drawing on empirical literature on macroeconomic announcements and high-frequency volatility persistence.
+
+\section{Economics and Volatility Background}
+\subsection{Financial Markets: An Overview}
+A financial market is a marketplace in which financial instruments such as equities, bonds, currencies, and commodities are bought and sold. These markets serve essential functions in modern economies, including the allocation of capital, the facilitation of price discovery, and the transfer of risk between participants (Mishkin, 2019). Participants range from individual retail investors to large institutional actors such as pension funds, insurance companies, and central banks, each operating over different time horizons and with different objectives.
+
+Asset prices in financial markets are determined by the interaction of supply and demand, which in turn reflects market participants' expectations about future economic conditions, corporate earnings, interest rates, and policy decisions. When new information arrives, participants revise their expectations and adjust their positions, causing prices to move. The speed and magnitude of these price adjustments depend on the significance of the information, the degree to which it was anticipated, and the diversity of interpretations among participants.
+
+Three broad asset classes are examined in this study. Equities, represented by the S\&P 500 index (SPX), reflect the aggregate market value of large U.S. corporations and are sensitive to expectations about corporate profitability and monetary policy. Foreign exchange, represented by the GBP/USD exchange rate (GBP), reflects the relative value of two currencies and responds to interest rate differentials and cross-border capital flows. Commodities, represented by gold (XAU/USD), serve as both an investment asset and a store of value, with prices influenced by inflation expectations, central bank policy, and geopolitical risk (Baur and Lucey, 2010).
+
+\subsection{Macroeconomic Background and Monetary Policy}
+This study focuses on macroeconomic events that influence the Federal Reserve's decisions on interest rates, as these events play a central role in shaping financial market behaviour. The Federal Reserve adjusts the stance of monetary policy primarily by raising or lowering its target range for the federal funds rate to fulfil its dual mandate of promoting maximum employment and maintaining price stability (Board of Governors of the Federal Reserve System, 2023).
+
+A reduction in the policy rate represents an easing of monetary policy, typically implemented when economic activity is weak or inflationary pressures are subdued. Conversely, increases in the policy rate reflect a tightening of monetary policy, necessary when the economy is overheating or inflation is elevated (Board of Governors of the Federal Reserve System, 2023).
+
+Lower policy interest rates are generally associated with higher equity prices, as reduced borrowing costs and lower discount rates support corporate investment and expected earnings growth. Empirical evidence confirms that U.S. equity markets respond positively to monetary policy easing, with unexpected reductions in interest rates leading to statistically significant increases in stock prices (Rigobon and Sack, 2004). At the same time, accommodative monetary policy places downward pressure on the U.S. dollar. In contrast, gold tends to perform well during periods of heightened uncertainty, as lower interest rates reduce the opportunity cost of holding non-yielding assets and reinforce gold's role as a safe-haven asset (Liu, Zhang, Gu, Hu, and He, 2025). Consistent with this evidence, the timeframe of this study coincides with a period of Federal Reserve monetary easing.
+
+Monetary policy decisions are made by the FOMC, which holds eight regularly scheduled meetings each year. While financial markets often incorporate anticipated policy actions into asset prices ahead of these meetings, unexpected elements of FOMC announcements can generate pronounced market reactions, particularly in terms of heightened volatility (Bernanke and Kuttner, 2005).
+
+In evaluating its dual mandate, the Federal Reserve places significant weight on key macroeconomic indicators. Labour market conditions are primarily assessed through the monthly U.S. Employment Situation Report published by the BLS, while price stability is monitored using inflation measures, with particular emphasis on the CPI. The release of these indicators can alter market expectations regarding the timing and magnitude of monetary policy adjustments, thereby acting as important sources of information shocks (Gilbert, Scotti, Strasser, and Vega, 2017). Accordingly, this study focuses on analysing RV dynamics surrounding these macroeconomic announcement events.
+
+\subsection{Volatility and Its Measurement}
+In financial markets, the impact of monetary policy decisions and macroeconomic announcements is reflected not only in changes in asset prices but also in changes in volatility, which measures the variability of asset returns over time (Poon and Granger, 2003). Volatility is commonly interpreted as an indicator of market uncertainty, capturing the intensity rather than the direction of price responses to new information.
+
+Unlike returns, which measure net price movements over a given interval, volatility captures the magnitude of price fluctuations within that interval. A financial return is the percentage change in an asset's price between two points in time. A positive return indicates a price increase; a negative return indicates a decline. Volatility, by contrast, reflects how much the price moves regardless of direction. Even when price changes are modest or anticipated, uncertainty and disagreement among market participants can generate substantial volatility.
+
+A central challenge in empirical volatility analysis is that volatility is a latent process and therefore cannot be directly observed. Within a continuous-time framework in which asset prices follow a stochastic process with time-varying volatility, true daily volatility is defined as the integrated variance, representing the accumulation of instantaneous variance over the trading day. As instantaneous volatility is unobservable, integrated variance must be approximated using observable price data.
+
+Early empirical studies relied on daily squared or absolute returns as proxies for volatility. However, Andersen and Bollerslev (1998) demonstrate that such daily return-based measures are highly noisy and inefficient, as they reflect only the net price change over a trading day and discard substantial intraday information.
+
+RV addresses this measurement problem by aggregating squared intraday returns over a given day. It is important to note that RV is an estimator of integrated variance, not identical to it. While integrated variance represents the theoretical true variance accumulated over the trading day, RV approximates this quantity using discrete observations at a finite sampling frequency. Under standard assumptions, RV constructed from sufficiently high-frequency data provides a consistent estimator of integrated variance. However, at very high frequencies, microstructure noise introduces upward bias, creating a bias-efficiency trade-off in the choice of sampling frequency (Bandi and Russell, 2008).
+
+An important implication of this literature is that improvements in volatility measurement can be as important as improvements in volatility modelling. Even relatively simple models generate forecasts that align far more closely with RV than with traditional volatility proxies (Andersen, Bollerslev, Diebold, and Labys, 2003). Accordingly, this study adopts RV as the primary measure of volatility.
+
+\section{Volatility Modelling Approaches and Their Limitations}
+This section reviews the principal econometric approaches used to model financial market volatility and highlights their key limitations. The discussion focuses on three broad classes of models: conditional heteroskedasticity models, linear time-series models, and machine-learning approaches (Poon and Granger, 2003).
+
+\subsection{Conditional Heteroskedasticity Models: ARCH and GARCH}
+ARCH models were introduced by Engle (1982) to address the empirical observation that financial return volatility is not constant over time. By modelling the conditional variance of returns as a function of past squared shocks, ARCH models capture volatility clustering. This framework was extended through the GARCH model (Bollerslev, 1986), enabling volatility persistence to be captured more parsimoniously.
+
+Despite their success, ARCH and GARCH models exhibit several important limitations. First, standard GARCH specifications imply short-memory dynamics, contrasting with empirical evidence of long-memory behaviour in volatility (Baillie, Bollerslev, and Mikkelsen, 1996). Second, forecasting performance deteriorates at longer horizons. Third, their parameters offer limited economic interpretability and do not map onto distinct trading horizons or heterogeneous market behaviour.
+
+\subsection{Linear Time-Series Models Applied to Volatility: AR and ARIMA}
+Volatility has also been modelled using standard linear time-series approaches such as AR and ARIMA models (Box and Jenkins, 1970). However, several structural limitations make these models poorly aligned with the stylised facts of financial volatility. They rely on linear and stationary dynamics (Cheng, Li, and Weng, 2023), and do not explicitly model time-varying conditional variance. These models effectively embed an assumption of constant variance and are commonly paired with symmetric innovation structures, such as the Gaussian distribution, which are inconsistent with volatility clustering and episodic bursts (Petrica, Stancu, and Tindeche, 2016). For these reasons, AR and ARIMA are retained primarily as baseline benchmarks.
+
+\subsection{Machine Learning Approaches to Volatility Modelling}
+Recent literature has increasingly applied ML methods to volatility forecasting. Tree-based ensemble methods such as Random Forests (Friedman, 2001) and neural network-based approaches including LSTM models (Hochreiter and Schmidhuber, 1997) can capture nonlinear relationships and regime-dependent behaviour (Gu, Kelly, and Xiu, 2020). However, as Mullainathan and Spiess (2017) highlight, ML algorithms are designed for prediction rather than inference, limiting their usefulness for hypothesis-driven analysis of volatility transmission.
+
+\subsection{Summary and Implications for Model Choice}
+The preceding discussion highlights that existing approaches capture important features of volatility dynamics but exhibit limitations for persistent and announcement-driven volatility. These limitations motivate a framework that balances flexibility with interpretability and aligns naturally with RV measures derived from high-frequency data. These considerations support the use of the HAR-RV model.
+
+\section{The HAR-RV Framework}
+\subsection{Motivation and Model Overview}
+More flexible specifications, such as ARFIMA models, have been proposed to explicitly account for long-memory behaviour in volatility processes. Despite their ability to replicate the slow decay of volatility autocorrelations, these models entail increased estimation complexity, requirements for long data samples, and limited economic interpretability (Baillie, Bollerslev, and Mikkelsen, 1996). In response, Corsi (2009) introduces the HAR-RV model as a parsimonious alternative.
+
+\subsection{Model Specification and Long-Memory Approximation}
+In its standard form, the HAR-RV model relates RV at a future horizon to three horizon-specific measures of past RV: daily, weekly, and monthly. The specification proposed by Corsi (2009) is:
+
+\begin{equation}
+(2.1)
+\end{equation}
+It should be noted that Equation (2.1) is, in essence, a linear regression model. Its functional form is similar to standard AR or ARIMA specifications, with the distinction that the regressors are constructed as averages over different horizons rather than individual lags. The multi-horizon structure allows the model to approximate long-memory behaviour without explicitly imposing fractional integration.
+
+\subsection{Economic Interpretation and Volatility Transmission}
+The economic intuition underlying the HAR-RV framework is closely linked to the Heterogeneous Market Hypothesis (Muller, Dacorogna, Dave, Olsen, Pictet, and von Weizsacker, 1997), which recognises that financial markets are composed of participants operating over different investment horizons. An important implication is the asymmetric transmission of volatility across horizons (Corsi, 2009).
+
+\subsection{Empirical Evidence and Relevance for This Study}
+A substantial body of empirical evidence supports the effectiveness of the HAR-RV framework. Corsi (2009) demonstrates strong in-sample fit and superior out-of-sample forecasting performance relative to GARCH and ARFIMA specifications. Subsequent studies reinforce these findings (Andersen, Bollerslev, and Diebold, 2007; Patton and Sheppard, 2015). The HAR-RV model has also proven effective in environments characterised by heightened information flow (Clements and Galvao, 2021).
+
+Given the relatively short sample period in this study (approximately seven months of daily observations), the analysis primarily captures short-term volatility dynamics. The weekly and monthly RV components should therefore be interpreted as reflecting short-to-medium-horizon persistence rather than truly long-term dynamics.
+
+\subsection{Limitations of the HAR-RV Framework}
+Despite its strong empirical performance, the HAR-RV framework is subject to several limitations. First, it captures long-memory behaviour only in an approximate sense (Ma, Wei, Huang, and Chen, 2014). Second, the standard specification is linear and does not account for non-linearities or asymmetries. Third, RV remains sensitive to microstructure noise (Bandi and Russell, 2008). Finally, the framework conditions exclusively on past RV and does not incorporate forward-looking information. Notwithstanding these limitations, the HAR-RV model provides a transparent and empirically robust framework well suited to the objectives of this study.
+
+\section{Volatility and Information Arrival}
+\subsection{Volatility as a Response to Information}
+Financial markets operate as mechanisms for processing and incorporating information into asset prices. Volatility reflects the intensity of market reactions to information arrival rather than the direction of those reactions (Ross, 1989). Scheduled macroeconomic announcements and monetary policy decisions are of particular interest, as they concentrate information releases at known points in time.
+
+\subsection{Macroeconomic Announcements and Empirical Evidence}
+A substantial body of empirical research documents a strong relationship between macroeconomic announcements and financial market volatility. Andersen and Bollerslev (1998) show that intraday volatility in FX markets rises markedly around scheduled macroeconomic announcements. Subsequent research extends this evidence: FOMC announcements generate pronounced volatility responses across equity, bond, and FX markets (Bernanke and Kuttner, 2005; Gurkaynak, Sack, and Swanson, 2005). More recently, Bekaert, Hoerova, and Lo Duca (2013) document the role of monetary policy in driving risk appetite and volatility dynamics, while Clements and Galvao (2021) demonstrate that macroeconomic data releases affect realised volatility forecasts.
+
+An important insight is the distinction between anticipated and surprise components of announcements. Unexpected deviations from consensus forecasts tend to generate disproportionately large volatility responses (Gilbert, Scotti, Strasser, and Vega, 2017). This finding motivates the expected-versus-surprise decomposition employed in this study.
+
+\subsection{High-Frequency Volatility and Persistence}
+Volatility reactions to announcements often occur within short time windows and may dissipate rapidly, making them difficult to detect using daily return-based measures (Andersen, Bollerslev, Diebold, and Vega, 2003). High-frequency data allow these intraday dynamics to be observed directly. In addition to capturing immediate responses, high-frequency volatility measures also reveal persistence effects following announcements (Bollerslev, Li, and Xue, 2018).
+
+The combination of high-frequency volatility measures and multi-horizon modelling frameworks is therefore essential for accurately describing announcement-driven volatility dynamics. In this context, the use of RV in conjunction with the HAR-RV framework provides a natural and effective approach, forming the basis for the empirical analysis conducted in this study.
+
+\chapter{Methodology}
+This chapter describes the empirical methodology employed in this study. It is organised into five sections. Section 3.1 details the data sources, sampling characteristics, and cleaning procedures applied to the intraday price data and macroeconomic event records. Section 3.2 describes the construction of daily realised variance from high-frequency returns and the derivation of multi-horizon RV components. Section 3.3 presents the HAR-RV model framework and the sequence of augmented specifications used to incorporate macroeconomic and tariff announcement information. Section 3.4 outlines the estimation procedure, including the treatment of serial dependence. Section 3.5 defines the forecast evaluation framework, including the in-sample and out-of-sample partitioning strategy and the performance metrics used to compare model specifications.
+
+\section{Data}
+\subsection{Intraday Price Data}
+
+The primary dataset comprises high-frequency intraday price observations for the S&P 500 index (SPX), sourced from the Bloomberg Terminal, accessed via the Quinn School of Business, University College Dublin. Data are sampled at five-minute intervals across the standard U.S. equity trading session, spanning 09:30 to 16:00 Eastern Time, yielding 78 intraday return observations per trading day.
+The sample is restricted to complete trading sessions. Days on which U.S. equity markets were closed, including scheduled public holidays such as Christmas Day (25 December 2025) and New Year's Day (1 January 2026), and days subject to early market closure, such as Christmas Eve (24 December 2025) and the post-Thanksgiving session (28 November 2025), are excluded from the analysis. This filter ensures that each retained observation contributes a full complement of intraday returns, thereby producing realised volatility estimates that are directly comparable across trading days and free from the downward bias that would otherwise arise from truncated sessions.
+Market Hours
+To assess the generalisability of the models across asset classes, supplementary five-minute spot price data are obtained from the Bloomberg Terminal for two additional instruments: the British pound against the U.S. dollar (GBP/USD) and gold denominated in U.S. dollars per troy ounce (XAU/USD). These assets are selected to provide cross-asset variation in microstructure characteristics, liquidity profiles, and volatility dynamics, enabling a broader evaluation of model performance beyond domestic equity markets.
+In addition, a secondary S&P 500 dataset spanning May 2023 to October 2023, sourced from Pineify, is incorporated to evaluate model performance under a markedly different market regime. This six-month window is characterised by relatively subdued realised volatility and a notable absence of the acute geopolitical tensions and trade policy uncertainty that define the primary sample period. 
+This period was selected on the basis that it captures contemporary market microstructure and institutional characteristics whilst exhibiting markedly lower realised and implied volatility relative to more recent periods. Notably, the CBOE Volatility Index (VIX) remained at subdued levels throughout this window, indicative of stable investor sentiment and an absence of the acute uncertainty that has characterised U.S. equity markets in the years since. The inclusion of this comparative dataset facilitates an assessment of the extent to which model accuracy and predictive stability are sensitive to prevailing macroeconomic conditions and geopolitical risk, providing a more robust and generalisable evaluation of model performance across distinct market regimes.
+Five-minute sampling frequency is adopted in accordance with the established convention in the high-frequency finance literature, as Liu, Patton, and Sheppard (2015) demonstrate that this interval strikes an optimal balance between minimising microstructure noise and maximising the precision of realised volatility estimates, a finding corroborated across equity, foreign exchange, and commodity markets in subsequent studies including Plíhal and Lyócsa (2021) and Kambouroudis and McMillan, and Tsakou (2021).
+All timestamps in the raw data are recorded in Irish Standard Time (IST) or Irish Summer Time (GMT+1), reflecting the timezone of the Bloomberg terminal used for extraction. Under normal conditions, when both the United States and Ireland observe their respective daylight saving time (DST) adjustments, the U.S. trading session of 09:30 to 16:00 ET corresponds to 14:30 to 21:00 Irish time. However, a complication arises from the fact that the U.S. and Ireland do not transition between standard and summer time on the same dates. During the brief windows each spring and autumn when only one jurisdiction has changed clocks, the session maps to 13:30 to 20:00 Irish time. The data cleaning pipeline identifies these DST mismatch windows programmatically and applies the appropriate session boundaries on a per-day basis to ensure that only observations recorded during active U.S. trading hours are retained.
+
+
+\subsection{Data Cleaning}
+A multi-step data cleaning pipeline is applied to the raw intraday data to ensure consistency and reliability prior to RV construction. The pipeline proceeds as follows.
+
+First, timestamp validation is performed. Each observation is checked against the appliGBP session boundaries for its trading day, accounting for the DST adjustment described above. Observations falling outside the active session window are removed. Second, duplicate price records sharing the same timestamp are identified and dropped, retaining only the first occurrence. Third, observations with missing close prices are excluded, as these would introduce undefined returns into the RV calculation.
+
+Fourth, U.S. market holidays and early-close sessions are removed. Within the sample period, six full market holidays are excluded: Labor Day (1 September 2025), Thanksgiving Day (27 November 2025), Christmas Day (25 December 2025), New Year's Day (1 January 2026), Martin Luther King Jr. Day (19 January 2026), and Presidents' Day (16 February 2026). Two additional dates are excluded due to shortened trading sessions: the day after Thanksgiving (28 November 2025) and Christmas Eve (24 December 2025). Early-close days are removed entirely rather than retained with truncated sessions, as partial trading days would yield a reduced number of intraday returns and produce RV estimates that are not directly comparable to those from full sessions.
+
+After cleaning, the dataset contains 164 complete trading days spanning the period from 22 July 2025 to 18 March 2026. A per-day bar count verification confirms that each retained trading day contains the expected 79 five-minute observations, with the exception of a small number of days in early March 2026 that record 78 bars due to a single missing observation. These days are retained as the impact on RV estimation from one missing bar is negligible.
+
+\subsection{Macroeconomic Announcement Data}
+
+FOMC interest rate decisions are sourced directly from the Board of Governors of the Federal Reserve System. Rather than using a survey-based consensus forecast, the expected rate outcome is derived from 30-Day Federal Funds futures prices traded on the Chicago Mercantile Exchange (CME). These futures contracts reflect what traders are collectively pricing the federal funds rate to be at expiration, providing a real-time, market-implied expectation of the FOMC decision in the period leading up to each announcement. This approach is consistent with \cite{@article{bauer-swanson-nberma,
+  title={A Reassessment of Monetary Policy Surprises and High-Frequency Identification},
+  author={Bauer, Michael D. and Swanson, Eric T.},
+  journal={NBER Macroeconomics Annual},
+  volume={37},
+  number={1},
+  pages={87--155},
+  year={2023},
+  publisher={The University of Chicago Press Chicago, IL}
+}
+}, who demonstrate that Federal Funds futures remain reliable and efficient measures of market rate expectations around scheduled FOMC announcements.
+
+Consensus forecast and actual release values for key U.S. macroeconomic indicators — including employment reports and inflation releases — are sourced from the Investing.com economic calendar, whose forecast figures are aggregated from surveys of professional economists and analysts at major financial institutions and represent the median expectation across surveyed contributors in the period preceding each scheduled release. Records are compiled from January 2023 onwards to construct a sufficiently large historical distribution of release outcomes, from which standard deviations are calculated for each indicator and used to implement a three-tier surprise classification system, as further described in Section 3.3.
+
+Eight macroeconomic event types are included in the analysis: FOMC interest rate decisions, Consumer Price Index (CPI) releases, Non-Farm Payroll (NFP) reports, Producer Price Index (PPI) releases, Personal Consumption Expenditure (PCE) price index releases, ADP National Employment Reports, Job Openings and Labor Turnover Survey (JOLTS) releases, and Initial Jobless Claims (CLAIMS). These events are selected on the basis that they are among the most closely monitored U.S. economic indicators and have been shown to generate significant volatility responses in prior empirical work (Andersen, Bollerslev, Diebold, and Vega, 2003; Gilbert, Scotti, Strasser, and Vega, 2017).
+
+For each event, a binary dummy variable is set equal to one on days when the corresponding announcement occurs and zero otherwise. In addition, the expected-versus-surprise decomposition uses the actual release value, the consensus forecast, and the computed surprise (defined as the difference between the actual and forecast values). For rate-based indicators (FOMC, CPI, PPI, PCE), the surprise is expressed in percentage points; for count-based indicators (NFP, ADP, JOLTS, CLAIMS), the surprise is expressed in thousands. A release is classified as "expected" if the surprise is zero within a floating-point tolerance of 1 x 10\textasciicircum{}-9 and as a "surprise" otherwise.
+
+\subsection{Tariff Announcement Data}
+The sample period coincides with a period of heightened U.S. trade policy activity, during which a series of tariff announcements generated substantial market volatility. To capture these effects, a tariff announcement dummy is constructed using a manually curated event log (tariff_wss_v2.xlsx) that records the dates, descriptions, and severity assessments of tariff-related announcements during the period from August 2025 to February 2026.
+
+Each tariff event is assigned a Weighted Severity Score (WSS) based on a qualitative assessment of its expected market impact, considering factors such as the scope of the tariff action, the size of affected trade flows, and the degree to which the announcement was anticipated. The binary tariff dummy (TARIFF) is set equal to one on days when at least one tariff event with a WSS of five or greater occurs, and zero otherwise. Events that were subsequently retracted or reversed are excluded from the dummy construction. Tariff events are further classified as escalatory or de-escalatory based on whether the announcement represented an increase or a reduction in trade barriers, enabling separate analysis of directional tariff effects on volatility.
+
+\subsection{Sample Period and Limitations}
+The full sample spans 164 trading days from 22 July 2025 to 18 March 2026. However, the effective analysis window for most augmented model specifications begins on 19 August 2025, after the twenty-two-day rolling window required for the monthly RV component has been populated, and extends to 27 February 2026, the date of the final macroeconomic release in the dataset. The resulting analysis window of approximately seven months captures short-term volatility dynamics. The weekly and monthly RV components should therefore be interpreted as reflecting short-to-medium-horizon persistence rather than long-term structural behaviour, and the findings should be understood in the context of a relatively condensed sample that includes an atypical period of trade policy uncertainty.
+
+\section{Realised Variance Construction}
+This section describes the construction of daily RV from the cleaned intraday price data and the derivation of the multi-horizon components used as regressors in the HAR-RV model.
+
+\subsection{Daily Realised Variance}
+Let P_{t,i} denote the closing price of the asset at the i-th five-minute interval on trading day t, where i = 1, 2, ..., M and M = 78 denotes the number of five-minute return intervals in a standard session. The intraday log-return at interval i is defined as:
+
+\begin{equation}
+r_{t,i} = ln(P_{t,i}) - ln(P_{t,i-1})        (3.1)
+\end{equation}
+Daily RV on trading day t is then computed as the sum of squared intraday log-returns:
+
+\begin{equation}
+RV_t = SUM_{i=1}\textasciicircum{}{M} r_{t,i}\textasciicircum{}2        (3.2)
+\end{equation}
+Under standard assumptions of no microstructure noise and a sufficiently high sampling frequency, RV provides a consistent estimator of integrated variance, which represents the accumulation of instantaneous variance over the trading day (Andersen and Bollerslev, 1998; Barndorff-Nielsen and Shephard, 2002). In practice, the five-minute sampling frequency adopted in this study introduces a degree of approximation, but as discussed in Section 3.1.1, this frequency is widely regarded as providing an effective trade-off between estimation precision and robustness to microstructure effects.
+
+\subsection{Logarithmic Transformation}
+The distribution of daily RV is highly right-skewed, reflecting the occurrence of occasional extreme volatility days. To reduce skewness, stabilise variance, and improve the distributional properties of the dependent variable for linear regression, a natural logarithmic transformation is applied:
+
+\begin{equation}
+y_t = ln(RV_t)        (3.3)
+\end{equation}
+This transformation is standard in the realised volatility literature and has been shown to yield a series that more closely approximates a Gaussian distribution, improving the statistical properties of OLS-based estimation (Andersen, Bollerslev, Diebold, and Labys, 2003). All subsequent model specifications are estimated using log realised variance as the dependent variable.
+
+\subsection{Multi-Horizon RV Components}
+The HAR-RV model requires three horizon-specific measures of past volatility: a daily, a weekly, and a monthly component. These are constructed from the log RV series as follows. The daily component is simply the previous day's log RV, lagged by one trading day:
+
+\begin{equation}
+RV_t\textasciicircum{}(d) = y_{t-1}        (3.4)
+\end{equation}
+The weekly component is the arithmetic mean of log RV over the five most recent trading days, lagged by one day to prevent contemporaneous information from entering the regressor:
+
+\begin{equation}
+RV_t\textasciicircum{}(w) = (1/5) SUM_{j=1}\textasciicircum{}{5} y_{t-j}        (3.5)
+\end{equation}
+The monthly component is defined analogously using a twenty-two-day rolling window, consistent with the approximate number of trading days in a calendar month:
+
+\begin{equation}
+RV_t\textasciicircum{}(m) = (1/22) SUM_{j=1}\textasciicircum{}{22} y_{t-j}        (3.6)
+\end{equation}
+This construction follows Corsi (2009), who interprets the three components as capturing the behaviour of market participants operating at different frequencies: short-term traders responding to daily volatility, medium-term participants reacting to weekly patterns, and longer-horizon investors influenced by monthly trends. In the context of this study, the relatively short sample period of approximately seven months means that the monthly component captures persistence over a horizon of roughly one month rather than reflecting long-term structural volatility dynamics.
+
+Each rolling average requires a minimum number of observations equal to the window length before it can be computed. The weekly component therefore becomes available after the first five trading days, while the monthly component requires twenty-two trading days. This warm-up period, combined with the one-day lag, means that the first usable observation for the full HAR-RV specification falls on 19 August 2025, reducing the effective sample from 164 to approximately 140 trading days depending on the model specification.
+
+\section{Model Framework}
+This section presents the sequence of model specifications employed in the study. The modelling strategy proceeds incrementally: a baseline HAR-RV model is first estimated, and successive extensions are introduced to assess the marginal contribution of macroeconomic and tariff announcement information to volatility forecasting.
+
+\subsection{Baseline HAR-RV}
+The baseline specification follows Corsi (2009) and regresses log RV on its three horizon-specific components:
+
+\begin{equation}
+y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + e_t        (3.7)
+\end{equation}
+where y_t = ln(RV_t) is the dependent variable, and the regressors RV_t\textasciicircum{}(d), RV_t\textasciicircum{}(w), and RV_t\textasciicircum{}(m) are defined as in Equations (3.4) through (3.6). The coefficients B_d, B_w, and B_m capture the contribution of daily, weekly, and monthly volatility persistence, respectively. This specification serves as the benchmark against which all augmented models are compared.
+
+\subsection{HAR-RV with Macroeconomic Announcement Dummies}
+The first extension augments the baseline with binary dummy variables indicating macroeconomic announcement days. Two variants are estimated. The first adds a single FOMC dummy to test whether monetary policy announcement days exhibit elevated volatility:
+
+\begin{equation}
+y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + gamma * FOMC_t + e_t        (3.8)
+\end{equation}
+where FOMC_t = 1 if an FOMC announcement occurs on day t and zero otherwise. The second variant extends this to include dummies for all three primary macroeconomic events (FOMC, CPI, and NFP), each entering independently:
+
+\begin{equation}
+y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + gamma_1 * FOMC_t + gamma_2 * CPI_t + gamma_3 * NFP_t + e_t        (3.9)
+\end{equation}
+A positive and statistically significant gamma coefficient indicates that the corresponding announcement type is associated with higher log RV on the day of the announcement, after controlling for the autoregressive volatility structure.
+
+\subsection{Expected versus Surprise Decomposition}
+To distinguish between the effects of anticipated and unanticipated information, each macroeconomic event is decomposed into an expected and a surprise component. For each event type, the consensus forecast from the Investing.com economic calendar is compared with the actual release value. A release is classified as "expected" if the surprise (actual minus forecast) is zero within a floating-point tolerance of 1 x 10\textasciicircum{}-9, and as a "surprise" otherwise. Separate binary dummy variables are constructed for expected releases and surprise releases for each event, yielding variables such as FOMC_expected and FOMC_surprise.
+
+This decomposition is motivated by the empirical finding that unexpected deviations from consensus forecasts tend to generate disproportionately large volatility responses (Gilbert, Scotti, Strasser, and Vega, 2017). If the surprise component drives volatility rather than the mere occurrence of an announcement, the surprise dummies should carry larger and more significant coefficients than the expected dummies.
+
+\subsection{Three-Tier Macro Surprise Classification}
+To further investigate non-linear effects, macro announcements are classified into a three-tier surprise system using an extended dataset of macroeconomic releases from January 2023 to February 2026 (Macro_Expected_back_to_2023.xlsx). Each release is assigned to one of three categories based on the pre-scored surprise magnitude: Category 0 (in-line release), Category 1 (moderate surprise), or Category 2 (large surprise). For each event type (CPI, NFP, FOMC), three binary dummies are created, yielding variables such as CPI_0, CPI_1, and CPI_2.
+
+Two aggregation approaches are employed. The first uses the nine individual event-category dummies (three events by three categories) plus a TARIFF dummy as regressors alongside the HAR-RV components. The second collapses the event dimension into three aggregated dummies (MACRO_0, MACRO_1, MACRO_2), where MACRO_k = 1 if any non-FOMC event falls into category k on that day. FOMC events are treated separately due to their distinct market impact, entering as FOMC_exp (in-line) and FOMC_unexp (combining categories 1 and 2). This yields the specification:
+
+\begin{equation}
+y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + delta_0 * MACRO_0_t + delta_1 * MACRO_1_t + delta_2 * MACRO_2_t + phi_1 * FOMC_exp_t + phi_2 * FOMC_unexp_t + e_t        (3.10)
+\end{equation}
+If volatility responds more strongly to larger surprises, the estimated coefficients should increase monotonically across categories (delta_0 \textless{} delta_1 \textless{} delta_2).
+
+\subsection{Tariff Announcement Dummy}
+A binary tariff dummy (TARIFF_t) is added to the augmented specifications to capture the effect of trade policy announcements on volatility. As described in Section 3.1.4, TARIFF_t = 1 on days with a tariff event whose WSS is at least five, and zero otherwise. The tariff dummy is included alongside the individual macro surprise dummies to test whether tariff announcements have an incremental effect on volatility beyond that captured by scheduled macroeconomic releases. The most complete individual-dummy specification takes the form:
+
+\begin{equation}
+y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + SUM_{e,k} gamma_{e,k} * D_{e,k,t} + lambda * TARIFF_t + e_t        (3.11)
+\end{equation}
+where D_{e,k,t} denotes the dummy for event type e and surprise category k, and the summation runs over the available event-category combinations (CPI, NFP, and FOMC, each with up to three categories).
+
+\subsection{Adjusted Lag Specification}
+\begin{equation}
+The final HAR-RV extension addresses a potential contamination effect in the daily RV lag. On days immediately following a macroeconomic announcement or tariff event, the standard daily lag RV_t\textasciicircum{}(d) = y_{t-1} carries information about announcement-day volatility. If this elevated volatility is transient and does not reflect the underlying volatility regime, including it as a regressor may distort the model's forecasts for subsequent non-announcement days.
+\end{equation}
+To address this, an adjusted lag specification is implemented. On any day t where the previous day (t-1) was a macroeconomic announcement day (CPI, NFP, or FOMC) or a tariff event day, the daily lag is replaced with the log RV from the most recent non-announcement trading day. Formally:
+
+\begin{equation}
+RV_t\textasciicircum{}(d,adj) = y_{t-s}        (3.12)
+\end{equation}
+where s \textgreater{}= 1 is the smallest lag such that day t-s is neither a macroeconomic announcement day nor a tariff event day. Within the estimation window, this adjustment modifies the daily lag on 21 out of approximately 140 trading days. The weekly and monthly components are not adjusted, as their rolling-average construction naturally dilutes the influence of any single announcement day.
+
+\section{Estimation}
+\subsection{OLS with HAC Standard Errors}
+All HAR-RV model specifications are estimated by Ordinary Least Squares (OLS). Although OLS provides consistent coefficient estimates under standard regularity conditions, the residuals of volatility models typically exhibit both heteroskedasticity and serial correlation, invalidating conventional standard error estimates. To address this, Heteroskedasticity and Autocorrelation Consistent (HAC) standard errors are computed using the Newey-West estimator (Newey and West, 1987) with a bandwidth of five lags. This bandwidth is selected to account for the weekly cycle in trading activity while maintaining estimator precision given the relatively short sample. All reported t-statistics, p-values, and confidence intervals are based on HAC-robust standard errors.
+
+\subsection{Machine Learning Benchmarks}
+In addition to the OLS-based HAR-RV specifications, two machine learning models are estimated as non-linear benchmarks: a Random Forest regressor and a neural network. Both models use the same feature set as the corresponding HAR-RV specifications (the three RV components and the relevant macro and tariff dummies) and are trained on the same in-sample partition. These models serve as benchmarks to assess whether non-linear methods improve forecast accuracy beyond the linear HAR-RV framework. Full hyperparameter details are reported alongside the results in Chapter 4.
+
+\section{Evaluation Framework}
+\subsection{Train-Test Split Strategy}
+The primary evaluation uses a 75:25 in-sample to out-of-sample split. The in-sample period spans from 22 July 2025 to 20 January 2026, and the out-of-sample period runs from 21 January 2026 to 20 2026. Models are estimated on the in-sample data only, and forecasts are generated recursively over the out-of-sample period by applying the estimated coefficients to lagged RV values that update as the out-of-sample window advances.
+
+A 90:10 split is also tested for robustness. Under this partition, the in-sample period extends from 22 July 2025 to 25 February 2026 (149 trading days), leaving the final trading days as the out-of-sample evaluation window. The 90:10 split provides a larger estimation sample at the cost of a narrower forecast evaluation period.
+
+In addition, several model specifications (including the macro category, tariff, and adjusted lag models) are estimated over the full sample without an out-of-sample hold-out. Full-sample estimation allows the use of all available data for coefficient interpretation but does not permit an assessment of out-of-sample forecast accuracy.
+
+\subsection{Performance Metrics}
+Model performance is evaluated using three complementary metrics, all computed on the log RV scale to match the estimation target. The coefficient of determination (R-squared) measures the proportion of variance in log RV explained by the model. The root mean squared error (RMSE) captures the average magnitude of forecast errors, penalising large deviations more heavily. The mean absolute error (MAE) provides an alternative measure of average forecast accuracy that is less sensitive to outliers.
+
+These metrics are reported separately for the in-sample fit and the out-of-sample forecast period. In-sample R-squared indicates goodness of fit, while out-of-sample RMSE and MAE provide a more reliable assessment of forecast performance, as they reflect the model's ability to generalise beyond the estimation period. Model comparisons are structured around the incremental improvement in these metrics as successive extensions are added to the baseline HAR-RV specification.
+
+\subsection{Cross-Asset Replication}
+The full modelling and evaluation pipeline described above is applied independently to each of the three assets: SPX, GBP, and XAU. While the core methodology is identical, minor differences arise in session hours (GBP trades over a longer window due to the overlap between London and New York sessions) and in the set of relevant macroeconomic events (the Bank of England interest rate decision is included for GBP but not for the other assets). Results are compared across assets in Chapter 4 to assess whether the volatility effects of macroeconomic announcements are consistent or asset-specific.
+
+\chapter{Results}
+This chapter presents the empirical results of the study. It is organised into six sections. Section 4.1 provides descriptive statistics for the realised variance series across all three assets. Sections 4.2 through 4.4 report the estimation and forecasting results for SPX, GBP, and XAU, respectively, following the sequence of model specifications described in Chapter 3. Section 4.5 presents the out-of-sample forecast comparison across all models and assets.
+
+\section{Descriptive Statistics}
+% [Caption: Table 1: Log RV per dataset]
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|}
+\hline
+ & SPX & GBP & XAU \\
+\hline
+Statistic & Log RV & Log RV & Log RV \\
+\hline
+Observations &  &  &  \\
+\hline
+Mean &  &  &  \\
+\hline
+Median &  &  &  \\
+\hline
+Std Dev &  &  &  \\
+\hline
+Min &  &  &  \\
+\hline
+Max &  &  &  \\
+\hline
+Skewness &  &  &  \\
+\hline
+Excess Kurtosis &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+Add Jarque-Bera test statistic (p-value) to confirm non-normality of raw RV
+
+Add ADF test statistic to confirm stationarity of log RV series
+
+Add Jarque-Bera test statistic to confirm non-normality of raw RV
+
+Add ADF (Augmented Dickey-Fuller) test statistic to confirm stationarity of log RV series
+
+INSERT PLOTS (Full dataset and dashes vertical lines for macro events) \ldots{}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
+\hline
+FOMC &  &  &  &  \\
+\hline
+CPI &  &  &  &  \\
+\hline
+NFP &  &  &  &  \\
+\hline
+Total &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+INSERT TARIFF INFO
+
+STAT TO JUSTIFY CROSS ASSET COMPARSION (correlation table -- pairwise correlations between log RV of SPX, GBP, XAU to motivate cross-asset comparison.
+
+\section{SPX Results}
+\subsection{Baseline HAR-RV}
+% [Table heading: Table X: Baseline HAR-RV Model (Model 1) - In-Sample Estimation Results]
+Dependent variable: log(RV). HAC standard errors (Newey-West, 5 lags) in parentheses.***, **, * denote significance at the 1\%, 5\%, and 10\% levels respectively.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Variable & Coefficient & HAC Std Err & t-stat & p-value \\
+\hline
+Intercept & -4.9885** & (1.9556) & -2.5509 & 0.0107 \\
+\hline
+RV_d (Daily) & 0.4258*** & (0.1157) & 3.6808 & 0.0002 \\
+\hline
+RV_w (Weekly) & 0.1868 & (0.1644) & 1.1366 & 0.2557 \\
+\hline
+RV_m (Monthly) & -0.0876 & (0.2317) & -0.3782 & 0.7053 \\
+\hline
+ &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Observations & 86 \\
+\hline
+Sample Period & 2025-09-24 to 2026-01-29 \\
+\hline
+R² & 0.2531 \\
+\hline
+Adjusted R² & 0.2258 \\
+\hline
+RMSE (log RV) & 0.7335 \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\subsection{Macro-Augmented Models}
+Model 2 -- individual element dummies (FOMC, CPI, NFP, Tariff)
+
+% [Table heading: Table X: HAR-RV + Macro Dummies (FOMC, CPI, NFP, Tariff) --- In-Sample Estimation Results]
+Dependent variable: log(RV). HAC standard errors (Newey-West, 5 lags) in parentheses.***, **, * denote significance at the 1\%, 5\%, and 10\% levels respectively.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Variable & Coefficient & HAC Std Err & t-stat & p-value \\
+\hline
+Intercept & -4.8633*** & (1.8254) & -2.6643 & 0.0077 \\
+\hline
+RV_d (Daily) & 0.4642*** & (0.1306) & 3.5536 & 0.0004 \\
+\hline
+RV_w (Weekly) & 0.2231 & (0.1725) & 1.2932 & 0.1959 \\
+\hline
+RV_m (Monthly) & -0.1420 & (0.2161) & -0.6571 & 0.5111 \\
+\hline
+FOMC & 1.2258*** & (0.3098) & 3.9567 & 0.0001 \\
+\hline
+CPI & 0.0667 & (0.4270) & 0.1562 & 0.8759 \\
+\hline
+NFP & 0.6274*** & (0.2170) & 2.8906 & 0.0038 \\
+\hline
+Tariff & 0.4072 & (0.3278) & 1.2425 & 0.2141 \\
+\hline
+ &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Observations & 86 \\
+\hline
+Sample Period & 2025-09-24 to 2026-01-29 \\
+\hline
+R² & 0.3429 \\
+\hline
+Adjusted R² & 0.2839 \\
+\hline
+RMSE (log RV) & 0.6880 \\
+\hline
+ &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+Model 3 -- expected vs surprise (FOMC_exp, FOMC_surp)
+
+% [Table heading: Table X: HAR-RV + Expected vs Surprise --- In-Sample Estimation Results]
+Dependent variable: log(RV). HAC standard errors (Newey-West, 5 lags) in parentheses.MACRO_0/1/2 collapse all non-FOMC events by surprise category. FOMC is split into expected vs unexpected.***, **, * denote significance at the 1\%, 5\%, and 10\% levels respectively.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Variable & Coefficient & HAC Std Err & t-stat & p-value \\
+\hline
+Intercept & -4.6182** & (1.9118) & -2.4157 & 0.0157 \\
+\hline
+RV_d (Daily) & 0.4734*** & (0.1333) & 3.5521 & 0.0004 \\
+\hline
+RV_w (Weekly) & 0.1967 & (0.1753) & 1.1219 & 0.2619 \\
+\hline
+RV_m (Monthly) & -0.1049 & (0.2325) & -0.4513 & 0.6518 \\
+\hline
+MACRO_0 (In Line) & -0.0966 & (0.1962) & -0.4926 & 0.6223 \\
+\hline
+MACRO_1 (Mod. Surprise) & 0.2028 & (0.3459) & 0.5864 & 0.5576 \\
+\hline
+MACRO_2 (Big Surprise) & -0.1904 & (0.3563) & -0.5343 & 0.5931 \\
+\hline
+FOMC Expected & 1.1548*** & (0.4215) & 2.7394 & 0.0062 \\
+\hline
+FOMC Unexpected & 1.2623*** & (0.2230) & 5.6612 & 0.0000 \\
+\hline
+Tariff & 0.3431 & (0.2935) & 1.1688 & 0.2425 \\
+\hline
+ &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Observations & 86 \\
+\hline
+Sample Period & 2025-09-24 to 2026-01-29 \\
+\hline
+R² & 0.3317 \\
+\hline
+Adjusted R² & 0.2525 \\
+\hline
+RMSE (log RV) & 0.6939 \\
+\hline
+ &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+Model 4 -- three-tier classification (CPI_0, CPI_1, CPI_2)
+
+Table X: HAR-RV + Three-Tier Classification --- In-Sample Estimation Results
+
+Dependent variable: log(RV). HAC standard errors (Newey-West, 5 lags) in parentheses.Each macro event has individual dummies: 0 = in line, 1 = moderate surprise, 2 = big surprise.***, **, * denote significance at the 1\%, 5\%, and 10\% levels respectively.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Variable & Coefficient & HAC Std Err & t-stat & p-value \\
+\hline
+Intercept & -4.6989** & (1.8913) & -2.4844 & 0.0130 \\
+\hline
+RV_d (Daily) & 0.4798*** & (0.1300) & 3.6907 & 0.0002 \\
+\hline
+RV_w (Weekly) & 0.1801 & (0.1685) & 1.0687 & 0.2852 \\
+\hline
+RV_m (Monthly) & -0.1000 & (0.2260) & -0.4426 & 0.6581 \\
+\hline
+CPI (In Line) & 0.4963*** & (0.1510) & 3.2875 & 0.0010 \\
+\hline
+CPI (Mod. Surprise) & -0.1594 & (0.5726) & -0.2783 & 0.7808 \\
+\hline
+NFP (In Line) & 0.0048 & (0.1910) & 0.0249 & 0.9802 \\
+\hline
+NFP (Mod. Surprise) & 1.2221*** & (0.1368) & 8.9310 & 0.0000 \\
+\hline
+FOMC (In Line) & 1.1819*** & (0.4126) & 2.8646 & 0.0042 \\
+\hline
+FOMC (Mod. Surprise) & 1.2851*** & (0.1979) & 6.4950 & 0.0000 \\
+\hline
+Tariff & 0.3893 & (0.3275) & 1.1886 & 0.2346 \\
+\hline
+ &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Observations & 86 \\
+\hline
+Sample Period & 2025-09-24 to 2026-01-29 \\
+\hline
+R² & 0.3528 \\
+\hline
+Adjusted R² & 0.2666 \\
+\hline
+RMSE (log RV) & 0.6828 \\
+\hline
+ &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\subsection{Adjusted Lag Specification Results}
+Model 5 - Same as Model 4 with daily RV lag replaced on event days
+
+% [Table heading: Table X: HAR-RV + Three-Tier + Adjusted RV_d --- In-Sample Estimation Results]
+Dependent variable: log(RV). HAC standard errors (Newey-West, 5 lags) in parentheses.RV_d is adjusted: when the previous day is a macro/tariff event day, the most recent non-event day's log-RV is used instead of the simple 1-day lag.***, **, * denote significance at the 1\%, 5\%, and 10\% levels respectively.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+Variable & Coefficient & HAC Std Err & t-stat & p-value \\
+\hline
+Intercept & -5.0763** & (2.0798) & -2.4408 & 0.0147 \\
+\hline
+RV_d (Daily, Adjusted) & 0.3649*** & (0.1327) & 2.7498 & 0.0060 \\
+\hline
+RV_w (Weekly) & 0.2479 & (0.1803) & 1.3747 & 0.1692 \\
+\hline
+RV_m (Monthly) & -0.0923 & (0.2635) & -0.3504 & 0.7260 \\
+\hline
+CPI (In Line) & 0.3536** & (0.1511) & 2.3404 & 0.0193 \\
+\hline
+CPI (Mod. Surprise) & -0.1993 & (0.5814) & -0.3427 & 0.7318 \\
+\hline
+NFP (In Line) & -0.0385 & (0.2172) & -0.1775 & 0.8592 \\
+\hline
+NFP (Mod. Surprise) & 1.2420*** & (0.1583) & 7.8476 & 0.0000 \\
+\hline
+FOMC (In Line) & 1.0476** & (0.4367) & 2.3989 & 0.0164 \\
+\hline
+FOMC (Mod. Surprise) & 1.1479*** & (0.2463) & 4.6601 & 0.0000 \\
+\hline
+Tariff & 0.6842** & (0.3172) & 2.1569 & 0.0310 \\
+\hline
+ &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|}
+\hline
+Observations & 86 \\
+\hline
+Sample Period & 2025-09-24 to 2026-01-29 \\
+\hline
+R² & 0.2930 \\
+\hline
+Adjusted R² & 0.1987 \\
+\hline
+RMSE (log RV) & 0.7137 \\
+\hline
+ &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+Compare R2 and RMSE against Model 4
+
+Comment on comparison
+
+\subsection{Machine Learning Benchmarks}
+Model 6 Random Forest (\& NN) model with the same parameters as best augmented HAR
+
+Simple comparison table: HAR_baseline vs best augmented HAR vs RF (vs potentially NN)
+
+\section{GBP Results}
+\subsection{Baseline HAR-RV}
+\subsection{Macro-Augmented Models}
+\subsection{Adjusted Lag Specification and ML Benchmarks}
+\section{XAU Results}
+\subsection{Baseline HAR-RV}
+\subsection{Macro-Augmented Models}
+\subsection{Adjusted Lag Specification and ML Benchmarks}
+\section{Out-of-Sample Forecast Comparison}
+75:25 OR 90:10
+
+% [Caption: Table 2: OOS Forecast Performance]
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|l|l|l|l|l|l|}
+\hline
+ & SPX & SPX & GBP & GBP & XAU & XAU \\
+\hline
+Model & RMSE & MAE & RMSE & MAE & RMSE & MAE \\
+\hline
+1 &  &  &  &  &  &  \\
+\hline
+2 &  &  &  &  &  &  \\
+\hline
+3 &  &  &  &  &  &  \\
+\hline
+4 &  &  &  &  &  &  \\
+\hline
+5 &  &  &  &  &  &  \\
+\hline
+6 &  &  &  &  &  &  \\
+\hline
+\end{tabular}
+\caption{[Table caption]}
+\end{table}
+\chapter{Discussion}
+This chapter interprets the empirical findings presented in Chapter 4 and situates them within the broader literature on volatility forecasting and macroeconomic announcements. It is organised into four sections. Section 5.1 discusses the key findings regarding the role of macroeconomic announcements in volatility dynamics. Section 5.2 examines the cross-asset comparison. Section 5.3 compares the results with the existing literature. Section 5.4 discusses the limitations of the study.
+
+\section{Interpretation of Key Findings}
+[TO BE DRAFTED --- Which macro events matter most, surprise vs expected effects, tariff announcement effects, adjusted lag impact.]
+
+\section{Cross-Asset Comparison}
+[TO BE DRAFTED --- SPX vs GBP vs XAU: consistent patterns, divergent patterns, asset-specific sensitivities.]
+
+\section{Comparison with Existing Literature}
+[TO BE DRAFTED --- How findings align with or contradict Corsi (2009), Chan (2018), Andersen and Bollerslev (1998), Gilbert et al. (2017), etc.]
+
+\section{Limitations}
+[TO BE DRAFTED --- Short sample period, linearity of HAR-RV, data frequency constraints, manual tariff scoring subjectivity, limited macro event coverage.]
+
+\chapter{Conclusion}
+This chapter summarises the principal findings of the study, outlines the contributions to the literature, and identifies directions for future research.
+
+\section{Summary of Findings}
+[TO BE DRAFTED --- Answer each of the 7 research questions with reference to the empirical results.]
+
+\section{Contributions}
+[TO BE DRAFTED --- Tariff WSS framework, three-tier surprise classification, cross-asset HAR-RV comparison, adjusted lag specification.]
+
+\section{Future Research Directions}
+[TO BE DRAFTED --- Longer sample period, intraday announcement effects, advanced deep learning architectures, additional asset classes, real-time forecasting.]
+
+\chapter*{References}
+\addcontentsline{toc}{chapter}{References}
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\end{thebibliography}
+\end{document}
