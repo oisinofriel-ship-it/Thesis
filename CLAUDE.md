@@ -56,7 +56,7 @@ All writing produced must strictly adhere to the following:
 | **Tone** | Formal, objective, and analytical. No conversational language. |
 | **Perspective** | Third person (e.g., "The model yields...", "This specification includes...") |
 | **Clarity** | Precise and brief. No AI cliches. |
-| **Citation** | Harvard referencing — "Corsi (2009)" not "(Corsi, 2009)" |
+| **Citation** | Use `\cite{Key}` in LaTeX. **Always add the entry to `references.bib` first, then insert `\cite{Key}` into `Final_Report.tex`.** Never reference a study that is not in `references.bib`. |
 | **Discipline** | Quantitative Finance / Financial Econometrics terminology |
 
 ## Prohibited Phrases (AI Cliches)
@@ -74,6 +74,7 @@ All writing produced must strictly adhere to the following:
 4. **Academic Integrity:** Never fabricate results or statistics. All metrics must come from actual model output.
 5. **Incremental Updates:** After every significant change (new model, new metric, rename, new cell), update `memory.md` immediately.
 6. **Explain Changes:** When modifying the notebook, always summarise what was changed and why.
+7. **Citations — References First:** When writing thesis text that cites a study, **ALWAYS add the reference to `references.bib` BEFORE inserting the citation into `Final_Report.tex`**. Use `\cite{AuthorYear}` or `\citep{AuthorYear}` format in the LaTeX file. Never cite a reference that does not exist in `references.bib`.
 
 ## Thesis-Specific Context
 - **Topic**: HAR-RV models augmented with macroeconomic announcement variables for volatility forecasting

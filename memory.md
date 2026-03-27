@@ -152,3 +152,10 @@
 - In-sample dummies with zero occurrences are excluded to avoid perfect multicollinearity
 - The `full_*` dataframes are built over the **full sample** so that OOS lags (RV_w, RV_m) can use in-sample history
 - CUTOFF defined once in Cell 4 and reused by all models
+
+## Citation Workflow (MANDATORY)
+When writing thesis text that references a study:
+1. **Add the entry to `references.bib` FIRST** (BibTeX format, key = `AuthorYear`)
+2. **Then insert `\cite{Key}` into `Final_Report.tex`**
+3. Never cite a reference that does not exist in `references.bib`
+4. Files: `C:\Users\oisin\Thesis\references.bib` and `C:\Users\oisin\Thesis\Final_Report.tex`
