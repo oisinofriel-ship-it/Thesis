@@ -1,5 +1,6 @@
 Read memory.md, CLAUDE.md, and skills.md before starting
 
+cd "C:\Users\oisin\Thesis"
 
 git add .
 
