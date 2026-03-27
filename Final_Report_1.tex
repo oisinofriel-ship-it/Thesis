@@ -173,9 +173,9 @@ Research Question 3
 
 Does the magnitude of the announcement innovation influence the magnitude of the realised variance response in a monotonically increasing fashion?
 
-H$_{3}$$_{0}$ (Null): The RV response does not differ systematically across announcement innovation categories; the coefficients δ$_{0}$, δ$_{1}$, and δ$_{2}$ associated with anticipated, marginal, and significant announcement innovations are not monotonically ordered.
+H$_{3}$$_{0}$ (Null): The RV response does not differ systematically across announcement innovation categories; the coefficients $\delta_0$, $\delta_1$, and $\delta_2$ associated with anticipated, marginal, and significant announcement innovations are not monotonically ordered.
 
-H$_{3}$$_{1}$ (Alternative): The RV response increases monotonically with the magnitude of the announcement innovation (δ$_{0}$ \textless{} δ$_{1}$ \textless{} δ$_{2}$), consistent with the notion that unanticipated information generates larger volatility responses than fully anticipated releases (Balduzzi et al., 2001; Bernanke and Kuttner, 2005).
+H$_{3}$$_{1}$ (Alternative): The RV response increases monotonically with the magnitude of the announcement innovation ($\delta_0 < \delta_1 < \delta_2$), consistent with the notion that unanticipated information generates larger volatility responses than fully anticipated releases (Balduzzi et al., 2001; Bernanke and Kuttner, 2005).
 
 Research Question 4
 
@@ -183,7 +183,7 @@ Do unscheduled tariff announcements generate realised variance responses that ar
 
 H$_{4}$$_{0}$ (Null): Tariff announcement days are not associated with significantly elevated realised variance beyond the level explained by the autoregressive volatility structure and scheduled macroeconomic event dummies.
 
-H$_{4}$$_{1}$ (Alternative): Tariff announcements produce a positive and statistically significant increment in realised variance (λ \textgreater{} 0), reflecting the role of unscheduled policy uncertainty shocks as a distinct driver of short-term volatility (Baker, Bloom, and Davis, 2016).
+H$_{4}$$_{1}$ (Alternative): Tariff announcements produce a positive and statistically significant increment in realised variance ($\lambda$ \textgreater{} 0), reflecting the role of unscheduled policy uncertainty shocks as a distinct driver of short-term volatility (Baker, Bloom, and Davis, 2016).
 
 Research Question 5
 
@@ -387,23 +387,13 @@ After cleaning, the dataset contains 164 complete trading days spanning the peri
 
 \subsection{Macroeconomic Announcement Data}
 
-FOMC interest rate decisions are sourced directly from the Board of Governors of the Federal Reserve System. Rather than using a survey-based consensus forecast, the expected rate outcome is derived from 30-Day Federal Funds futures prices traded on the Chicago Mercantile Exchange (CME). These futures contracts reflect what traders are collectively pricing the federal funds rate to be at expiration, providing a real-time, market-implied expectation of the FOMC decision in the period leading up to each announcement. This approach is consistent with \cite{@article{bauer-swanson-nberma,
-  title={A Reassessment of Monetary Policy Surprises and High-Frequency Identification},
-  author={Bauer, Michael D. and Swanson, Eric T.},
-  journal={NBER Macroeconomics Annual},
-  volume={37},
-  number={1},
-  pages={87--155},
-  year={2023},
-  publisher={The University of Chicago Press Chicago, IL}
-}
-}, who demonstrate that Federal Funds futures remain reliable and efficient measures of market rate expectations around scheduled FOMC announcements.
+FOMC interest rate decisions are sourced directly from the Board of Governors of the Federal Reserve System. Rather than using a survey-based consensus forecast, the expected rate outcome is derived from 30-Day Federal Funds futures prices traded on the Chicago Mercantile Exchange (CME). These futures contracts reflect what traders are collectively pricing the federal funds rate to be at expiration, providing a real-time, market-implied expectation of the FOMC decision in the period leading up to each announcement. This approach is consistent with \cite{BauerSwanson2023}, who demonstrate that Federal Funds futures remain reliable and efficient measures of market rate expectations around scheduled FOMC announcements.
 
 Consensus forecast and actual release values for key U.S. macroeconomic indicators — including employment reports and inflation releases — are sourced from the Investing.com economic calendar, whose forecast figures are aggregated from surveys of professional economists and analysts at major financial institutions and represent the median expectation across surveyed contributors in the period preceding each scheduled release. Records are compiled from January 2023 onwards to construct a sufficiently large historical distribution of release outcomes, from which standard deviations are calculated for each indicator and used to implement a three-tier surprise classification system, as further described in Section 3.3.
 
 Eight macroeconomic event types are included in the analysis: FOMC interest rate decisions, Consumer Price Index (CPI) releases, Non-Farm Payroll (NFP) reports, Producer Price Index (PPI) releases, Personal Consumption Expenditure (PCE) price index releases, ADP National Employment Reports, Job Openings and Labor Turnover Survey (JOLTS) releases, and Initial Jobless Claims (CLAIMS). These events are selected on the basis that they are among the most closely monitored U.S. economic indicators and have been shown to generate significant volatility responses in prior empirical work (Andersen, Bollerslev, Diebold, and Vega, 2003; Gilbert, Scotti, Strasser, and Vega, 2017).
 
-For each event, a binary dummy variable is set equal to one on days when the corresponding announcement occurs and zero otherwise. In addition, the expected-versus-surprise decomposition uses the actual release value, the consensus forecast, and the computed surprise (defined as the difference between the actual and forecast values). For rate-based indicators (FOMC, CPI, PPI, PCE), the surprise is expressed in percentage points; for count-based indicators (NFP, ADP, JOLTS, CLAIMS), the surprise is expressed in thousands. A release is classified as "expected" if the surprise is zero within a floating-point tolerance of 1 x 10\textasciicircum{}-9 and as a "surprise" otherwise.
+For each event, a binary dummy variable is set equal to one on days when the corresponding announcement occurs and zero otherwise. In addition, the expected-versus-surprise decomposition uses the actual release value, the consensus forecast, and the computed surprise (defined as the difference between the actual and forecast values). For rate-based indicators (FOMC, CPI, PPI, PCE), the surprise is expressed in percentage points; for count-based indicators (NFP, ADP, JOLTS, CLAIMS), the surprise is expressed in thousands. A release is classified as "expected" if the surprise is zero within a floating-point tolerance of $1 \times 10^{-9}$ and as a "surprise" otherwise.
 
 \subsection{Tariff Announcement Data}
 The sample period coincides with a period of heightened U.S. trade policy activity, during which a series of tariff announcements generated substantial market volatility. To capture these effects, a tariff announcement dummy is constructed using a manually curated event log (tariff_wss_v2.xlsx) that records the dates, descriptions, and severity assessments of tariff-related announcements during the period from August 2025 to February 2026.
@@ -417,15 +407,15 @@ The full sample spans 164 trading days from 22 July 2025 to 18 March 2026. Howev
 This section describes the construction of daily RV from the cleaned intraday price data and the derivation of the multi-horizon components used as regressors in the HAR-RV model.
 
 \subsection{Daily Realised Variance}
-Let P_{t,i} denote the closing price of the asset at the i-th five-minute interval on trading day t, where i = 1, 2, ..., M and M = 78 denotes the number of five-minute return intervals in a standard session. The intraday log-return at interval i is defined as:
+Let $P_{t,i}$ denote the closing price of the asset at the i-th five-minute interval on trading day t, where $i = 1, 2, \ldots, M$ and $M = 78$ denotes the number of five-minute return intervals in a standard session. The intraday log-return at interval i is defined as:
 
 \begin{equation}
-r_{t,i} = ln(P_{t,i}) - ln(P_{t,i-1})        (3.1)
+r_{t,i} = \ln($P_{t,i}$) - \ln(P_{t,i-1})
 \end{equation}
 Daily RV on trading day t is then computed as the sum of squared intraday log-returns:
 
 \begin{equation}
-RV_t = SUM_{i=1}\textasciicircum{}{M} r_{t,i}\textasciicircum{}2        (3.2)
+RV_t = \sum_{i=1}^{M} r_{t,i}^2
 \end{equation}
 Under standard assumptions of no microstructure noise and a sufficiently high sampling frequency, RV provides a consistent estimator of integrated variance, which represents the accumulation of instantaneous variance over the trading day (Andersen and Bollerslev, 1998; Barndorff-Nielsen and Shephard, 2002). In practice, the five-minute sampling frequency adopted in this study introduces a degree of approximation, but as discussed in Section 3.1.1, this frequency is widely regarded as providing an effective trade-off between estimation precision and robustness to microstructure effects.
 
@@ -433,7 +423,7 @@ Under standard assumptions of no microstructure noise and a sufficiently high sa
 The distribution of daily RV is highly right-skewed, reflecting the occurrence of occasional extreme volatility days. To reduce skewness, stabilise variance, and improve the distributional properties of the dependent variable for linear regression, a natural logarithmic transformation is applied:
 
 \begin{equation}
-y_t = ln(RV_t)        (3.3)
+y_t = \ln(RV_t)
 \end{equation}
 This transformation is standard in the realised volatility literature and has been shown to yield a series that more closely approximates a Gaussian distribution, improving the statistical properties of OLS-based estimation (Andersen, Bollerslev, Diebold, and Labys, 2003). All subsequent model specifications are estimated using log realised variance as the dependent variable.
 
@@ -441,17 +431,17 @@ This transformation is standard in the realised volatility literature and has be
 The HAR-RV model requires three horizon-specific measures of past volatility: a daily, a weekly, and a monthly component. These are constructed from the log RV series as follows. The daily component is simply the previous day's log RV, lagged by one trading day:
 
 \begin{equation}
-RV_t\textasciicircum{}(d) = y_{t-1}        (3.4)
+$RV_t^{(d)}$ = y_{t-1}
 \end{equation}
 The weekly component is the arithmetic mean of log RV over the five most recent trading days, lagged by one day to prevent contemporaneous information from entering the regressor:
 
 \begin{equation}
-RV_t\textasciicircum{}(w) = (1/5) SUM_{j=1}\textasciicircum{}{5} y_{t-j}        (3.5)
+$RV_t^{(w)}$ = (1/5) \sum_{j=1}^{5} y_{t-j}
 \end{equation}
 The monthly component is defined analogously using a twenty-two-day rolling window, consistent with the approximate number of trading days in a calendar month:
 
 \begin{equation}
-RV_t\textasciicircum{}(m) = (1/22) SUM_{j=1}\textasciicircum{}{22} y_{t-j}        (3.6)
+$RV_t^{(m)}$ = (1/22) \sum_{j=1}^{22} y_{t-j}
 \end{equation}
 This construction follows Corsi (2009), who interprets the three components as capturing the behaviour of market participants operating at different frequencies: short-term traders responding to daily volatility, medium-term participants reacting to weekly patterns, and longer-horizon investors influenced by monthly trends. In the context of this study, the relatively short sample period of approximately seven months means that the monthly component captures persistence over a horizon of roughly one month rather than reflecting long-term structural volatility dynamics.
 
@@ -464,25 +454,25 @@ This section presents the sequence of model specifications employed in the study
 The baseline specification follows Corsi (2009) and regresses log RV on its three horizon-specific components:
 
 \begin{equation}
-y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + e_t        (3.7)
+y_t = \alpha + \beta_d \cdot $RV_t^{(d)}$ + \beta_w \cdot $RV_t^{(w)}$ + \beta_m \cdot $RV_t^{(m)}$ + \varepsilon_t
 \end{equation}
-where y_t = ln(RV_t) is the dependent variable, and the regressors RV_t\textasciicircum{}(d), RV_t\textasciicircum{}(w), and RV_t\textasciicircum{}(m) are defined as in Equations (3.4) through (3.6). The coefficients B_d, B_w, and B_m capture the contribution of daily, weekly, and monthly volatility persistence, respectively. This specification serves as the benchmark against which all augmented models are compared.
+where $y_t = \ln(RV_t)$ is the dependent variable, and the regressors RV_t^(d), RV_t^(w), and RV_t^(m) are defined as in Equations (3.4) through (3.6). The coefficients $\beta_d$, $\beta_w$, and $\beta_m$ capture the contribution of daily, weekly, and monthly volatility persistence, respectively. This specification serves as the benchmark against which all augmented models are compared.
 
 \subsection{HAR-RV with Macroeconomic Announcement Dummies}
 The first extension augments the baseline with binary dummy variables indicating macroeconomic announcement days. Two variants are estimated. The first adds a single FOMC dummy to test whether monetary policy announcement days exhibit elevated volatility:
 
 \begin{equation}
-y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + gamma * FOMC_t + e_t        (3.8)
+y_t = \alpha + \beta_d \cdot $RV_t^{(d)}$ + \beta_w \cdot $RV_t^{(w)}$ + \beta_m \cdot $RV_t^{(m)}$ + \gamma \cdot FOMC_t + \varepsilon_t
 \end{equation}
-where FOMC_t = 1 if an FOMC announcement occurs on day t and zero otherwise. The second variant extends this to include dummies for all three primary macroeconomic events (FOMC, CPI, and NFP), each entering independently:
+where $FOMC_t = 1$ if an FOMC announcement occurs on day t and zero otherwise. The second variant extends this to include dummies for all three primary macroeconomic events (FOMC, CPI, and NFP), each entering independently:
 
 \begin{equation}
-y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + gamma_1 * FOMC_t + gamma_2 * CPI_t + gamma_3 * NFP_t + e_t        (3.9)
+y_t = \alpha + \beta_d \cdot $RV_t^{(d)}$ + \beta_w \cdot $RV_t^{(w)}$ + \beta_m \cdot $RV_t^{(m)}$ + \gamma_1 \cdot FOMC_t + \gamma_2 \cdot CPI_t + \gamma_3 \cdot NFP_t + \varepsilon_t
 \end{equation}
 A positive and statistically significant gamma coefficient indicates that the corresponding announcement type is associated with higher log RV on the day of the announcement, after controlling for the autoregressive volatility structure.
 
 \subsection{Expected versus Surprise Decomposition}
-To distinguish between the effects of anticipated and unanticipated information, each macroeconomic event is decomposed into an expected and a surprise component. For each event type, the consensus forecast from the Investing.com economic calendar is compared with the actual release value. A release is classified as "expected" if the surprise (actual minus forecast) is zero within a floating-point tolerance of 1 x 10\textasciicircum{}-9, and as a "surprise" otherwise. Separate binary dummy variables are constructed for expected releases and surprise releases for each event, yielding variables such as FOMC_expected and FOMC_surprise.
+To distinguish between the effects of anticipated and unanticipated information, each macroeconomic event is decomposed into an expected and a surprise component. For each event type, the consensus forecast from the Investing.com economic calendar is compared with the actual release value. A release is classified as "expected" if the surprise (actual minus forecast) is zero within a floating-point tolerance of $1 \times 10^{-9}$, and as a "surprise" otherwise. Separate binary dummy variables are constructed for expected releases and surprise releases for each event, yielding variables such as FOMC_expected and FOMC_surprise.
 
 This decomposition is motivated by the empirical finding that unexpected deviations from consensus forecasts tend to generate disproportionately large volatility responses (Gilbert, Scotti, Strasser, and Vega, 2017). If the surprise component drives volatility rather than the mere occurrence of an announcement, the surprise dummies should carry larger and more significant coefficients than the expected dummies.
 
@@ -492,26 +482,26 @@ To further investigate non-linear effects, macro announcements are classified in
 Two aggregation approaches are employed. The first uses the nine individual event-category dummies (three events by three categories) plus a TARIFF dummy as regressors alongside the HAR-RV components. The second collapses the event dimension into three aggregated dummies (MACRO_0, MACRO_1, MACRO_2), where MACRO_k = 1 if any non-FOMC event falls into category k on that day. FOMC events are treated separately due to their distinct market impact, entering as FOMC_exp (in-line) and FOMC_unexp (combining categories 1 and 2). This yields the specification:
 
 \begin{equation}
-y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + delta_0 * MACRO_0_t + delta_1 * MACRO_1_t + delta_2 * MACRO_2_t + phi_1 * FOMC_exp_t + phi_2 * FOMC_unexp_t + e_t        (3.10)
+y_t = \alpha + \beta_d \cdot $RV_t^{(d)}$ + \beta_w \cdot $RV_t^{(w)}$ + \beta_m \cdot $RV_t^{(m)}$ + \delta_0 \cdot MACRO_0_t + \delta_1 \cdot MACRO_1_t + \delta_2 \cdot MACRO_2_t + \phi_1 \cdot FOMC_exp_t + \phi_2 \cdot FOMC_unexp_t + \varepsilon_t
 \end{equation}
-If volatility responds more strongly to larger surprises, the estimated coefficients should increase monotonically across categories (delta_0 \textless{} delta_1 \textless{} delta_2).
+If volatility responds more strongly to larger surprises, the estimated coefficients should increase monotonically across categories ($\delta_0 < \delta_1 < \delta_2$).
 
 \subsection{Tariff Announcement Dummy}
-A binary tariff dummy (TARIFF_t) is added to the augmented specifications to capture the effect of trade policy announcements on volatility. As described in Section 3.1.4, TARIFF_t = 1 on days with a tariff event whose WSS is at least five, and zero otherwise. The tariff dummy is included alongside the individual macro surprise dummies to test whether tariff announcements have an incremental effect on volatility beyond that captured by scheduled macroeconomic releases. The most complete individual-dummy specification takes the form:
+A binary tariff dummy (TARIFF_t) is added to the augmented specifications to capture the effect of trade policy announcements on volatility. As described in Section 3.1.4, $TARIFF_t = 1$ on days with a tariff event whose WSS is at least five, and zero otherwise. The tariff dummy is included alongside the individual macro surprise dummies to test whether tariff announcements have an incremental effect on volatility beyond that captured by scheduled macroeconomic releases. The most complete individual-dummy specification takes the form:
 
 \begin{equation}
-y_t = alpha + B_d * RV_t\textasciicircum{}(d) + B_w * RV_t\textasciicircum{}(w) + B_m * RV_t\textasciicircum{}(m) + SUM_{e,k} gamma_{e,k} * D_{e,k,t} + lambda * TARIFF_t + e_t        (3.11)
+y_t = \alpha + \beta_d \cdot $RV_t^{(d)}$ + \beta_w \cdot $RV_t^{(w)}$ + \beta_m \cdot $RV_t^{(m)}$ + \sum_{e,k} \gamma_{e,k} \cdot $D_{e,k,t}$ + \lambda \cdot TARIFF_t + \varepsilon_t
 \end{equation}
-where D_{e,k,t} denotes the dummy for event type e and surprise category k, and the summation runs over the available event-category combinations (CPI, NFP, and FOMC, each with up to three categories).
+where $D_{e,k,t}$ denotes the dummy for event type e and surprise category k, and the summation runs over the available event-category combinations (CPI, NFP, and FOMC, each with up to three categories).
 
 \subsection{Adjusted Lag Specification}
 \begin{equation}
-The final HAR-RV extension addresses a potential contamination effect in the daily RV lag. On days immediately following a macroeconomic announcement or tariff event, the standard daily lag RV_t\textasciicircum{}(d) = y_{t-1} carries information about announcement-day volatility. If this elevated volatility is transient and does not reflect the underlying volatility regime, including it as a regressor may distort the model's forecasts for subsequent non-announcement days.
+The final HAR-RV extension addresses a potential contamination effect in the daily RV lag. On days immediately following a macroeconomic announcement or tariff event, the standard daily lag $RV_t^{(d)}$ = y_{t-1} carries information about announcement-day volatility. If this elevated volatility is transient and does not reflect the underlying volatility regime, including it as a regressor may distort the model's forecasts for subsequent non-announcement days.
 \end{equation}
 To address this, an adjusted lag specification is implemented. On any day t where the previous day (t-1) was a macroeconomic announcement day (CPI, NFP, or FOMC) or a tariff event day, the daily lag is replaced with the log RV from the most recent non-announcement trading day. Formally:
 
 \begin{equation}
-RV_t\textasciicircum{}(d,adj) = y_{t-s}        (3.12)
+RV_t^(d,adj) = y_{t-s}
 \end{equation}
 where s \textgreater{}= 1 is the smallest lag such that day t-s is neither a macroeconomic announcement day nor a tariff event day. Within the estimation window, this adjustment modifies the daily lag on 21 out of approximately 140 trading days. The weekly and monthly components are not adjusted, as their rolling-average construction naturally dilutes the influence of any single announcement day.
 
