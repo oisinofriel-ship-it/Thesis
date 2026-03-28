@@ -21,16 +21,22 @@ This file defines the specialized skills and capabilities for the modelling and 
 - **Three-Tier Classification:** Understand and modify the surprise classification system (Category 0 = in line, 1 = moderate surprise, 2 = large surprise) applied to FOMC, CPI, NFP, PPI, PCE, ADP, JOLTS, CLAIMS.
 - **Tariff Dummy Construction:** Understand the WSS (Weighted Severity Score) framework from `tariff_wss_v2.xlsx` and the threshold (WSS >= 5) for the binary TARIFF dummy.
 - **Adjusted Lag Specification:** Understand Model 5's RV_d adjustment logic — when the previous day is a macro/tariff event day, use the most recent prior non-event day's log-RV.
-- **Random Forest Benchmarking:** Fit and evaluate sklearn RandomForestRegressor as an ML benchmark against OLS models, using identical features for apples-to-apples comparison.
+- **Random Forest Benchmarking:** Fit and evaluate sklearn RandomForestRegressor as an ML benchmark against OLS models, using identical features for apples-to-apples comparison. (Neural network removed — RF is the only ML benchmark.)
 - **Cross-Model Comparison:** Structure comparison tables with IS and OOS metrics (R², Adj R², RMSE, MAE) and highlight best performers.
 - **Statistical Testing:** Implement QLIKE loss, Diebold-Mariano tests, and Model Confidence Sets when requested.
+- **Supervisor PDF Review:** Extract annotations from supervisor-annotated PDFs using PyMuPDF (`fitz`), identify highlighted sections and comments, and implement changes directly in `Final_Report.tex`.
+- **LaTeX Equation Formatting:** Ensure all equations are standalone (`\begin{equation}...\end{equation}`), use `\noindent` for continuation, `\begin{split}` for multiline, `\frac{}{}` for fractions, proper math mode for variables in prose.
+- **Cross-Asset Awareness:** Understand that GBP/USD (24hr) and XAU/USD (23hr) have longer sessions than SPX (6.5hr), producing mechanically higher daily RV via the squared-return summation in Equation 3.2.
 
 ## Key Technical Conventions
 - All OLS models: `sm.OLS().fit(cov_type="HAC", cov_kwds={"maxlags": 5})`
 - Target variable: `y = log(RV)` (natural log of realised variance)
 - HAR features: `RV_d` (1-day lag), `RV_w` (5-day rolling mean, lagged), `RV_m` (22-day rolling mean, lagged)
-- In-sample cutoff: `CUTOFF = pd.Timestamp("2026-01-29")`
-- OOS period: `2026-01-30` to `2026-03-20`
+- In-sample cutoff (SPX): `CUTOFF = pd.Timestamp("2026-01-29")`
+- OOS period (SPX): `2026-01-30` to `2026-03-20`
+- GBP/USD sample: 2025-10-29 to 2026-03-26
+- XAU/USD sample: 2025-12-04 to 2026-03-26
+- Historical SPX sample: 2023-05-01 to 2023-10-31 (80:20 dynamic split)
 - Variable naming: `_m1` (baseline), `_m2`, `_m3a`, `_m3b`, `_m4`, `_m5`, `_m6` (RF)
 - Dummies with zero in-sample occurrences are excluded from estimation
 
@@ -40,7 +46,7 @@ This file defines the specialized skills and capabilities for the modelling and 
 |:---|:---:|:---|
 | Ch 1: Introduction | 7 pages | Drafted |
 | Ch 2: Literature Review | 14 pages | Drafted |
-| Ch 3: Methodology | 14 pages | Complete draft |
+| Ch 3: Methodology | 14 pages | Revised per supervisor feedback (Sections 3.1–3.5 updated) |
 | Ch 4: Results | 16 pages | In progress — SPX models complete, OOS done |
 | Ch 5: Discussion | 6 pages | Not started |
 | Ch 6: Conclusion | 3 pages | Not started |

@@ -198,6 +198,28 @@
 - In-sample dummies with zero occurrences are excluded to avoid perfect multicollinearity
 - The `full_*` dataframes are built over the **full sample** so that OOS lags (RV_w, RV_m) can use in-sample history
 - CUTOFF defined once in Cell 4 and reused by all models
+- Daily RV for GBP/USD and XAU/USD computed over 22:00–22:00 UTC window
+- GBP/USD and XAU/USD have mechanically higher daily RV than SPX due to longer sessions (24hr/23hr vs 6.5hr) — more squared returns in the summation
+- Neural network benchmark removed from thesis — only Random Forest retained as ML benchmark
+
+## Terminology Convention
+- Use "realised variance (RV)" on **first mention** in any document, then "RV" thereafter
+- Never use "realised volatility" when referring to the RV measure — RV is an estimator of integrated variance, not volatility itself
+- In LaTeX equations: use `RV_t^{(d)}` not `$RV_t^{(d)}$` inside `\begin{equation}` environments
+
+## LaTeX Formatting Rules
+- All equations must be **standalone**: blank line before `\begin{equation}`, `\noindent` on the line after `\end{equation}` for continuation text
+- Long equations use `\begin{split}...\end{split}` inside `\begin{equation}` for multiline
+- Use `\frac{}{}` for fractions, not `(1/n)`
+- Use `\citep{}` for parenthetical citations, `\cite{}` or `\citet{}` for textual citations
+- Use LaTeX double-backtick quotes ` ``...'' ` not straight quotes `"..."`
+- Each `\section{}` should have a brief introductory paragraph describing what the section contains
+- Avoid hardcoded sample-specific numbers (e.g., "130 trading days") — use generic language that applies across all datasets
+
+## Supervisor PDF Comment Workflow
+- Supervisor provides annotated PDFs (e.g., `improvements.pdf`, `3_1_improvements.pdf`) with highlighted sections and comments
+- Extract annotations using PyMuPDF (`fitz`): `page.annots()` for comments, `page.get_text('text', clip=rect)` for highlighted text
+- Implement changes directly in `Final_Report.tex` (not in separate files, unless explicitly requested)
 
 ## Citation Workflow (MANDATORY)
 When writing thesis text that references a study:
@@ -205,3 +227,13 @@ When writing thesis text that references a study:
 2. **Then insert `\cite{Key}` into `Final_Report.tex`**
 3. Never cite a reference that does not exist in `references.bib`
 4. Files: `C:\Users\oisin\Thesis\references.bib` and `C:\Users\oisin\Thesis\Final_Report.tex`
+
+## References Added This Session
+- `LiuPattonSheppard2015` — 5-min RV optimal sampling
+- `PlihalLyocsa2021` — RV modelling EUR/USD
+- `KambouroudisMcMillanTsakou2021` — RV forecasting
+- `FlemingRemolona1999` — announcement effects on term structure
+- `Balduzzi2001` — economic news and bond prices
+- `Breiman2001` — Random Forests
+- `Christensen2023` — ML approach to volatility forecasting
+- `InoueKilian2005` — in-sample vs out-of-sample tests
