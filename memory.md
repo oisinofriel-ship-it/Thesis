@@ -22,6 +22,21 @@
 | `tariff_wss_v2.xlsx` | Tariff event scoring (Weighted Severity Score); TARIFF dummy = 1 when WSS >= 5 |
 | `rv_spx.xlsx` | Computed daily realised variance |
 
+## Historical SPX Directory
+- **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\Historical_SPX\`
+- **Notebook**: `Historical_SPX_stats.ipynb` — same 7 models as main notebook but for May–Oct 2023 historical period
+- **Data**: `SPX_1.csv` to `SPX_22.csv` — CSV format with `dd/mm/yyyy HH:MM` dates in **Ireland time** (same TradingView/Pineify source as main data)
+- **Macro file**: `Macro_Expected_back_to_2023.xlsx` — same file as main SPX dir, contains all events back to Jan 2023
+- **Tariff file**: `tariff_wss_v2.xlsx` — present but **not used** (no tariff events in 2023)
+- **Sample**: 2023-05-01 to 2023-10-31, 80:20 IS:OOS split (dynamic CUTOFF)
+- **Key differences from main notebook**:
+  - CSV loading with `dayfirst=True` instead of Excel
+  - No TARIFF dummy in any model (pre-2025 period)
+  - 80:20 dynamic split instead of fixed CUTOFF date
+  - Holiday mask: July 3 early close, July 4, Sep 4 (Labor Day)
+  - All IS/OOS metrics computed dynamically (no hardcoded values)
+  - `parse_macro_b23()` defined in cell 3 (plot cell) and reused by all model cells
+
 ---
 
 ## Notebook Structure (SPX_stats.ipynb)
@@ -38,9 +53,22 @@
 - Target variable: `y = log(RV)`
 
 ### Sample Periods
-- **Data starts**: `START_DATE = pd.Timestamp("2025-07-22")`
-- **In-sample**: 2025-07-22 to `CUTOFF = pd.Timestamp("2026-01-29")`
-- **Out-of-sample**: `2026-01-30` to `2026-03-20`
+
+#### Main Dataset (SPX_stats.ipynb)
+| Period | Start | End | Notes |
+|--------|-------|-----|-------|
+| Full sample | 2025-07-22 | 2026-03-20 | `START_DATE` to `END_DATE` |
+| In-sample | 2025-07-22 | 2026-01-29 | Fixed `CUTOFF = pd.Timestamp("2026-01-29")` |
+| Out-of-sample | 2026-01-30 | 2026-03-20 | ~35 trading days |
+
+#### Historical Dataset (Historical_SPX_stats.ipynb)
+| Period | Start | End | Notes |
+|--------|-------|-----|-------|
+| Full sample | 2023-05-01 | 2023-10-31 | ~128 trading days (after partial-day removal) |
+| In-sample | 2023-05-01 | ~2023-09-25 | 80% of full sample, dynamic CUTOFF |
+| Out-of-sample | ~2023-09-26 | 2023-10-31 | 20% of full sample, ~26 trading days |
+
+*Note: Historical IS/OOS dates are approximate — exact cutoff depends on number of full trading days retained after cleaning.*
 
 ---
 
