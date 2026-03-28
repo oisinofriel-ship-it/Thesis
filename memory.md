@@ -3,7 +3,7 @@
 ## Overview
 - **Student**: Oisin
 - **Institution**: University College Dublin (UCD)
-- **Topic**: Macro-augmented HAR-RV models for forecasting realised volatility of the S&P 500 (SPX), with a focus on the impact of macroeconomic announcements and tariff policy events
+- **Topic**: Macro-augmented HAR-RV models for forecasting realised variance (RV) of the S&P 500 (SPX), with a focus on the impact of macroeconomic announcements and tariff policy events
 - **Main Report**: `C:\Users\oisin\Thesis\Final_Report.tex` (LaTeX, with `references.bib`)
 
 ---
@@ -20,7 +20,25 @@
 | `Macro_dates.xlsx` | FOMC, CPI, NFP announcement dates |
 | `Macro_Expected_back_to_2023.xlsx` | Consensus forecasts, actuals, and pre-computed surprise categories (0/1/2) for FOMC, CPI, NFP, PPI, PCE, ADP, JOLTS, CLAIMS from Jan 2023 onward |
 | `tariff_wss_v2.xlsx` | Tariff event scoring (Weighted Severity Score); TARIFF dummy = 1 when WSS >= 5 |
-| `rv_spx.xlsx` | Computed daily realised variance |
+| `rv_spx.xlsx` | Computed daily RV |
+
+## CABLE (GBP/USD) Directory
+- **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\CABLE\`
+- **Notebooks**: `GBP_stats.ipynb`, `GBPUSD_Full_Refactored.ipynb`, `GBP_Full_Data.ipynb`
+- **Data**: `GBPUSD_1.xlsx` to `GBPUSD_14.xlsx` — 5-min intraday, timestamps in Irish time
+- **Sample period**: 2025-10-29 to 2026-03-26
+- **Trading hours**: 22:00 Sunday to 22:00 Friday (UTC), continuous 24-hr market (no daily break)
+  - In Irish time: Sunday ~18:00–19:00 open, Friday 21:55 close (shifts with DST)
+- **Macro/tariff files**: `Macro_dates.xlsx`, `Macro_Expected_back_to_2023.xlsx`, `tariff_wss_v2.xlsx`
+
+## XAU (Gold) Directory
+- **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\XAU\Full_Data\`
+- **Notebooks**: `XAU_stats.ipynb`, `XAU_Full_Refactored.ipynb`, `XAU_Full_Data.ipynb`
+- **Data**: `XAU_1.xlsx` to `XAU_13.xlsx` — 5-min intraday, timestamps in Irish time
+- **Sample period**: 2025-12-04 to 2026-03-26
+- **Trading hours**: 22:00 Sunday to 22:00 Friday (UTC), 23-hr daily sessions with a **1-hour break from 22:00 to 23:00 UTC**
+  - In Irish time: Sunday 23:00 open, daily gap at 22:00–23:00, Friday 21:55 close (shifts with DST)
+- **Macro/tariff files**: `Macro_dates.xlsx`, `Macro_Expected_back_to_2023.xlsx`, `tariff_wss_v2.xlsx`
 
 ## Historical SPX Directory
 - **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\Historical_SPX\`
@@ -43,7 +61,7 @@
 
 ### Data Preparation (Cells 0-3)
 - Imports: numpy, pandas, scipy, statsmodels, matplotlib, sklearn
-- Computes daily realised variance (RV) from intraday data
+- Computes daily RV from intraday data
 - Descriptive statistics for log(RV)
 - Plot: RV time series with macro event lines overlaid
 
@@ -168,7 +186,7 @@
 ---
 
 ## Potential Next Steps (discussed but not yet implemented)
-- **QLIKE** loss function — asymmetric, penalises under-prediction of volatility more (standard in RV literature, Patton 2011)
+- **QLIKE** loss function — asymmetric, penalises under-prediction more (standard in RV literature, Patton 2011)
 - **Diebold-Mariano test** — pairwise statistical test of forecast accuracy differences between models
 - **Model Confidence Set (MCS)** — Hansen et al. (2011), identifies statistically indistinguishable best models
 
