@@ -1,0 +1,26 @@
+Notes about Thesis:
+
+Ensure that all SPX have 78 or 79 ticks and using the close from 9:00 to 15:55 like the alternative dataset
+
+
+
+About Methodology:
+  Content accuracy issues:
+
+  4. FOMC uses futures-based surprise; all others use survey-based. Section 3.3.4 describes the three-tier classification
+  uniformly, but for FOMC the surprise is measured against 30-Day Fed Funds futures (from 3.1.3), while CPI/NFP use
+  Investing.com consensus. The different surprise measures should be flagged in 3.3.4, with a cross-reference to 3.1.3 for
+  the FOMC case.
+  5. De-escalation events trigger TARIFF = 1. Section 3.1.4 notes 9 of 36 tariff events were de-escalatory, but the TARIFF
+  dummy treats all WSS ≥ 5 events identically regardless of direction. An escalation and a de-escalation both fire the same
+  dummy, potentially conflating opposite volatility dynamics. This is a genuine methodological limitation that should be
+  acknowledged.
+  6. GBP/USD and XAU/USD IS/OOS split dates absent. Section 3.1.5 gives specific IS/OOS dates for the primary SPX (22 Jul
+  2025 – 29 Jan 2026 / 30 Jan 2026 – 20 Mar 2026) but not for GBP/USD or XAU/USD, only their full sample dates. Readers
+  cannot infer the evaluation window without the split.
+  7. Stationarity not addressed. OLS requires stationary regressors, and the chapter never states that log RV was checked
+  for stationarity. Chapter 4 presumably includes ADF tests — a single sentence in 3.4.1 saying stationarity is verified
+  prior to estimation (with a forward reference to Section 4.1) would close this gap.
+  8. Fixed estimation window not stated. Section 3.4.2 discusses window length but never explicitly states whether the IS
+  window is fixed or recursive/rolling. Since the model is estimated once on the full IS period and the coefficients are
+  applied forward, this should be stated.
