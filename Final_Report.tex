@@ -2,6 +2,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{times}
+\usepackage[font=small,labelfont=bf]{caption}
+\captionsetup{
+    justification=justified,
+    singlelinecheck=false
+}
 \usepackage{geometry}
 \geometry{a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm}
 \usepackage{setspace}
@@ -380,7 +385,9 @@ In addition, a secondary S\&P 500 dataset spanning May 2023 to October 2023, sou
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\textwidth]{VIX_5_years.png}
-\caption{Daily closing values of the CBOE Volatility Index (VIX) from March 2021 to March 2026. The blue shaded region denotes the primary sample period (July 2025--March 2026), which coincides with elevated implied volatility driven by trade policy uncertainty and successive tariff announcements. The orange shaded region marks the historical comparison period (May--October 2023), during which the VIX remained broadly within its historical average range, reflecting stable investor sentiment and an absence of the sustained, policy-driven elevations that characterise the primary sample period.}
+\caption{\textbf{Daily closing values of the CBOE Volatility Index (VIX), March 2021--March 2026.}
+The blue shaded region denotes the primary sample period (July 2025--March 2026), characterised by elevated implied volatility associated with trade policy uncertainty and successive tariff announcements.
+The orange shaded region indicates the historical comparison period (May--October 2023), during which the VIX remained broadly within its historical average range, reflecting stable investor sentiment and an absence of the sustained, policy-driven elevations that characterise the primary sample period.}
 \label{fig:vix_5yr}
 \end{figure}
 
