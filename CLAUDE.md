@@ -105,6 +105,18 @@ These must be followed when writing any thesis text:
 13. Data cleaning sections should be concise and general — not step-by-step enumeration
 14. Explain cross-asset differences: GBP/XAU have higher daily RV than SPX due to longer sessions (refer to Equation 3.2)
 15. When referencing supervisor PDF comments, extract annotations with PyMuPDF and implement directly in `Final_Report.tex`
+16. After implementing supervisor feedback, always resolve any git merge conflicts and push cleanly
+
+## Git & Overleaf Workflow
+- Thesis repo: `https://github.com/oisinofriel-ship-it/Thesis` (synced with Overleaf)
+- **Always `git pull` before pushing** — Overleaf pushes to remote and can cause conflicts
+- When resolving merge conflicts: keep correct GBP/XAU trading hours (22:00-22:00 UTC full sessions), keep more detailed Data Cleaning content, keep VIX figure (not commented-out TODO)
+- Commit merge resolutions before pushing (git will reject push if merge is uncommitted)
+
+## Reference PDF Management
+- Script: `download_references.py` in thesis root — parses `references.bib`, searches Crossref/Unpaywall/Semantic Scholar for open-access PDFs
+- Output: `reference_pdfs/` folder, named by BibTeX key
+- Most finance papers are paywalled; remaining PDFs need UCD library access or Google Scholar
 
 ## How to Prompt for Best Results
 To ensure Claude always refers to these markdown files when working:

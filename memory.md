@@ -219,7 +219,9 @@
 ## Supervisor PDF Comment Workflow
 - Supervisor provides annotated PDFs (e.g., `improvements.pdf`, `3_1_improvements.pdf`) with highlighted sections and comments
 - Extract annotations using PyMuPDF (`fitz`): `page.annots()` for comments, `page.get_text('text', clip=rect)` for highlighted text
+- For highlighted text extraction: group vertices into quads (4 points each), build rects from quad[0] to quad[2], extract text per quad
 - Implement changes directly in `Final_Report.tex` (not in separate files, unless explicitly requested)
+- After implementing, always check for and resolve any git merge conflicts before pushing
 
 ## Citation Workflow (MANDATORY)
 When writing thesis text that references a study:
@@ -228,12 +230,28 @@ When writing thesis text that references a study:
 3. Never cite a reference that does not exist in `references.bib`
 4. Files: `C:\Users\oisin\Thesis\references.bib` and `C:\Users\oisin\Thesis\Final_Report.tex`
 
-## References Added This Session
-- `LiuPattonSheppard2015` — 5-min RV optimal sampling
-- `PlihalLyocsa2021` — RV modelling EUR/USD
-- `KambouroudisMcMillanTsakou2021` — RV forecasting
-- `FlemingRemolona1999` — announcement effects on term structure
-- `Balduzzi2001` — economic news and bond prices
-- `Breiman2001` — Random Forests
-- `Christensen2023` — ML approach to volatility forecasting
-- `InoueKilian2005` — in-sample vs out-of-sample tests
+## Git & Overleaf Sync
+- Thesis repo: `https://github.com/oisinofriel-ship-it/Thesis`
+- Overleaf syncs via a branch (e.g. `overleaf-2026-03-28-1250`) which merges into `main`
+- **Common issue**: Overleaf pushes can cause merge conflicts in `Final_Report.tex` — always `git pull` before pushing, then resolve conflicts
+- When resolving conflicts between local (HEAD) and Overleaf versions:
+  - HEAD typically has correct GBP/XAU trading hours (22:00-22:00 UTC full sessions)
+  - Overleaf version may have outdated session descriptions (London-NY overlap, COMEX hours) from earlier drafts
+  - Keep the more detailed Data Cleaning content (DST explanation, specific holidays) from whichever version has it
+
+## Supervisor Feedback Log
+### improvements.pdf (2026-03-28)
+1. **"better Figure caption"** on VIX figure (Figure 3.1) — **DONE**: expanded caption to describe daily closing values, blue/orange shaded regions with context about trade policy uncertainty and stable sentiment
+2. **"this additional dataset of Hist_SPX, should be included in 3.1.1"** — **DONE**: confirmed Historical SPX paragraph is in Section 3.1.1 (Intraday Price Data), not in Data Cleaning
+
+## Reference PDF Downloads
+- Script: `C:\Users\oisin\Thesis\download_references.py`
+- Output: `C:\Users\oisin\Thesis\reference_pdfs\`
+- Uses Crossref (DOI lookup) -> Unpaywall (OA PDFs) -> Semantic Scholar (fallback)
+- Dependencies: `bibtexparser`, `requests`
+- **Result (2026-03-28)**: 6/53 downloaded via open access (Andersen2007, Cheng2023, Christensen2023, FajgelbaumKhandelwal2022, Gu2020, Rigobon2004); remaining 45 need UCD library access
+- SSRN links frequently fail (return HTML login pages, not PDFs) — manual download needed for those
+
+## Total References in references.bib
+- 53 entries (as of 2026-03-28)
+- Includes 2 `@misc` entries (FederalReserve2023, Brookings2025) and 1 `@book` (BoxJenkins1970, Mishkin2019)

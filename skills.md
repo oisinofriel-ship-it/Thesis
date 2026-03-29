@@ -27,6 +27,8 @@ This file defines the specialized skills and capabilities for the modelling and 
 - **Supervisor PDF Review:** Extract annotations from supervisor-annotated PDFs using PyMuPDF (`fitz`), identify highlighted sections and comments, and implement changes directly in `Final_Report.tex`.
 - **LaTeX Equation Formatting:** Ensure all equations are standalone (`\begin{equation}...\end{equation}`), use `\noindent` for continuation, `\begin{split}` for multiline, `\frac{}{}` for fractions, proper math mode for variables in prose.
 - **Cross-Asset Awareness:** Understand that GBP/USD (24hr) and XAU/USD (23hr) have longer sessions than SPX (6.5hr), producing mechanically higher daily RV via the squared-return summation in Equation 3.2.
+- **Git/Overleaf Conflict Resolution:** When `Final_Report.tex` has merge conflicts from Overleaf sync, resolve by keeping correct content from each side (HEAD for correct GBP/XAU sessions and VIX figure, Overleaf for detailed Data Cleaning). Always commit the merge resolution before pushing.
+- **Reference PDF Automation:** Run `download_references.py` to bulk-download open-access PDFs from `references.bib` via Crossref/Unpaywall/Semantic Scholar. Output in `reference_pdfs/`. Paywalled papers require UCD library access.
 
 ## Key Technical Conventions
 - All OLS models: `sm.OLS().fit(cov_type="HAC", cov_kwds={"maxlags": 5})`

@@ -1,0 +1,33 @@
+@article{Clements2021,
+author = {Clements, Michael P. and Galvao, Ana Beatriz},
+title = {Measuring the Effects of Expectations and Uncertainty on Macroeconomic Forecasts},
+journal = {Journal of Applied Econometrics},
+year = {2021},
+volume = {36},
+number = {5},
+pages = {636--655}
+}
+
+@article{Osipovich2025,
+author = {Osipovich, Alexander},
+title = {Stock Market News, Oct.\ 10, 2025: Trump to Impose 100{\%} Tariff on China; Nasdaq Falls 3.6{\%}},
+journal = {The Wall Street Journal},
+year = {2025},
+month = {October}
+}
+
+@misc{Brookings2025,
+author = {{Brookings Institution}},
+title = {Trump's Tariff Tracker},
+year = {2025},
+howpublished = {\url{https://www.brookings.edu/articles/trumps-tariff-tracker/}},
+note = {Accessed: March 2026}
+}
+
+@misc{FederalReserve2023,
+author = {{Board of Governors of the Federal Reserve System}},
+title = {Monetary Policy},
+year = {2023},
+howpublished = {\url{https://www.federalreserve.gov/aboutthefed/fedexplained/monetary-policy.htm}},
+note = {Accessed: 25 January 2026}
+}
