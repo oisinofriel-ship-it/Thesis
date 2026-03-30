@@ -2,7 +2,7 @@ Notes about Thesis:
 
 Ensure that all SPX have 78 or 79 ticks and using the close from 9:00 to 15:55 like the alternative dataset
 
-
+Get new Data from bloomberg
 
 About Methodology:
   Content accuracy issues:

@@ -138,6 +138,9 @@
 
 ## Out-of-Sample Evaluation (Cell 19)
 - Period: 2026-01-30 to 2026-03-20
+- **Fixed window**: models estimated once on full IS period; coefficients held constant and applied to OOS
+- Lagged RV inputs for OOS drawn from full dataset (not IS-only), so RV_w and RV_m use actual history as window advances
+- No re-estimation within the OOS period
 - For OLS models (1-5): slices OOS rows from `full_*` dataframes, adds constant, calls `.predict()`
 - For RF (Model 6): uses same OOS slice as Model 5, calls `rf_model_m6.predict()`
 - Metrics computed per model: OOS RMSE, OOS MAE, OOS R², OOS Adjusted R²
@@ -153,12 +156,14 @@
 ---
 
 ## Three-Tier Surprise Classification System
-- Category 0: In line with expectations
-- Category 1: Moderate surprise
-- Category 2: Large/big surprise
+- Category 0 (in-line): |standardised surprise| ≤ 0.5 SD
+- Category 1 (moderate surprise): 0.5 < |standardised surprise| ≤ 1.0 SD
+- Category 2 (large surprise): |standardised surprise| > 1.0 SD
+- Standardised surprise = |actual − consensus| / SD of historical releases (Jan 2023 onwards)
 - Categories are pre-computed in `Macro_Expected_back_to_2023.xlsx` (column index 6)
-- Historical data from Jan 2023 used to build standard deviation distributions for thresholds
 - Applied to: FOMC, CPI, NFP, PPI, PCE, ADP, JOLTS, CLAIMS
+- **FOMC uses futures-implied expectation** (CME 30-Day Fed Funds futures), not survey-based consensus
+- All other events use Investing.com survey-based consensus
 
 ## Tariff Dummy Construction
 - Source: `tariff_wss_v2.xlsx`, sheet "Tariff Event Scoring"
@@ -190,6 +195,13 @@
 - **Diebold-Mariano test** — pairwise statistical test of forecast accuracy differences between models
 - **Model Confidence Set (MCS)** — Hansen et al. (2011), identifies statistically indistinguishable best models
 
+## Outstanding Chapter 3 Improvements (not yet implemented — 2026-03-29)
+- **Stationarity**: OLS requires stationary regressors; not addressed in methodology; ADF tests in Ch4 should be cross-referenced from 3.4.1
+- **De-escalation TARIFF limitation**: 9/36 tariff events are de-escalatory but TARIFF dummy treats all WSS≥5 equally regardless of direction; should be acknowledged as a limitation in 3.1.4 or 3.3.5
+- **GBP/USD and XAU/USD IS/OOS split dates**: 3.1.5 gives full sample dates but not IS/OOS split dates for these two assets
+- **Fixed vs rolling window**: 3.4.2 does not explicitly state the IS window is fixed (not rolling/recursive)
+- **Equation labels**: equations use hardcoded numbers (3.4–3.6) rather than `\label{}`/`\ref{}` — low priority but fragile
+
 ---
 
 ## Technical Notes
@@ -215,6 +227,23 @@
 - Use LaTeX double-backtick quotes ` ``...'' ` not straight quotes `"..."`
 - Each `\section{}` should have a brief introductory paragraph describing what the section contains
 - Avoid hardcoded sample-specific numbers (e.g., "130 trading days") — use generic language that applies across all datasets
+- RMSE and MAE **must** be in `\begin{equation}` blocks (not inline) — already done in 3.5.1
+
+## Chapter 3 Structure (as of 2026-03-29)
+- **3.1**: Data (Intraday Price Data, Data Cleaning, Macro Data, Tariff Data, Sample Period & Limitations)
+- **3.2**: Realised Variance Construction (Daily RV, Log Transform, Multi-Horizon Components)
+- **3.3**: Model Framework — includes `\ref{tab:model_summary}` summary table of all 7 models
+  - 3.3.1 Baseline HAR-RV (Model 1)
+  - 3.3.2 HAR-RV with Macro Dummies (Model 2 — **includes TARIFF in equation**) — rewritten as motivation leading to three-tier
+  - 3.3.3 Expected vs Surprise Decomposition — **motivational only, no separate model**
+  - 3.3.4 Three-Tier Classification (Models 3a/3b)
+  - 3.3.5 Tariff Dummy (Model 4)
+  - 3.3.6 Adjusted Lag (Model 5)
+- **3.4**: Estimation (OLS/HAC, Estimation Window + OOS forecast method, RF Benchmark)
+  - OOS forecast generation described in 3.4.2: fixed IS window, coefficients held constant, applied forward
+- **3.5**: Evaluation Framework (Performance Metrics, Cross-Asset Replication)
+  - Section 3.5.1 (Train-Test Split Strategy) **removed** — was repetitive with 3.4.2
+  - Section 3.5.3 trimmed — Bank of England removed, session-length paragraph removed
 
 ## Supervisor PDF Comment Workflow
 - Supervisor provides annotated PDFs (e.g., `improvements.pdf`, `3_1_improvements.pdf`) with highlighted sections and comments
@@ -238,11 +267,17 @@ When writing thesis text that references a study:
   - HEAD typically has correct GBP/XAU trading hours (22:00-22:00 UTC full sessions)
   - Overleaf version may have outdated session descriptions (London-NY overlap, COMEX hours) from earlier drafts
   - Keep the more detailed Data Cleaning content (DST explanation, specific holidays) from whichever version has it
+  - 2026-03-29 conflict: VIX figure caption — Overleaf had `\textbf{}` bold title format; HEAD had updated language ("historical average range"). Resolution: keep Overleaf formatting + HEAD language
 
 ## Supervisor Feedback Log
 ### improvements.pdf (2026-03-28)
 1. **"better Figure caption"** on VIX figure (Figure 3.1) — **DONE**: expanded caption to describe daily closing values, blue/orange shaded regions with context about trade policy uncertainty and stable sentiment
 2. **"this additional dataset of Hist_SPX, should be included in 3.1.1"** — **DONE**: confirmed Historical SPX paragraph is in Section 3.1.1 (Intraday Price Data), not in Data Cleaning
+3. **Page 35**: Equation~(2) → Equation~3.2 — **DONE**
+4. **Page 36**: VIX paragraph — add that period had natural spikes but was not abnormally tranquil — **DONE**
+5. **Page 37**: Remove hardcoded "164 complete trading days..." paragraph — **DONE**
+6. **Section 3.5.1 Train-Test Split Strategy**: flagged as repetition — **DONE**: section removed; OOS forecast generation description moved to 3.4.2
+7. **Section 3.5.3 Cross-Asset Replication**: flagged as repetition; remove Bank of England — **DONE**: section trimmed to one paragraph, BoE removed
 
 ## Reference PDF Downloads
 - Script: `C:\Users\oisin\Thesis\download_references.py`

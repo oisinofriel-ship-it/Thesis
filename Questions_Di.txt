@@ -1,0 +1,7 @@
+Should I match these?:
+
+Hist dataset is 9:00-15:55
+
+SPX is 9:00 - 16:00
+
+GitHub Repo with LaTex file and importing?
