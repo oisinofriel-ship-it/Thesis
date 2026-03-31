@@ -968,6 +968,34 @@ $\lambda$               & & & & & & & & \\
 
 \subsection{Model 6: Random Forest Benchmark}
 
+Unlike the OLS-based specifications, the Random Forest does not produce coefficient estimates. Instead, Gini-based feature importances are reported, which measure the relative contribution of each feature to the reduction in mean squared error across all trees in the ensemble. Importances sum to unity and are not directly comparable to regression coefficients; they indicate relative predictive contribution rather than directional effects.
+
+\begin{table}[H]
+\centering
+\caption{Model 6: Random Forest --- Feature Importances Across Asset Classes}
+\label{tab:model6_importances}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+& S\&P 500 & S\&P 500 2023 & GBP/USD & XAU/USD \\
+\midrule
+$RV_t^{(d)}$      & & & & \\
+$RV_t^{(w)}$      & & & & \\
+$RV_t^{(m)}$      & & & & \\
+$\gamma_{FOMC,1}$ & & & & \\
+$\lambda$ ($TARIFF$) & & & & \\
+$\gamma_{FOMC,0}$ & & & & \\
+$\gamma_{NFP,1}$  & & & & \\
+$\gamma_{CPI,1}$  & & & & \\
+$\gamma_{NFP,0}$  & & & & \\
+$\gamma_{CPI,0}$  & & & & \\
+\midrule
+Sum               & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
 \section{Out-of-Sample Forecast Comparison}
 80:20
 
