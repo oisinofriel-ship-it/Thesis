@@ -9,6 +9,7 @@
 }
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{float} 
 \geometry{a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm}
 \usepackage{setspace}
 \doublespacing
@@ -634,19 +635,19 @@ This chapter presents the empirical results of the study. It is organised into s
 \hline
 Statistic & RV & RV & RV & RV \\
 \hline
-Observations & 165 & 126 &  &  \\
+Observations & 165 & 126 & 96 &  \\
 \hline
-Mean & 38.53 & 34.59 &  &  \\
+Mean & 38.53 & 34.59 & 19.87 &  \\
 \hline
-Std Dev & 33.14 & 20.67 &  &  \\
+Std Dev & 33.14 & 20.67 & 11.49 &  \\
 \hline
-Min & 3.60 & 8.87 &  &  \\
+Min & 3.60 & 8.87 & 6.67 &  \\
 \hline
-Max & 182.16 & 135.82 &  &  \\
+Max & 182.16 & 135.82 & 53.78 &  \\
 \hline
-Skewness & 1.69 & 1.75 &  &  \\
+Skewness & 1.69 & 1.75 & 1.49 &  \\
 \hline
-Excess Kurtosis & 3.65 & 4.48 &  &  \\
+Excess Kurtosis & 3.65 & 4.48 & 1.28 &  \\
 \hline
 \end{tabular}
 \caption{[Table caption]}
@@ -663,13 +664,35 @@ Add ADF (Augmented Dickey-Fuller) test statistic to confirm stationarity of log 
 
 INSERT PLOTS (Full dataset and dashes vertical lines for macro events) \ldots{}
 
-\includegraphics{SPX_RV_macro_events.pdf}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{SPX_RV_macro_events.pdf}
+    \caption{SPX RV over entire sample period}
+    \label{fig:SPX RV over entire sample period}
+\end{figure}
 
-\includegraphics{Hist_SPX_RV_macro_events.pdf}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hist_SPX_RV_macro_events.pdf}
+    \caption{PX 2023 RV over entire sample period}
+    \label{fig:SPX 2023 RV over entire sample period}
+\end{figure}
 
-\includegraphics{GBP_RV_macro_events.pdf}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{GBP_RV_macro_events.pdf}
+    \caption{GBP RV over entire sample period}
+    \label{fig:GBP RV over entire sample period}
+\end{figure}
 
-\includegraphics{XAU_RV_macro_events.pdf}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{XAU_RV_macro_events.pdf}
+    \caption{XAU RV over entire sample period}
+    \label{fig:XAU RV over entire sample period}
+\end{figure}
+
+## what to do with this table considering the start dates of my different datasets?##
 
 \begin{table}[H]
 \centering
@@ -972,7 +995,7 @@ Simple comparison table: HAR_baseline vs best augmented HAR vs RF (vs potentiall
 \subsection{Macro-Augmented Models}
 \subsection{Adjusted Lag Specification and ML Benchmarks}
 \section{Out-of-Sample Forecast Comparison}
-75:25 OR 90:10
+80:20
 
 % [Caption: Table 2: OOS Forecast Performance]
 \begin{table}[H]
