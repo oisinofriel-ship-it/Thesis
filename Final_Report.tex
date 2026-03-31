@@ -719,6 +719,33 @@ STAT TO JUSTIFY CROSS ASSET COMPARSION (correlation table -- pairwise correlatio
 
 \subsection{Model 1: Baseline HAR-RV}
 
+\begin{table}[H]
+\centering
+\caption{HAR-RV Coefficient Estimates Across Asset Classes}
+\label{tab:har_coefficients}
+\[
+RV^{(d)}_{t+1d} = c + \beta^{(d)} RV^{(d)}_t + \beta^{(w)} RV^{(w)}_t + \beta^{(m)} RV^{(m)}_t + \omega_{t+1d}
+\]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{S\&P 500} & \multicolumn{2}{c}{S\&P 500 2023} & \multicolumn{2}{c}{GBP/USD} & \multicolumn{2}{c}{XAU/USD} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+& Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
+\midrule
+$c$          & & & & & & & & \\
+             & & & & & & & & \\
+$\beta_d$    & & & & & & & & \\
+             & & & & & & & & \\
+$\beta_w$    & & & & & & & & \\
+             & & & & & & & & \\
+$\beta_m$    & & & & & & & & \\
+             & & & & & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
 \subsection{Model 2: HAR-RV with Individual Macro Dummies}
 
 \subsection{Model 3: Expected versus Surprise Decomposition}
