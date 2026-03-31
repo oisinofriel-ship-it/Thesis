@@ -8,6 +8,7 @@
     singlelinecheck=false
 }
 \usepackage{geometry}
+\usepackage{graphicx}
 \geometry{a4paper, top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm}
 \usepackage{setspace}
 \doublespacing
@@ -627,31 +628,31 @@ This chapter presents the empirical results of the study. It is organised into s
 % [Caption: Table 1: Log RV per dataset]
 \begin{table}[H]
 \centering
-\begin{tabular}{|l|l|l|l|}
+\begin{tabular}{|l|p{2cm}|p{2cm}|p{2cm}|p{2cm}|}
 \hline
- & SPX & GBP & XAU \\
+ & SPX & SPX 2023 & GBP & XAU \\
 \hline
-Statistic & Log RV & Log RV & Log RV \\
+Statistic & RV & RV & RV & RV \\
 \hline
-Observations &  &  &  \\
+Observations & 165 & 126 &  &  \\
 \hline
-Mean &  &  &  \\
+Mean & 38.53 & 34.59 &  &  \\
 \hline
-Median &  &  &  \\
+Std Dev & 33.14 & 20.67 &  &  \\
 \hline
-Std Dev &  &  &  \\
+Min & 3.60 & 8.87 &  &  \\
 \hline
-Min &  &  &  \\
+Max & 182.16 & 135.82 &  &  \\
 \hline
-Max &  &  &  \\
+Skewness & 1.69 & 1.75 &  &  \\
 \hline
-Skewness &  &  &  \\
-\hline
-Excess Kurtosis &  &  &  \\
+Excess Kurtosis & 3.65 & 4.48 &  &  \\
 \hline
 \end{tabular}
 \caption{[Table caption]}
 \end{table}
+Mean, Std Dev, Min, Max all scaled to the power of 10^6 
+
 Add Jarque-Bera test statistic (p-value) to confirm non-normality of raw RV
 
 Add ADF test statistic to confirm stationarity of log RV series
@@ -661,6 +662,14 @@ Add Jarque-Bera test statistic to confirm non-normality of raw RV
 Add ADF (Augmented Dickey-Fuller) test statistic to confirm stationarity of log RV series
 
 INSERT PLOTS (Full dataset and dashes vertical lines for macro events) \ldots{}
+
+\includegraphics{SPX_RV_macro_events.pdf}
+
+\includegraphics{Hist_SPX_RV_macro_events.pdf}
+
+\includegraphics{GBP_RV_macro_events.pdf}
+
+\includegraphics{XAU_RV_macro_events.pdf}
 
 \begin{table}[H]
 \centering
@@ -701,8 +710,6 @@ RV_d (Daily) & 0.4258*** & (0.1157) & 3.6808 & 0.0002 \\
 RV_w (Weekly) & 0.1868 & (0.1644) & 1.1366 & 0.2557 \\
 \hline
 RV_m (Monthly) & -0.0876 & (0.2317) & -0.3782 & 0.7053 \\
-\hline
- &  &  &  &  \\
 \hline
 \end{tabular}
 \caption{[Table caption]}
