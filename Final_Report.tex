@@ -748,15 +748,223 @@ $\beta_m$    & & & & & & & & \\
 
 \subsection{Model 2: HAR-RV with Individual Macro Dummies}
 
+\begin{table}[H]
+\centering
+\caption{Model 2: HAR-RV with Individual Macro Dummies --- Coefficient Estimates Across Asset Classes}
+\label{tab:model2_coefficients}
+\[
+\begin{split}
+y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} \\
++ \gamma_1 FOMC_t + \gamma_2 CPI_t + \gamma_3 NFP_t + \lambda TARIFF_t + \varepsilon_t
+\end{split}
+\]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{S\&P 500} & \multicolumn{2}{c}{S\&P 500 2023} & \multicolumn{2}{c}{GBP/USD} & \multicolumn{2}{c}{XAU/USD} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+& Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
+\midrule
+$\alpha$       & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(d)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(w)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(m)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\gamma_1$     & & & & & & & & \\
+               & & & & & & & & \\
+$\gamma_2$     & & & & & & & & \\
+               & & & & & & & & \\
+$\gamma_3$     & & & & & & & & \\
+               & & & & & & & & \\
+$\lambda$      & & & & & & & & \\
+               & & & & & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
 \subsection{Model 3: Expected versus Surprise Decomposition}
+
+Two variants of the expected/surprise decomposition are estimated. Model~3a constructs the composite surprise categories ($MACRO\_0$, $MACRO\_1$, $MACRO\_2$) using all non-FOMC macro events, while Model~3b restricts the composite to CPI and NFP releases only.
 
 \subsubsection{Model 3a: All Macro Events}
 
+\begin{table}[H]
+\centering
+\caption{Model 3a: Expected versus Surprise (All Macro Events) --- Coefficient Estimates Across Asset Classes}
+\label{tab:model3a_coefficients}
+\[
+\begin{split}
+y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} \\
++ \delta_0 MACRO_{0,t} + \delta_1 MACRO_{1,t} + \delta_2 MACRO_{2,t} \\
++ \phi_1 FOMC\_exp_t + \phi_2 FOMC\_unexp_t + \lambda TARIFF_t + \varepsilon_t
+\end{split}
+\]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{S\&P 500} & \multicolumn{2}{c}{S\&P 500 2023} & \multicolumn{2}{c}{GBP/USD} & \multicolumn{2}{c}{XAU/USD} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+& Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
+\midrule
+$\alpha$       & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(d)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(w)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(m)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\delta_0$     & & & & & & & & \\
+               & & & & & & & & \\
+$\delta_1$     & & & & & & & & \\
+               & & & & & & & & \\
+$\delta_2$     & & & & & & & & \\
+               & & & & & & & & \\
+$\phi_1$       & & & & & & & & \\
+               & & & & & & & & \\
+$\phi_2$       & & & & & & & & \\
+               & & & & & & & & \\
+$\lambda$      & & & & & & & & \\
+               & & & & & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
 \subsubsection{Model 3b: CPI and NFP Only}
+
+\begin{table}[H]
+\centering
+\caption{Model 3b: Expected versus Surprise (CPI and NFP Only) --- Coefficient Estimates Across Asset Classes}
+\label{tab:model3b_coefficients}
+\[
+\begin{split}
+y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} \\
++ \delta_0 MACRO_{0,t}^{*} + \delta_1 MACRO_{1,t}^{*} + \delta_2 MACRO_{2,t}^{*} \\
++ \phi_1 FOMC\_exp_t + \phi_2 FOMC\_unexp_t + \lambda TARIFF_t + \varepsilon_t
+\end{split}
+\]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{S\&P 500} & \multicolumn{2}{c}{S\&P 500 2023} & \multicolumn{2}{c}{GBP/USD} & \multicolumn{2}{c}{XAU/USD} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+& Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
+\midrule
+$\alpha$       & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(d)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(w)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\beta^{(m)}$  & & & & & & & & \\
+               & & & & & & & & \\
+$\delta_0$     & & & & & & & & \\
+               & & & & & & & & \\
+$\delta_1$     & & & & & & & & \\
+               & & & & & & & & \\
+$\delta_2$     & & & & & & & & \\
+               & & & & & & & & \\
+$\phi_1$       & & & & & & & & \\
+               & & & & & & & & \\
+$\phi_2$       & & & & & & & & \\
+               & & & & & & & & \\
+$\lambda$      & & & & & & & & \\
+               & & & & & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \subsection{Model 4: Three-Tier Individual Dummies}
 
+\begin{table}[H]
+\centering
+\caption{Model 4: Three-Tier Individual Dummies --- Coefficient Estimates Across Asset Classes}
+\label{tab:model4_coefficients}
+\[
+y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} + \sum_{e,k} \gamma_{e,k} D_{e,k,t} + \lambda TARIFF_t + \varepsilon_t
+\]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{S\&P 500} & \multicolumn{2}{c}{S\&P 500 2023} & \multicolumn{2}{c}{GBP/USD} & \multicolumn{2}{c}{XAU/USD} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+& Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
+\midrule
+$\alpha$                & & & & & & & & \\
+                        & & & & & & & & \\
+$\beta^{(d)}$           & & & & & & & & \\
+                        & & & & & & & & \\
+$\beta^{(w)}$           & & & & & & & & \\
+                        & & & & & & & & \\
+$\beta^{(m)}$           & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{CPI,0}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{CPI,1}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{NFP,0}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{NFP,1}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{FOMC,0}$       & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{FOMC,1}$       & & & & & & & & \\
+                        & & & & & & & & \\
+$\lambda$               & & & & & & & & \\
+                        & & & & & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
 \subsection{Model 5: Three-Tier with Adjusted RV Lag}
+
+\begin{table}[H]
+\centering
+\caption{Model 5: Three-Tier with Adjusted RV Lag --- Coefficient Estimates Across Asset Classes}
+\label{tab:model5_coefficients}
+\[
+y_t = \alpha + \beta^{(d)} RV_t^{(d,adj)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} + \sum_{e,k} \gamma_{e,k} D_{e,k,t} + \lambda TARIFF_t + \varepsilon_t
+\]
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+& \multicolumn{2}{c}{S\&P 500} & \multicolumn{2}{c}{S\&P 500 2023} & \multicolumn{2}{c}{GBP/USD} & \multicolumn{2}{c}{XAU/USD} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
+& Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
+\midrule
+$\alpha$                & & & & & & & & \\
+                        & & & & & & & & \\
+$\beta^{(d)}$           & & & & & & & & \\
+                        & & & & & & & & \\
+$\beta^{(w)}$           & & & & & & & & \\
+                        & & & & & & & & \\
+$\beta^{(m)}$           & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{CPI,0}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{CPI,1}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{NFP,0}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{NFP,1}$        & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{FOMC,0}$       & & & & & & & & \\
+                        & & & & & & & & \\
+$\gamma_{FOMC,1}$       & & & & & & & & \\
+                        & & & & & & & & \\
+$\lambda$               & & & & & & & & \\
+                        & & & & & & & & \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
 
 \subsection{Model 6: Random Forest Benchmark}
 
