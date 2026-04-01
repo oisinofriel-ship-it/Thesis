@@ -1,8 +1,11 @@
 Notes about Thesis:
 
-Ensure that all SPX have 78 or 79 ticks and using the close from 9:00 to 15:55 like the alternative dataset
+Results Max 3 sub-headings???
 
-Get new Data from bloomberg
+remove escaltory / de-escalatory Tariff announcements from the write-up
+
+what to include here (Sustainability and Ethical aspects (500 words on each)): 
+Note that in the final chapter, you are asked to comment on sustainability and ethical aspects of your project. This should comprise about 500 words on each topic. The comments on sustainability should assess the impact of your project based on the 3 pillars of sustainability: environmental impact, social impact, and economic impact, with reference to the UN Sustainable Development Goals. The comments on ethics should reflect on your project in light of the professional and ethical responsibilities of engineers. There are no "correct" answers that we are looking for in these sections; rather, the purpose is for you to reflect on these topics. Please see the slides for more details about topics that you might include here.  
 
 About Methodology:
   Content accuracy issues:

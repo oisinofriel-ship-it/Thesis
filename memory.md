@@ -1,292 +1,167 @@
 # Thesis Project Memory
 
 ## Overview
-- **Student**: Oisin
-- **Institution**: University College Dublin (UCD)
-- **Topic**: Macro-augmented HAR-RV models for forecasting realised variance (RV) of the S&P 500 (SPX), with a focus on the impact of macroeconomic announcements and tariff policy events
-- **Main Report**: `C:\Users\oisin\Thesis\Final_Report.tex` (LaTeX, with `references.bib`)
+- **Topic**: Macro-augmented HAR-RV models for RV forecasting — SPX, GBP/USD, XAU/USD
+- **Report**: `C:\Users\oisin\Thesis\Final_Report.tex` + `references.bib`
+- **Git repo**: `https://github.com/oisinofriel-ship-it/Thesis` (synced with Overleaf)
 
 ---
 
 ## Directory Structure
-- **Thesis root**: `C:\Users\oisin\Thesis\` — LaTeX report, references, memory
-- **Model/data directory**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\SPX\`
-- **Primary notebook**: `SPX_stats.ipynb` — all models, OOS evaluation, comparison table
+| Path | Contents |
+|------|----------|
+| `C:\Users\oisin\Thesis\` | LaTeX report, references, memory |
+| `...\THESIS\Model\SPX\` | SPX notebook (`SPX_stats.ipynb`), data |
+| `...\THESIS\Model\CABLE\` | GBP notebook (`GBP_stats.ipynb`), data |
+| `...\THESIS\Model\XAU\Full_Data\` | XAU notebook (`XAU_stats.ipynb`), data |
+| `...\THESIS\Model\Historical_SPX\` | Historical SPX notebook, CSV data |
 
-## Key Data Files (in SPX directory)
+## Key Data Files (all model dirs share macro/tariff files)
 | File | Description |
 |------|-------------|
-| `SPX_1.xlsx` to `SPX_14.xlsx` | Raw intraday SPX data (split across files) |
+| `SPX_1.xlsx`–`SPX_14.xlsx` | Raw intraday SPX data |
 | `Macro_dates.xlsx` | FOMC, CPI, NFP announcement dates |
-| `Macro_Expected_back_to_2023.xlsx` | Consensus forecasts, actuals, and pre-computed surprise categories (0/1/2) for FOMC, CPI, NFP, PPI, PCE, ADP, JOLTS, CLAIMS from Jan 2023 onward |
-| `tariff_wss_v2.xlsx` | Tariff event scoring (Weighted Severity Score); TARIFF dummy = 1 when WSS >= 5 |
+| `Macro_Expected_back_to_2023.xlsx` | Consensus forecasts, actuals, surprise categories (0/1/2) from Jan 2023 |
+| `tariff_wss_v2.xlsx` | Tariff WSS scores; TARIFF=1 when WSS≥5 |
 | `rv_spx.xlsx` | Computed daily RV |
 
-## CABLE (GBP/USD) Directory
-- **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\CABLE\`
-- **Notebooks**: `GBP_stats.ipynb`, `GBPUSD_Full_Refactored.ipynb`, `GBP_Full_Data.ipynb`
-- **Data**: `GBPUSD_1.xlsx` to `GBPUSD_14.xlsx` — 5-min intraday, timestamps in Irish time
-- **Sample period**: 2025-10-29 to 2026-03-26
-- **Trading hours**: 22:00 Sunday to 22:00 Friday (UTC), continuous 24-hr market (no daily break)
-  - In Irish time: Sunday ~18:00–19:00 open, Friday 21:55 close (shifts with DST)
-- **Macro/tariff files**: `Macro_dates.xlsx`, `Macro_Expected_back_to_2023.xlsx`, `tariff_wss_v2.xlsx`
+## Sample Periods
+| Dataset | In-Sample | Out-of-Sample |
+|---------|-----------|---------------|
+| SPX (main) | 2025-07-22 – 2026-01-29 | 2026-01-30 – 2026-03-20 |
+| SPX (historical) | 2023-05-01 – ~2023-09-25 (80%) | ~2023-09-26 – 2023-10-31 |
+| GBP/USD | 2025-10-29 – (cutoff TBD) | TBD |
+| XAU/USD | 2025-12-04 – (cutoff TBD) | TBD |
 
-## XAU (Gold) Directory
-- **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\XAU\Full_Data\`
-- **Notebooks**: `XAU_stats.ipynb`, `XAU_Full_Refactored.ipynb`, `XAU_Full_Data.ipynb`
-- **Data**: `XAU_1.xlsx` to `XAU_13.xlsx` — 5-min intraday, timestamps in Irish time
-- **Sample period**: 2025-12-04 to 2026-03-26
-- **Trading hours**: 22:00 Sunday to 22:00 Friday (UTC), 23-hr daily sessions with a **1-hour break from 22:00 to 23:00 UTC**
-  - In Irish time: Sunday 23:00 open, daily gap at 22:00–23:00, Friday 21:55 close (shifts with DST)
-- **Macro/tariff files**: `Macro_dates.xlsx`, `Macro_Expected_back_to_2023.xlsx`, `tariff_wss_v2.xlsx`
-
-## Historical SPX Directory
-- **Path**: `C:\Users\oisin\OneDrive - University College Dublin\THESIS\Model\Historical_SPX\`
-- **Notebook**: `Historical_SPX_stats.ipynb` — same 7 models as main notebook but for May–Oct 2023 historical period
-- **Data**: `SPX_1.csv` to `SPX_22.csv` — CSV format with `dd/mm/yyyy HH:MM` dates in **Ireland time** (same TradingView/Pineify source as main data)
-- **Macro file**: `Macro_Expected_back_to_2023.xlsx` — same file as main SPX dir, contains all events back to Jan 2023
-- **Tariff file**: `tariff_wss_v2.xlsx` — present but **not used** (no tariff events in 2023)
-- **Sample**: 2023-05-01 to 2023-10-31, 80:20 IS:OOS split (dynamic CUTOFF)
-- **Key differences from main notebook**:
-  - CSV loading with `dayfirst=True` instead of Excel
-  - No TARIFF dummy in any model (pre-2025 period)
-  - 80:20 dynamic split instead of fixed CUTOFF date
-  - Holiday mask: July 3 early close, July 4, Sep 4 (Labor Day)
-  - All IS/OOS metrics computed dynamically (no hardcoded values)
-  - `parse_macro_b23()` defined in cell 3 (plot cell) and reused by all model cells
-
----
-
-## Notebook Structure (SPX_stats.ipynb)
-
-### Data Preparation (Cells 0-3)
-- Imports: numpy, pandas, scipy, statsmodels, matplotlib, sklearn
-- Computes daily RV from intraday data
-- Descriptive statistics for log(RV)
-- Plot: RV time series with macro event lines overlaid
-
-### HAR Feature Construction
-- `build_har_features(rv)` — standard HAR: RV_d (1-day lag), RV_w (5-day rolling mean, lagged), RV_m (22-day rolling mean, lagged)
-- `build_har_features_adj(rv, macro_flag)` — adjusted version for Model 5: RV_d skips macro/tariff event days and uses most recent non-event day's log-RV
-- Target variable: `y = log(RV)`
-
-### Sample Periods
-
-#### Main Dataset (SPX_stats.ipynb)
-| Period | Start | End | Notes |
-|--------|-------|-----|-------|
-| Full sample | 2025-07-22 | 2026-03-20 | `START_DATE` to `END_DATE` |
-| In-sample | 2025-07-22 | 2026-01-29 | Fixed `CUTOFF = pd.Timestamp("2026-01-29")` |
-| Out-of-sample | 2026-01-30 | 2026-03-20 | ~35 trading days |
-
-#### Historical Dataset (Historical_SPX_stats.ipynb)
-| Period | Start | End | Notes |
-|--------|-------|-----|-------|
-| Full sample | 2023-05-01 | 2023-10-31 | ~128 trading days (after partial-day removal) |
-| In-sample | 2023-05-01 | ~2023-09-25 | 80% of full sample, dynamic CUTOFF |
-| Out-of-sample | ~2023-09-26 | 2023-10-31 | 20% of full sample, ~26 trading days |
-
-*Note: Historical IS/OOS dates are approximate — exact cutoff depends on number of full trading days retained after cleaning.*
+## Trading Hours
+- **SPX**: 09:30–16:00 ET (6.5 hr)
+- **GBP/USD**: 22:00 Sun – 22:00 Fri UTC, continuous 24 hr
+- **XAU/USD**: 22:00 Sun – 22:00 Fri UTC, 23 hr/day (break 22:00–23:00 UTC daily)
+- GBP/XAU have mechanically higher daily RV than SPX due to longer sessions
 
 ---
 
 ## Models
+| Model | Description | Key extra features |
+|-------|-------------|-------------------|
+| 1 | Baseline HAR-RV | — |
+| 2 | HAR-RV + Individual Macro Dummies | FOMC, CPI, NFP, TARIFF |
+| 3a | Expected vs Surprise (all non-FOMC events) | MACRO_0/1/2, FOMC_exp, FOMC_unexp, TARIFF |
+| 3b | Expected vs Surprise (CPI+NFP only) | MACRO*_0/1/2, FOMC_exp, FOMC_unexp, TARIFF |
+| 4 | Three-Tier Individual Dummies | CPI_0/1, NFP_0/1, FOMC_0/1, TARIFF (tier-2 dummies dropped — zero occurrences) |
+| 5 | Three-Tier + Adjusted RV_d Lag | Same as 4 but RV_d replaced with RV_d* on days after event days |
+| 6 | Random Forest (500 trees, seed=42) | Same features as Model 5; Gini feature importances |
 
-### Model 1 — Baseline HAR-RV (Cell 4)
-- Features: RV_d, RV_w, RV_m
-- OLS with HAC standard errors (Newey-West, 5 lags)
-- Variables: `har_model`, `is_rmse`, `is_mae`, `full_base`, `har_is`
+**Naming history**: Model 3→3a, Model 4b→3b (variable suffixes: _m3→_m3a, _m4b→_m3b)
 
-### Model 2 — HAR-RV + Individual Macro Dummies (Cell 7)
-- Features: RV_d, RV_w, RV_m + FOMC, CPI, NFP, TARIFF (binary 0/1 dummies)
-- Event dates from `Macro_dates.xlsx`; tariff from `tariff_wss_v2.xlsx`
-- Variables: `har_model_m2`, `is_rmse_m2`, `is_mae_m2`, `full_m2`, `feat_m2`
-
-### Model 3a — Expected vs Surprise (Cell 9)
-- Parses `Macro_Expected_back_to_2023.xlsx` via `parse_macro_b23()`
-- Builds per-event per-category dummies (e.g. CPI_0, CPI_1, CPI_2)
-- Collapses all non-FOMC events into composite MACRO_0, MACRO_1, MACRO_2 (daily max across CPI, NFP, PPI, PCE, ADP, JOLTS, CLAIMS)
-- FOMC_exp = FOMC_0; FOMC_unexp = max(FOMC_1, FOMC_2)
-- Features: RV_d, RV_w, RV_m + MACRO_0/1/2, FOMC_exp, FOMC_unexp, TARIFF
-- Variables: `har_model_m3a`, `is_rmse_m3a`, `is_mae_m3a`, `full_m3a`, `feat_m3a`
-
-### Model 3b — FOMC exp/unexp + CPI/NFP Only Macro Tiers (Cell 11)
-- Same as 3a but MACRO_0/1/2 constructed from **CPI and NFP only** (excludes PPI, PCE, ADP, JOLTS, CLAIMS)
-- Uses `macro_b23_dummies_4b` (separate dummy frame)
-- Features: RV_d, RV_w, RV_m + MACRO_0/1/2, FOMC_exp, FOMC_unexp, TARIFF
-- Variables: `har_model_m3b`, `is_rmse_m3b`, `is_mae_m3b`, `full_m3b`, `feat_m3b`
-
-### Model 4 — Three-Tier Individual Dummies (Cell 13)
-- Individual event-level dummies: CPI_0/1/2, NFP_0/1/2, FOMC_0/1/2 + TARIFF
-- Dummies with zero in-sample occurrences are dropped (e.g. CPI_2, NFP_2, FOMC_2 were dropped)
-- Features: RV_d, RV_w, RV_m + `macro_ind_avail` + TARIFF
-- Variables: `har_model_m4`, `is_rmse_m4`, `is_mae_m4`, `full_m4`, `feat_m4`
-
-### Model 5 — Three-Tier + Adjusted RV_d Lag (Cell 15)
-- Same features as Model 4 but RV_d lag is adjusted: when previous day was a macro/tariff event day, uses most recent prior non-event day's log-RV instead
-- Macro days identified as: any CPI/NFP/FOMC category (0/1/2) OR TARIFF = 1
-- Variables: `har_model_m5`, `is_rmse_m5`, `is_mae_m5`, `full_m5`, `feat_m5`, `is_macro_day`
-
-### Model 6 — Random Forest (Cell 17)
-- `RandomForestRegressor(n_estimators=500, random_state=42, n_jobs=-1)`
-- Uses **exact same data and features as Model 5** (`har_is_m5`, `feat_m5`)
-- Computes feature importances (Gini-based)
-- Variables: `rf_model_m6`, `is_rmse_m6`, `is_mae_m6`, `is_r2_m6`, `is_r2_adj_m6`
-- Note: RF will overfit in-sample (high IS R²); OOS performance is the real test
+### Three-Tier Classification
+- Cat 0 (in-line): |std surprise| ≤ 0.5 SD
+- Cat 1 (moderate): 0.5 < |std surprise| ≤ 1.0 SD
+- Cat 2 (large): |std surprise| > 1.0 SD
+- FOMC uses CME futures-implied expectation; all others use Investing.com survey consensus
 
 ---
 
-## Out-of-Sample Evaluation (Cell 19)
-- Period: 2026-01-30 to 2026-03-20
-- **Fixed window**: models estimated once on full IS period; coefficients held constant and applied to OOS
-- Lagged RV inputs for OOS drawn from full dataset (not IS-only), so RV_w and RV_m use actual history as window advances
-- No re-estimation within the OOS period
-- For OLS models (1-5): slices OOS rows from `full_*` dataframes, adds constant, calls `.predict()`
-- For RF (Model 6): uses same OOS slice as Model 5, calls `rf_model_m6.predict()`
-- Metrics computed per model: OOS RMSE, OOS MAE, OOS R², OOS Adjusted R²
-- Helper function: `oos_adj_r2(y_true, y_pred, p)` — formula: `1 - (1-R²)(n-1)/(n-p-1)`
+## SPX In-Sample Results (IS window: 2025-09-24 – 2026-01-29, n=86)
+### Coefficients (HAC SE, Newey-West 5 lags)
+| Variable | M1 | M2 | M3a | M4 | M5 |
+|----------|----|----|-----|----|----|
+| α | -4.9885** | -4.8633*** | -4.6182** | -4.6989** | -5.0763** |
+| β_d | 0.4258*** | 0.4642*** | 0.4734*** | 0.4798*** | 0.3649*** |
+| β_w | 0.1868 | 0.2231 | 0.1967 | 0.1801 | 0.2479 |
+| β_m | -0.0876 | -0.1420 | -0.1049 | -0.1000 | -0.0923 |
+| γ1/FOMC | — | 1.2258*** | — | — | — |
+| γ2/CPI | — | 0.0667 | — | — | — |
+| γ3/NFP | — | 0.6274*** | — | — | — |
+| λ/TARIFF | — | 0.4072 | 0.3431 | 0.3893 | 0.6842** |
+| δ0/MACRO_0 | — | — | -0.0966 | — | — |
+| δ1/MACRO_1 | — | — | 0.2028 | — | — |
+| δ2/MACRO_2 | — | — | -0.1904 | — | — |
+| φ1/FOMC_exp | — | — | 1.1548*** | — | — |
+| φ2/FOMC_unexp | — | — | 1.2623*** | — | — |
+| γ_CPI,0 | — | — | — | 0.4963*** | 0.3536** |
+| γ_CPI,1 | — | — | — | -0.1594 | -0.1993 |
+| γ_NFP,0 | — | — | — | 0.0048 | -0.0385 |
+| γ_NFP,1 | — | — | — | 1.2221*** | 1.2420*** |
+| γ_FOMC,0 | — | — | — | 1.1819*** | 1.0476** |
+| γ_FOMC,1 | — | — | — | 1.2851*** | 1.1479*** |
+
+### Fit Statistics
+| Metric | M1 | M2 | M3a | M4 | M5 | M6 (RF) |
+|--------|----|----|-----|----|----|---------|
+| IS R² | 0.2531 | 0.3429 | 0.3317 | 0.3528 | 0.2930 | 0.8681 |
+| IS Adj R² | 0.2258 | 0.2839 | 0.2525 | 0.2666 | 0.1987 | 0.8546 |
+| IS RMSE | 0.7335 | 0.6880 | 0.6939 | 0.6828 | 0.7137 | 0.3105 |
+| OOS R² | -0.3390 | -0.5881 | -0.4969 | -0.6446 | -0.7126 | -0.7680 |
+| OOS RMSE | 0.6663 | 0.7256 | 0.7045 | 0.7384 | 0.7535 | 0.7656 |
+
+### Model 6 SPX Feature Importances
+| Feature | Importance |
+|---------|-----------|
+| RV_d | 0.4030 |
+| RV_w | 0.2702 |
+| RV_m | 0.2186 |
+| FOMC_1 | 0.0366 |
+| TARIFF | 0.0279 |
+| FOMC_0 | 0.0210 |
+| NFP_1 | 0.0150 |
+| CPI_1 | 0.0041 |
+| NFP_0 | 0.0028 |
+| CPI_0 | 0.0008 |
 
 ---
 
-## Comparison Table (Cell 21)
-- Columns: Description, In-Sample R², Adjusted R², IS RMSE, IS MAE, OOS R², OOS Adj R², OOS RMSE, OOS MAE
-- Styled HTML table with `highlight_best()` — bold blue for best in each column (highest for R², lowest for RMSE/MAE)
-- Caption includes both IS and OOS date ranges
+## Chapter 4 Structure (Final_Report.tex, as of 2026-03-31)
+- **4.1** Descriptive Statistics
+- **4.2** In-Sample Estimation Results
+  - 4.2.1 Model 1: Baseline HAR-RV
+  - 4.2.2 Model 2: HAR-RV with Individual Macro Dummies
+  - 4.2.3 Model 3: Expected versus Surprise Decomposition
+    - 4.2.3.1 Model 3a: All Macro Events
+    - 4.2.3.2 Model 3b: CPI and NFP Only
+  - 4.2.4 Model 4: Three-Tier Individual Dummies
+  - 4.2.5 Model 5: Three-Tier with Adjusted RV Lag
+  - 4.2.6 Model 6: Random Forest Benchmark
+- **4.3** Out-of-Sample Forecast Comparison
+
+**Table format**: Each subsection (4.2.1–4.2.5) has a cross-asset table (SPX, SPX 2023, GBP, XAU) with Coef. + (t-stat) columns. Equation displayed above each table; left-side symbols match the equation. Section 4.2.6 uses a single-column importance table (no t-stats). All cross-asset cells currently blank except SPX (values above).
+
+## Chapter 3 Structure
+- **3.1**: Data (Intraday Price Data, Data Cleaning, Macro Data, Tariff Data, Sample Periods)
+- **3.2**: Realised Variance Construction (Daily RV, Log Transform, Multi-Horizon Components)
+- **3.3**: Model Framework (Models 1–6, summary table `\ref{tab:model_summary}`)
+- **3.4**: Estimation (OLS/HAC, Estimation Window + OOS method, RF Benchmark)
+- **3.5**: Evaluation Framework (Performance Metrics, Cross-Asset Replication)
 
 ---
 
-## Three-Tier Surprise Classification System
-- Category 0 (in-line): |standardised surprise| ≤ 0.5 SD
-- Category 1 (moderate surprise): 0.5 < |standardised surprise| ≤ 1.0 SD
-- Category 2 (large surprise): |standardised surprise| > 1.0 SD
-- Standardised surprise = |actual − consensus| / SD of historical releases (Jan 2023 onwards)
-- Categories are pre-computed in `Macro_Expected_back_to_2023.xlsx` (column index 6)
-- Applied to: FOMC, CPI, NFP, PPI, PCE, ADP, JOLTS, CLAIMS
-- **FOMC uses futures-implied expectation** (CME 30-Day Fed Funds futures), not survey-based consensus
-- All other events use Investing.com survey-based consensus
+## Outstanding Issues
+- **GBP/XAU IS/OOS split dates** not stated in 3.1.5
+- **De-escalation TARIFF**: 9/36 events are de-escalatory; dummy treats all WSS≥5 equally — acknowledge in limitations
+- **Stationarity**: OLS requires stationary regressors; ADF tests in Ch4 should cross-reference 3.4.1
+- **3b coefficient values**: not yet available — table left blank in Final_Report.tex
 
-## Tariff Dummy Construction
-- Source: `tariff_wss_v2.xlsx`, sheet "Tariff Event Scoring"
-- Each date assigned a Weighted Severity Score (WSS)
-- TARIFF = 1 when WSS >= 5, else 0
-- Parsed via `_parse_tariff()` function applied to "Scoring Notes" column
+## Potential Next Steps
+- QLIKE loss function (Patton 2011) — asymmetric, standard in RV literature
+- Diebold-Mariano test — pairwise forecast accuracy differences
+- Model Confidence Set — Hansen et al. (2011)
 
 ---
 
-## Naming History
-- "Model 3" was renamed to "Model 3a" (all macro events in composite)
-- "Model 4b" was renamed to "Model 3b" (CPI/NFP only composite)
-- All variable suffixes updated accordingly (_m3 -> _m3a, _m4b -> _m3b)
+## LaTeX / Citation Rules
+- **Citations**: add to `references.bib` FIRST, then `\cite{}` in tex. Never cite without bib entry.
+- Equations: standalone `\begin{equation}`, `\noindent` after; multiline uses `\begin{split}`
+- Use `\citep{}` parenthetical, `\citet{}` textual
+- Avoid hardcoded sample numbers (e.g. "130 trading days")
+- Terminology: "realised variance (RV)" on first mention; never "realised volatility"
 
----
-
-## Metrics Glossary
-| Metric | Direction | Description |
-|--------|-----------|-------------|
-| R² | Higher = better | Proportion of variance explained |
-| Adjusted R² | Higher = better | R² penalised for number of features |
-| RMSE | Lower = better | Root mean squared error (penalises large errors) |
-| MAE | Lower = better | Mean absolute error (treats all errors equally) |
-
----
-
-## Potential Next Steps (discussed but not yet implemented)
-- **QLIKE** loss function — asymmetric, penalises under-prediction more (standard in RV literature, Patton 2011)
-- **Diebold-Mariano test** — pairwise statistical test of forecast accuracy differences between models
-- **Model Confidence Set (MCS)** — Hansen et al. (2011), identifies statistically indistinguishable best models
-
-## Outstanding Chapter 3 Improvements (not yet implemented — 2026-03-29)
-- **Stationarity**: OLS requires stationary regressors; not addressed in methodology; ADF tests in Ch4 should be cross-referenced from 3.4.1
-- **De-escalation TARIFF limitation**: 9/36 tariff events are de-escalatory but TARIFF dummy treats all WSS≥5 equally regardless of direction; should be acknowledged as a limitation in 3.1.4 or 3.3.5
-- **GBP/USD and XAU/USD IS/OOS split dates**: 3.1.5 gives full sample dates but not IS/OOS split dates for these two assets
-- **Fixed vs rolling window**: 3.4.2 does not explicitly state the IS window is fixed (not rolling/recursive)
-- **Equation labels**: equations use hardcoded numbers (3.4–3.6) rather than `\label{}`/`\ref{}` — low priority but fragile
-
----
+## Git / Overleaf
+- Always `git pull` before pushing — Overleaf pushes can cause conflicts
+- When resolving conflicts: keep correct GBP/XAU trading hours (22:00–22:00 UTC)
 
 ## Technical Notes
-- All OLS models use HAC standard errors (Newey-West, 5 lags)
-- Significance stars: *** (p<0.01), ** (p<0.05), * (p<0.10)
-- In-sample dummies with zero occurrences are excluded to avoid perfect multicollinearity
-- The `full_*` dataframes are built over the **full sample** so that OOS lags (RV_w, RV_m) can use in-sample history
-- CUTOFF defined once in Cell 4 and reused by all models
-- Daily RV for GBP/USD and XAU/USD computed over 22:00–22:00 UTC window
-- GBP/USD and XAU/USD have mechanically higher daily RV than SPX due to longer sessions (24hr/23hr vs 6.5hr) — more squared returns in the summation
-- Neural network benchmark removed from thesis — only Random Forest retained as ML benchmark
-
-## Terminology Convention
-- Use "realised variance (RV)" on **first mention** in any document, then "RV" thereafter
-- Never use "realised volatility" when referring to the RV measure — RV is an estimator of integrated variance, not volatility itself
-- In LaTeX equations: use `RV_t^{(d)}` not `$RV_t^{(d)}$` inside `\begin{equation}` environments
-
-## LaTeX Formatting Rules
-- All equations must be **standalone**: blank line before `\begin{equation}`, `\noindent` on the line after `\end{equation}` for continuation text
-- Long equations use `\begin{split}...\end{split}` inside `\begin{equation}` for multiline
-- Use `\frac{}{}` for fractions, not `(1/n)`
-- Use `\citep{}` for parenthetical citations, `\cite{}` or `\citet{}` for textual citations
-- Use LaTeX double-backtick quotes ` ``...'' ` not straight quotes `"..."`
-- Each `\section{}` should have a brief introductory paragraph describing what the section contains
-- Avoid hardcoded sample-specific numbers (e.g., "130 trading days") — use generic language that applies across all datasets
-- RMSE and MAE **must** be in `\begin{equation}` blocks (not inline) — already done in 3.5.1
-
-## Chapter 3 Structure (as of 2026-03-29)
-- **3.1**: Data (Intraday Price Data, Data Cleaning, Macro Data, Tariff Data, Sample Period & Limitations)
-- **3.2**: Realised Variance Construction (Daily RV, Log Transform, Multi-Horizon Components)
-- **3.3**: Model Framework — includes `\ref{tab:model_summary}` summary table of all 7 models
-  - 3.3.1 Baseline HAR-RV (Model 1)
-  - 3.3.2 HAR-RV with Macro Dummies (Model 2 — **includes TARIFF in equation**) — rewritten as motivation leading to three-tier
-  - 3.3.3 Expected vs Surprise Decomposition — **motivational only, no separate model**
-  - 3.3.4 Three-Tier Classification (Models 3a/3b)
-  - 3.3.5 Tariff Dummy (Model 4)
-  - 3.3.6 Adjusted Lag (Model 5)
-- **3.4**: Estimation (OLS/HAC, Estimation Window + OOS forecast method, RF Benchmark)
-  - OOS forecast generation described in 3.4.2: fixed IS window, coefficients held constant, applied forward
-- **3.5**: Evaluation Framework (Performance Metrics, Cross-Asset Replication)
-  - Section 3.5.1 (Train-Test Split Strategy) **removed** — was repetitive with 3.4.2
-  - Section 3.5.3 trimmed — Bank of England removed, session-length paragraph removed
-
-## Supervisor PDF Comment Workflow
-- Supervisor provides annotated PDFs (e.g., `improvements.pdf`, `3_1_improvements.pdf`) with highlighted sections and comments
-- Extract annotations using PyMuPDF (`fitz`): `page.annots()` for comments, `page.get_text('text', clip=rect)` for highlighted text
-- For highlighted text extraction: group vertices into quads (4 points each), build rects from quad[0] to quad[2], extract text per quad
-- Implement changes directly in `Final_Report.tex` (not in separate files, unless explicitly requested)
-- After implementing, always check for and resolve any git merge conflicts before pushing
-
-## Citation Workflow (MANDATORY)
-When writing thesis text that references a study:
-1. **Add the entry to `references.bib` FIRST** (BibTeX format, key = `AuthorYear`)
-2. **Then insert `\cite{Key}` into `Final_Report.tex`**
-3. Never cite a reference that does not exist in `references.bib`
-4. Files: `C:\Users\oisin\Thesis\references.bib` and `C:\Users\oisin\Thesis\Final_Report.tex`
-
-## Git & Overleaf Sync
-- Thesis repo: `https://github.com/oisinofriel-ship-it/Thesis`
-- Overleaf syncs via a branch (e.g. `overleaf-2026-03-28-1250`) which merges into `main`
-- **Common issue**: Overleaf pushes can cause merge conflicts in `Final_Report.tex` — always `git pull` before pushing, then resolve conflicts
-- When resolving conflicts between local (HEAD) and Overleaf versions:
-  - HEAD typically has correct GBP/XAU trading hours (22:00-22:00 UTC full sessions)
-  - Overleaf version may have outdated session descriptions (London-NY overlap, COMEX hours) from earlier drafts
-  - Keep the more detailed Data Cleaning content (DST explanation, specific holidays) from whichever version has it
-  - 2026-03-29 conflict: VIX figure caption — Overleaf had `\textbf{}` bold title format; HEAD had updated language ("historical average range"). Resolution: keep Overleaf formatting + HEAD language
-
-## Supervisor Feedback Log
-### improvements.pdf (2026-03-28)
-1. **"better Figure caption"** on VIX figure (Figure 3.1) — **DONE**: expanded caption to describe daily closing values, blue/orange shaded regions with context about trade policy uncertainty and stable sentiment
-2. **"this additional dataset of Hist_SPX, should be included in 3.1.1"** — **DONE**: confirmed Historical SPX paragraph is in Section 3.1.1 (Intraday Price Data), not in Data Cleaning
-3. **Page 35**: Equation~(2) → Equation~3.2 — **DONE**
-4. **Page 36**: VIX paragraph — add that period had natural spikes but was not abnormally tranquil — **DONE**
-5. **Page 37**: Remove hardcoded "164 complete trading days..." paragraph — **DONE**
-6. **Section 3.5.1 Train-Test Split Strategy**: flagged as repetition — **DONE**: section removed; OOS forecast generation description moved to 3.4.2
-7. **Section 3.5.3 Cross-Asset Replication**: flagged as repetition; remove Bank of England — **DONE**: section trimmed to one paragraph, BoE removed
-
-## Reference PDF Downloads
-- Script: `C:\Users\oisin\Thesis\download_references.py`
-- Output: `C:\Users\oisin\Thesis\reference_pdfs\`
-- Uses Crossref (DOI lookup) -> Unpaywall (OA PDFs) -> Semantic Scholar (fallback)
-- Dependencies: `bibtexparser`, `requests`
-- **Result (2026-03-28)**: 6/53 downloaded via open access (Andersen2007, Cheng2023, Christensen2023, FajgelbaumKhandelwal2022, Gu2020, Rigobon2004); remaining 45 need UCD library access
-- SSRN links frequently fail (return HTML login pages, not PDFs) — manual download needed for those
-
-## Total References in references.bib
-- 53 entries (as of 2026-03-28)
-- Includes 2 `@misc` entries (FederalReserve2023, Brookings2025) and 1 `@book` (BoxJenkins1970, Mishkin2019)
+- All OLS: HAC SE (Newey-West, 5 lags); significance: *** p<0.01, ** p<0.05, * p<0.10
+- Zero-occurrence dummies dropped (CPI_2, NFP_2, FOMC_2 absent from Models 4/5)
+- `full_*` dataframes built over full sample so OOS lags use actual history
+- RF (Model 6) overfits in-sample (IS R²=0.87); OOS is the real test
+- 53 BibTeX entries in `references.bib` (as of 2026-03-28)
