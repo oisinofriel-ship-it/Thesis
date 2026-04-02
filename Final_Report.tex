@@ -386,8 +386,8 @@ In addition, a secondary S\&P 500 dataset spanning May 2023 to October 2023, sou
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{VIX_5_years.png}
-\caption{\textbf{Daily closing values of the CBOE Volatility Index (VIX), March 2021--March 2026.}
+\includegraphics[width=\textwidth]{VIX_Last_5_Years.pdf}
+\caption{\textbf{Daily closing values of the VIX, March 2021--March 2026.}
 The blue shaded region denotes the primary sample period (July 2025--March 2026), characterised by elevated implied volatility associated with trade policy uncertainty and successive tariff announcements.
 The orange shaded region indicates the historical comparison period (May--October 2023), during which the VIX remained broadly within its historical average range, reflecting stable investor sentiment and an absence of the sustained, policy-driven elevations that characterise the primary sample period.}
 \label{fig:vix_5yr}
@@ -738,23 +738,6 @@ Total & & & & \\
     \label{fig:XAU RV over entire sample period}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lcccc}
-\toprule
-Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
-\midrule
-FOMC  & & & & \\
-CPI   & & & & \\
-NFP   & & & & \\
-\midrule
-Total & & & & \\
-\bottomrule
-\end{tabular}
-\caption{[Table caption]}
-\label{tab:events}
-\end{table}
-
 ## what to do with this table considering the start dates of my different datasets?##
 
 \begin{table}[H]
@@ -775,26 +758,31 @@ Total & 17 & 8 & 5 & 2 \\
 \end{table}
 INSERT TARIFF INFO:
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\begin{tabular}{lccccc}
+\caption{Tariff Event Classification Summary}
+\label{tab:tariff_summary}
+\begin{tabular}{lcc}
 \toprule
- & Occurrences & Mean Mag & Mean Brd & Mean Sec & Mean WSS \\
+ & In-Sample & Out-of-Sample \\
+ & (22 Jul 2025 -- 29 Jan 2026) & (30 Jan -- 20 Mar 2026) \\
 \midrule
-\multicolumn{6}{l}{\textit{In-Sample Window (22 Jul 2025 -- 5 Jan 2026)}} \\[2pt]
-Escalation    & 4  & & & & \\
-De-escalation & 8  & & & & \\
-\midrule
-\multicolumn{6}{l}{\textit{Out-of-Sample Window (6 Jan -- 20 Mar 2026)}} \\[2pt]
-Escalation    & 8  & & & & \\
-De-escalation & 3  & & & & \\
-\midrule
-Total         & 23 & & & & \\
+Total tariff events catalogued              & 22 & 10 \\
+\quad $T_t = 1$ (WSS $\geq 5$, escalatory) & 9  & 5  \\
+\quad De-escalation events (excluded)       & 8  & 4  \\
+\quad WSS $< 5$ (excluded)                  & 5  & 1  \\
 \bottomrule
 \end{tabular}
-\caption{Summary of Tariff Events by Window and Type}
-\label{tab:tariff_summary}
+\begin{tablenotes}
+\small
+\item \textit{Notes:} The Weighted Severity Score (WSS) is constructed as WSS $=$ Mag $+$ Brd $+$ Sec,
+where Mag scores tariff rate magnitude (0--3), Brd scores the breadth of countries affected (0--3), and
+Sec scores the sector scope by SPX index weight (0--3), giving a maximum score of 9. The binary dummy
+$T_t = \mathbf{1}[\text{WSS} \geq 5]$ is set to zero for de-escalation events regardless of WSS. Full
+event-level scores are reported in Appendix~\ref{app:tariff_wss}.
+\end{tablenotes}
 \end{table}
+
 
 STAT TO JUSTIFY CROSS ASSET COMPARSION (correlation table -- pairwise correlations between log RV of SPX, GBP, XAU to motivate cross-asset comparison.
 
@@ -1105,6 +1093,38 @@ Model & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MA
 \end{tabular}
 }
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{SPX_oos_forecast_models_comparison.pdf}
+    \caption{SPX OOS Model Comparsion}
+    \label{fig:SPX OOS Model Comparsion}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hist_SPX_oos_forecast_models_comparison.pdf}
+    \caption{SPX 2023 OOS Model Comparsion}
+    \label{fig:SPX 2023 OOS Model Comparsion}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{GBP_oos_forecast_models_comparison.pdf}
+    \caption{GBP OOS Model Comparsion}
+    \label{fig:GBP OOS Model Comparsion}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{XAU_oos_forecast_models_comparison.pdf}
+    \caption{XAU OOS Model Comparsion}
+    \label{fig:XAU OOS Model Comparsion}
+\end{figure}
+
+
 \chapter{Discussion}
 This chapter interprets the empirical findings presented in Chapter 4 and situates them within the broader literature on volatility forecasting and macroeconomic announcements. It is organised into four sections. Section 5.1 discusses the key findings regarding the role of macroeconomic announcements in volatility dynamics. Section 5.2 examines the cross-asset comparison. Section 5.3 compares the results with the existing literature. Section 5.4 discusses the limitations of the study.
 
