@@ -627,6 +627,9 @@ The modelling pipeline is applied independently to each of the four datasets usi
 This chapter presents the empirical results of the study. It is organised into six sections. Section 4.1 provides descriptive statistics for the RV series across all three assets. Sections 4.2 through 4.4 report the estimation and forecasting results for SPX, GBP, and XAU, respectively, following the sequence of model specifications described in Chapter 3. Section 4.5 presents the out-of-sample forecast comparison across all models and assets.
 
 \section{Descriptive Statistics}
+
+This section presents descriptive statistics for the daily realised variance series across the four samples under study: the S\&P 500 (SPX, July 2025--March 2026), the historical S\&P 500 replication (SPX 2023, May--October 2023), the GBP/USD exchange rate, and gold spot (XAU/USD). The statistics characterise the distributional properties of the target variable prior to model estimation, and are supplemented by per-asset macro announcement event frequencies and a tariff shock summary. Cross-asset differences in sample length, session structure, and distributional shape have direct implications for the identification and interpretation of the model specifications described in Chapter 3.
+
 % [Caption: Table 1: Log RV per dataset]
 \begin{table}[H]
 \centering
@@ -648,17 +651,13 @@ Excess Kurtosis & \multicolumn{2}{c}{3.65}   & \multicolumn{2}{c}{4.48}   & \mul
 \caption{[Table caption]}
 \label{tab:summary_stats}
 \end{table}
-Mean, Std Dev, Min, Max all scaled to the power of 10^6 
+% Note: All values in Table~ef{tab:summary_stats} scaled by $	imes 10^6$. Jarque--Bera and ADF statistics to be inserted once computed for log RV.
 
-Add Jarque-Bera test statistic (p-value) to confirm non-normality of raw RV
+The raw RV series exhibit strong positive skewness and excess kurtosis across all four samples, confirming that the untransformed series are far from Gaussian. XAU/USD displays the most extreme distributional characteristics, with skewness of 4.18 and excess kurtosis of 16.68, driven by episodic safe-haven demand spikes associated with geopolitical and tariff-related events. The two S\&P 500 samples show substantial skewness (1.69 and 1.75) and leptokurtosis, consistent with the fat-tailed behaviour of equity RV documented in the high-frequency literature \citep{Andersen2003a}. GBP/USD, with skewness of 1.49 and excess kurtosis of 1.28, is the most regularly distributed in levels. The logarithmic transformation applied prior to estimation is therefore essential for normalising the target variable, as described in Section~3.2.2. Stationarity of the log RV series for all assets is confirmed by Augmented Dickey--Fuller tests 	extit{[statistics to be inserted]}, a prerequisite for consistent OLS estimation.
 
-Add ADF test statistic to confirm stationarity of log RV series
+The four samples differ substantially in length and trading session structure. SPX (2025) has the largest sample (165 observations), providing the best-conditioned estimation environment. SPX 2023 (126 observations) serves as a replication across an economically distinct period, notable for higher macro surprise frequency and the absence of tariff events. GBP/USD (96 observations) and XAU/USD (72 observations) have shorter samples due to later data availability start dates; the smaller XAU/USD in-sample window limits identification power for parameterised specifications. As discussed in Section~3.1.1, the longer trading sessions of GBP/USD and XAU/USD produce mechanically higher daily RV than SPX via the squared-return summation in Equation~3.2; direct comparison of RV levels across assets is therefore not meaningful, though cross-asset comparison of model fit and coefficient patterns remains informative.
 
-Add Jarque-Bera test statistic to confirm non-normality of raw RV
-
-Add ADF (Augmented Dickey-Fuller) test statistic to confirm stationarity of log RV series
-
-INSERT PLOTS (Full dataset and dashes vertical lines for macro events) \ldots{}
+% INSERT PLOTS (Full dataset with vertical dashed lines marking macro and tariff event days)
 
 \begin{figure}[H]
     \centering
@@ -785,9 +784,13 @@ is excluded as no material tariff events occurred in that window.
 \end{table}
 
 
-STAT TO JUSTIFY CROSS ASSET COMPARSION (correlation table -- pairwise correlations between log RV of SPX, GBP, XAU to motivate cross-asset comparison.
+The macro announcement event tables reveal important cross-asset differences in event composition. For SPX (2025), the 20 events are broadly balanced across FOMC (6), CPI (7), and NFP (7), with a predominance of in-line and moderate surprise categories. The SPX 2023 sample is distributional distinct: all four FOMC meetings produced in-line readings, all six CPI releases were moderate surprises (Category 1), and NFP produced two large surprises --- a pattern that favours identification of surprise-tier effects relative to the 2025 sample. GBP/USD and XAU/USD have fewer events due to shorter sample windows (13 and 8 macro events respectively), with XAU/USD covering only two FOMC meetings within its in-sample estimation period. The tariff dummy ($T_t = 1$ for WSS $\geq 5$) is applied to all non-2023 samples: 14 qualifying days for SPX, 6 for GBP/USD, and 5 for XAU/USD.
+
+% [PLACEHOLDER: Cross-asset log RV correlation table --- pairwise Pearson correlations between log RV of SPX, GBP/USD, and XAU/USD over the common overlapping sample.]
 
 \section{In-Sample Estimation Results}
+
+This section presents in-sample coefficient estimates for all six model specifications across the four asset samples. Results are organised by model, with each cross-asset table preceded by the relevant specification equation. The discussion focuses on the primary SPX (2025) results, drawing cross-asset comparisons where patterns diverge materially or are economically informative.
 
 \subsection{Baseline and Binary Macro Augmentation}
 
@@ -824,6 +827,8 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{tabular}
 }
 \end{table}
+
+The baseline HAR-RV model establishes the persistence benchmark against which all augmented specifications are evaluated. For SPX (2025), only the daily lag is statistically significant ($\hat{\beta}^{(d)} = 0.387$, $p < 0.001$), while the weekly and monthly components are individually insignificant. This concentration of predictive content in the shortest lag reflects the difficulty of identifying multi-horizon persistence in samples of fewer than six months \citep{Corsi2009}: the 22-day rolling window required to estimate the monthly component represents approximately one-fifth of the estimation sample, leaving limited degrees of freedom for separating the three components. In contrast, SPX 2023 recovers significant weekly persistence ($\hat{\beta}^{(w)} = 0.444^{**}$), consistent with a more stable volatility regime during the post-pandemic disinflation period. GBP/USD also achieves significance for $\hat{\beta}^{(d)}$ only, while XAU/USD produces anomalous HAR coefficients: the monthly component is large and significantly positive ($\hat{\beta}^{(m)} = 9.266^{***}$), likely reflecting the very small XAU/USD in-sample window ($N = 14$), which leaves the monthly lag poorly identified and may produce spurious estimates. The in-sample R$^2$ values for GBP/USD (0.398) and XAU/USD (0.495) are higher than for SPX (0.253), but these figures must be interpreted cautiously given the smaller estimation samples.
 
 \paragraph{Model 2: HAR-RV with Individual Macro Dummies}\mbox{}\\
 
@@ -869,6 +874,8 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{tabular}
 }
 \end{table}
+
+Model 2 adds four binary announcement dummies to the baseline, raising the SPX in-sample R$^2$ by approximately 9 percentage points (0.343 versus 0.253). FOMC is the dominant event across all samples: $\hat{\gamma}_1 = 1.517^{***}$ for SPX (2025) and $\hat{\gamma}_1 = 1.170^{***}$ for SPX 2023, confirming that Federal Reserve communication days produce a systematic and economically large elevation in equity RV, consistent with the evidence in \citet{Bernanke2005}. NFP is also significant for SPX (2025) ($\hat{\gamma}_3 = 0.712^{***}$), SPX 2023 ($0.326^{***}$), and GBP/USD ($0.241^{**}$), but not for XAU/USD, where the labour market release carries less direct relevance for gold pricing. CPI produces a significant estimate for SPX 2023 ($\hat{\gamma}_2 = 0.301^{*}$) but is essentially zero for SPX (2025) ($-0.013$, $p \approx 0.97$), likely because most CPI releases in 2025 were in-line with a well-established disinflationary trend, reducing their informational content. The most striking cross-asset result is the TARIFF coefficient for GBP/USD: $\hat{\lambda} = -0.556^{***}$, in contrast to the positive (but insignificant) tariff coefficient for SPX. A plausible interpretation is that tariff escalation episodes are associated with a risk-off flight to U.S. dollars, reducing GBP/USD volatility relative to non-tariff periods by anchoring the exchange rate near its lower bound; however, this result should be treated cautiously given the small GBP/USD sample ($N = 40$) and the limited tariff event count.
 
 \subsection{Surprise-Differentiated Specifications}
 
@@ -924,6 +931,8 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 }
 \end{table}
 
+Model 3a decomposes non-FOMC events into three surprise tiers aggregated across release types, and separates FOMC into expected and unexpected components. For SPX (2025), the aggregated non-FOMC surprise categories ($\hat{\delta}_0$, $\hat{\delta}_1$, $\hat{\delta}_2$) are all individually insignificant, confirming that collapsing different announcement types into a single surprise dimension discards economically meaningful heterogeneity between CPI, NFP, and other releases. The FOMC decomposition is more informative: both $\hat{\phi}_1 = 1.252^{***}$ (expected) and $\hat{\phi}_2 = 1.768^{***}$ (unexpected) are highly significant with broadly similar magnitudes, indicating that FOMC-day volatility elevation is driven primarily by the scheduled communication event itself rather than the degree of deviation from futures-implied expectations. This finding is consistent with the evidence in \citet{Gurkaynak2005} that the path factor in FOMC communications generates a substantial market impact independent of the immediate rate surprise. For GBP/USD, the FOMC decomposition also produces significant estimates ($\hat{\phi}_1 = 0.462^{**}$, $\hat{\phi}_2 = 0.488^{***}$), while the aggregated non-FOMC surprise dummies show mixed evidence, with the moderate surprise category significant at the 1\% level ($\hat{\delta}_1 = 0.294^{***}$). Despite its larger parameter count, Model 3a achieves a lower adjusted R$^2$ for SPX (0.252) than Model 2 (0.284), indicating that the loss of event-type specificity outweighs any gain from the surprise tier decomposition.
+
 \paragraph{Model 3b: CPI and NFP Only}\mbox{}\\
 
 \begin{table}[H]
@@ -973,6 +982,8 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{tabular}
 }
 \end{table}
+
+Model 3b restricts the composite surprise categories to CPI and NFP releases only, excluding other non-FOMC announcements (PPI, PCE, ADP, JOLTS) from the aggregated tiers. For SPX (2025), the results are broadly similar to Model 3a, with the FOMC decomposition producing significant estimates ($\hat{\phi}_1 = 1.258^{***}$, $\hat{\phi}_2 = 1.786^{***}$) and the composite non-FOMC tiers remaining individually insignificant. The marginal improvement in adjusted R$^2$ relative to Model 3a (0.297 versus 0.252 for SPX) suggests that restricting the composite to CPI and NFP --- the two releases with the clearest equity market relevance --- reduces noise from the inclusion of lower-impact announcements. Across assets, GBP/USD again shows significant moderate surprise effects ($\hat{\delta}_1 = 0.306^{***}$), while XAU/USD FOMC coefficients remain significant and of similar magnitude to the binary specification in Model 2, consistent with gold's strong sensitivity to monetary policy communication \citep{Baur2010}.
 
 \paragraph{Model 4: Three-Tier Individual Dummies}\mbox{}\\
 
@@ -1028,6 +1039,8 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{threeparttable}
 \end{table}
 
+Model 4 is the best-fitting linear specification in-sample for SPX, achieving R$^2 = 0.353$ and adjusted R$^2 = 0.267$. The event-specific tier structure reveals heterogeneity obscured in earlier specifications. For FOMC, both the in-line ($\hat{\gamma}_{FOMC,0} = 1.255^{***}$) and moderate surprise ($\hat{\gamma}_{FOMC,1} = 1.766^{***}$) dummies are highly significant with broadly similar magnitudes, confirming that the scheduled FOMC communication event is the primary driver of announcement-day volatility rather than the surprise component per se --- a finding consistent with the path-factor evidence in \citet{Gurkaynak2005}. For NFP, the moderate surprise dummy is the most economically significant coefficient in the SPX specification ($\hat{\gamma}_{NFP,1} = 1.062^{***}$), while the in-line category is negligible, indicating that in-line labour market readings carry no incremental volatility signal relative to the baseline. CPI produces no significant effects for SPX (2025) under the three-tier structure, consistent with the earlier binary specification. Cross-asset, FOMC coefficients are significant for all samples where sufficient events exist, while NFP significance is largely concentrated in SPX. The TARIFF coefficient remains insignificant across all assets in Model 4, suggesting that its apparent relevance in some earlier specifications is sensitive to model structure.
+
 \paragraph{Model 5: Three-Tier with Adjusted RV Lag}\mbox{}\\
 
 \begin{table}[H]
@@ -1082,6 +1095,8 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{threeparttable}
 \end{table}
 
+Model 5 modifies the daily lag of Model 4 by substituting the most recent non-event day's log RV when the preceding trading day falls on a macro or tariff announcement. The adjustment reduces the estimated daily lag coefficient for SPX from 0.466 in Model 4 to 0.374, consistent with the intended removal of event-day contamination from the persistence regressor. Despite its theoretical motivation, Model 5 produces a lower in-sample R$^2$ for SPX (0.293 versus 0.353) and higher RMSE (0.714 versus 0.683), reflecting the trade-off between cleaner lag identification and the introduction of measurement noise from non-adjacent observation substitution. The event dummy estimates are broadly stable relative to Model 4: FOMC both tiers and NFP moderate surprise remain highly significant. For SPX 2023, the adjusted lag causes $\hat{\beta}^{(d)}$ to become insignificant ($-0.042$), which is consistent with a regime where macro event days were more frequent and the adjusted lag is invoked more often, weakening the persistence signal. Across assets, Model 5 does not systematically outperform Model 4 in-sample, but it may offer a better-specified baseline for interpreting macro dummy coefficients by isolating the event effect from lagged persistence contamination.
+
 \subsection{Random Forest Benchmark}
 
 Unlike the OLS-based specifications, the Random Forest does not produce coefficient estimates. Instead, Gini-based feature importances are reported, which measure the relative contribution of each feature to the reduction in mean squared error across all trees in the ensemble. Importances sum to unity and are not directly comparable to regression coefficients; they indicate relative predictive contribution rather than directional effects.
@@ -1112,7 +1127,12 @@ Sum               & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 }
 \end{table}
 
+The Random Forest achieves dramatically higher in-sample fit than any linear model across all assets. For SPX (2025), the RF in-sample R$^2 = 0.868$ and RMSE $= 0.311$, versus the best linear specification R$^2 = 0.353$. The feature importance table reveals that the three HAR persistence components collectively dominate the RF predictions: for SPX, $RV_t^{(d)}$, $RV_t^{(w)}$, and $RV_t^{(m)}$ account for approximately 89\% of total importance, with the event dummies contributing the remaining 11\%. This hierarchy confirms that even in a non-parametric model capable of capturing interactions and non-linearities, the fundamental predictive content for log RV remains in lagged persistence. The event dummies --- primarily FOMC and TARIFF --- contribute modestly but consistently across assets, suggesting their RF importance is driven by the same announcement-day RV elevations identified in the linear specifications. For XAU/USD, the monthly component ($RV_t^{(m)} = 0.411$) is the single most important feature, reflecting the strong mean-reversion tendency of gold RV over longer horizons within the short estimation window, a pattern consistent with the anomalous monthly coefficients observed in the linear models.
+
 \section{Out-of-Sample Forecast Comparison}
+
+This section evaluates forecast accuracy across all models and assets over the respective out-of-sample periods. Performance is measured by RMSE, MAE, and OOS R$^2$, with negative OOS R$^2$ values indicating that a model's forecasts are less accurate than the unconditional historical mean of log RV over the forecast horizon.
+
 \begin{table}[h]
 \centering
 \caption{Model Comparison Across Asset Classes (OOS)}
@@ -1135,6 +1155,10 @@ Model & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MA
 \end{tabular}
 }
 \end{table}
+
+The out-of-sample results reveal a consistent and striking pattern: macro augmentation does not improve forecast accuracy relative to the baseline HAR-RV for any asset. For SPX (2025), all models produce negative OOS R$^2$ values, indicating that all specifications --- including the baseline --- underperform the unconditional mean over the OOS window. The baseline HAR-RV (Model 1) achieves the lowest RMSE (0.667) among all specifications, and OOS performance systematically deteriorates as model complexity increases: Models 4 and 5, the most parameterised linear specifications, produce the highest RMSE values (0.732 and 0.743 respectively). This pattern is consistent with the overfitting of in-sample announcement effects to the specific macro realisation sequence of the estimation period; when the OOS period encounters a different macro regime or event timing, the fitted announcement coefficients become a source of forecast error rather than signal. The Random Forest (Model 6) performs worst of all for SPX (RMSE $= 0.759$, OOS R$^2 = -0.737$), confirming that flexible non-parametric models overfit severely in small samples with sparse event realisations \citep{Gu2020}.
+
+The SPX 2023 sample provides a partial contrast: the baseline HAR-RV also underperforms the unconditional mean (OOS R$^2 = -1.386$), but Models 2, 3a, 3b, and 4 show modest improvements over the baseline, with Model 3a achieving the lowest RMSE ($0.473$). This pattern may reflect the more stable and systematic nature of the 2023 macro surprise environment (particularly the uniform CPI Category 1 classification), which makes announcement-day effects more consistently estimable in-sample and more transferable to OOS. For GBP/USD, the baseline again dominates (RMSE $= 0.537$), with the Random Forest achieving broadly similar accuracy ($0.531$); augmented specifications consistently increase OOS error, mirroring the SPX pattern. XAU/USD shows the most extreme OOS R$^2$ values due to the very small OOS sample and the high unconditional variance of gold RV; the Random Forest is the single best-performing specification for XAU/USD (RMSE $= 1.005$, OOS R$^2 = -0.126$), which may reflect that the RF captures non-linear safe-haven dynamics more effectively than linear models in this specific OOS window, though the result should not be over-interpreted given the limited evidence.
 
 \begin{figure}[H]
     \centering
