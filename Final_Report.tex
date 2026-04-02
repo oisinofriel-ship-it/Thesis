@@ -15,6 +15,7 @@
 \doublespacing
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
+\usepackage{threeparttable}
 \usepackage{longtable}
 \usepackage{array}
 \usepackage{graphicx}
@@ -386,8 +387,8 @@ In addition, a secondary S\&P 500 dataset spanning May 2023 to October 2023, sou
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\textwidth]{VIX_5_years.png}
-\caption{\textbf{Daily closing values of the CBOE Volatility Index (VIX), March 2021--March 2026.}
+\includegraphics[width=\textwidth]{VIX_Last_5_Years.pdf}
+\caption{\textbf{Daily closing values of the VIX, March 2021--March 2026.}
 The blue shaded region denotes the primary sample period (July 2025--March 2026), characterised by elevated implied volatility associated with trade policy uncertainty and successive tariff announcements.
 The orange shaded region indicates the historical comparison period (May--October 2023), during which the VIX remained broadly within its historical average range, reflecting stable investor sentiment and an absence of the sustained, policy-driven elevations that characterise the primary sample period.}
 \label{fig:vix_5yr}
@@ -738,23 +739,6 @@ Total & & & & \\
     \label{fig:XAU RV over entire sample period}
 \end{figure}
 
-\begin{table}[H]
-\centering
-\begin{tabular}{lcccc}
-\toprule
-Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
-\midrule
-FOMC  & & & & \\
-CPI   & & & & \\
-NFP   & & & & \\
-\midrule
-Total & & & & \\
-\bottomrule
-\end{tabular}
-\caption{[Table caption]}
-\label{tab:events}
-\end{table}
-
 ## what to do with this table considering the start dates of my different datasets?##
 
 \begin{table}[H]
@@ -775,26 +759,31 @@ Total & 17 & 8 & 5 & 2 \\
 \end{table}
 INSERT TARIFF INFO:
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
-\begin{tabular}{lccccc}
+\caption{Tariff Event Classification Summary}
+\label{tab:tariff_summary}
+\begin{tabular}{lcc}
 \toprule
- & Occurrences & Mean Mag & Mean Brd & Mean Sec & Mean WSS \\
+ & In-Sample & Out-of-Sample \\
+ & (22 Jul 2025 -- 29 Jan 2026) & (30 Jan -- 20 Mar 2026) \\
 \midrule
-\multicolumn{6}{l}{\textit{In-Sample Window (22 Jul 2025 -- 5 Jan 2026)}} \\[2pt]
-Escalation    & 4  & & & & \\
-De-escalation & 8  & & & & \\
-\midrule
-\multicolumn{6}{l}{\textit{Out-of-Sample Window (6 Jan -- 20 Mar 2026)}} \\[2pt]
-Escalation    & 8  & & & & \\
-De-escalation & 3  & & & & \\
-\midrule
-Total         & 23 & & & & \\
+Total tariff events catalogued              & 22 & 10 \\
+\quad $T_t = 1$ (WSS $\geq 5$, escalatory) & 9  & 5  \\
+\quad De-escalation events (excluded)       & 8  & 4  \\
+\quad WSS $< 5$ (excluded)                  & 5  & 1  \\
 \bottomrule
 \end{tabular}
-\caption{Summary of Tariff Events by Window and Type}
-\label{tab:tariff_summary}
+\begin{tablenotes}
+\small
+\item \textit{Notes:} The Weighted Severity Score (WSS) is constructed as WSS $=$ Mag $+$ Brd $+$ Sec,
+where Mag scores tariff rate magnitude (0--3), Brd scores the breadth of countries affected (0--3), and
+Sec scores the sector scope by SPX index weight (0--3), giving a maximum score of 9. The binary dummy
+$T_t = \mathbf{1}[\text{WSS} \geq 5]$ is set to zero for de-escalation events regardless of WSS. Full
+event-level scores are reported in Appendix~\ref{app:tariff_wss}.
+\end{tablenotes}
 \end{table}
+
 
 STAT TO JUSTIFY CROSS ASSET COMPARSION (correlation table -- pairwise correlations between log RV of SPX, GBP, XAU to motivate cross-asset comparison.
 
@@ -816,14 +805,19 @@ y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
 & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
 \midrule
-$\alpha$           & & & & & & & & \\
+$\alpha$           & $-$4.1815** & ($-$2.12) & $-$5.9916*** & ($-$2.78) & $-$7.7910** & ($-$2.13) & 54.4837*** & (2.87) \\
                    & & & & & & & & \\
-$\beta^{(d)}$      & & & & & & & & \\
+$\beta^{(d)}$      & 0.3868*** & (4.15) & 0.1741** & (2.19) & 0.4896*** & (4.37) & $-$0.2204 & ($-$1.29) \\
                    & & & & & & & & \\
-$\beta^{(w)}$      & & & & & & & & \\
+$\beta^{(w)}$      & 0.1908 & (1.29) & 0.4438** & (2.09) & 0.4144 & (1.13) & $-$1.9515 & ($-$1.54) \\
                    & & & & & & & & \\
-$\beta^{(m)}$      & & & & & & & & \\
+$\beta^{(m)}$      & 0.0291 & (0.13) & $-$0.1814 & ($-$0.79) & $-$0.6030* & ($-$1.69) & 9.2656*** & (2.84) \\
                    & & & & & & & & \\
+\midrule
+IS $R^2$       & 0.2531 & & 0.1328 & & 0.3975 & & 0.4952 & \\
+IS Adj.\ $R^2$ & 0.2258 & & 0.0976 & & 0.3473 & & 0.3437 & \\
+IS RMSE        & 0.7335 & & 0.4331 & & 0.3200 & & 0.3940 & \\
+$N$            & 109 & & 78 & & 40 & & 14 & \\
 \bottomrule
 \end{tabular}
 }
@@ -848,22 +842,27 @@ y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
 & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
 \midrule
-$\alpha$       & & & & & & & & \\
+$\alpha$       & $-$3.9307** & ($-$2.23) & $-$4.0950** & ($-$2.53) & $-$11.1293*** & ($-$3.26) & 61.6060** & (2.03) \\
                & & & & & & & & \\
-$\beta^{(d)}$  & & & & & & & & \\
+$\beta^{(d)}$  & 0.4550*** & (4.70) & 0.2477*** & (3.13) & 0.4452*** & (3.14) & $-$0.0288 & ($-$0.19) \\
                & & & & & & & & \\
-$\beta^{(w)}$  & & & & & & & & \\
+$\beta^{(w)}$  & 0.2252 & (1.48) & 0.5809*** & (3.86) & 0.3784 & (1.07) & $-$3.7568* & ($-$1.93) \\
                & & & & & & & & \\
-$\beta^{(m)}$  & & & & & & & & \\
+$\beta^{(m)}$  & $-$0.0410 & ($-$0.20) & $-$0.2070 & ($-$1.19) & $-$0.8189** & ($-$2.50) & 11.6797** & (2.24) \\
                & & & & & & & & \\
-$\gamma_1$     & & & & & & & & \\
+$\gamma_1$     & 1.5168*** & (4.60) & 1.1697*** & (7.70) & 0.4663*** & (5.74) & 0.9951*** & (2.65) \\
                & & & & & & & & \\
-$\gamma_2$     & & & & & & & & \\
+$\gamma_2$     & $-$0.0127 & ($-$0.04) & 0.3011* & (1.79) & $-$0.0000*** & ($-$5.62) & 0.1700 & (0.97) \\
                & & & & & & & & \\
-$\gamma_3$     & & & & & & & & \\
+$\gamma_3$     & 0.7118*** & (3.78) & 0.3260*** & (2.80) & 0.2414** & (2.31) & 0.3912 & (0.77) \\
                & & & & & & & & \\
-$\lambda$      & & & & & & & & \\
+$\lambda$      & 0.1740 & (0.75) & --- & & $-$0.5563*** & ($-$9.66) & $-$0.0935 & ($-$0.58) \\
                & & & & & & & & \\
+\midrule
+IS $R^2$       & 0.3429 & & 0.3774 & & 0.5137 & & 0.6057 & \\
+IS Adj.\ $R^2$ & 0.2839 & & 0.3248 & & 0.4253 & & 0.1457 & \\
+IS RMSE        & 0.6880 & & 0.3669 & & 0.2875 & & 0.3482 & \\
+$N$            & 109 & & 78 & & 40 & & 14 & \\
 \bottomrule
 \end{tabular}
 }
@@ -893,26 +892,31 @@ y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
 & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
 \midrule
-$\alpha$       & & & & & & & & \\
+$\alpha$       & $-$3.8649** & ($-$2.09) & $-$4.1293*** & ($-$2.63) & $-$11.9294*** & ($-$3.46) & 54.9198*** & (2.64) \\
                & & & & & & & & \\
-$\beta^{(d)}$  & & & & & & & & \\
+$\beta^{(d)}$  & 0.4587*** & (4.65) & 0.2242*** & (2.72) & 0.3691** & (2.51) & $-$0.1215 & ($-$0.62) \\
                & & & & & & & & \\
-$\beta^{(w)}$  & & & & & & & & \\
+$\beta^{(w)}$  & 0.2199 & (1.39) & 0.5980*** & (4.00) & 0.4751 & (1.28) & $-$3.1595** & ($-$2.41) \\
                & & & & & & & & \\
-$\beta^{(m)}$  & & & & & & & & \\
+$\beta^{(m)}$  & $-$0.0341 & ($-$0.16) & $-$0.2065 & ($-$1.12) & $-$0.9130*** & ($-$2.64) & 10.4230*** & (3.00) \\
                & & & & & & & & \\
-$\delta_0$     & & & & & & & & \\
+$\delta_0$     & $-$0.0047 & ($-$0.03) & $-$0.0147 & ($-$0.18) & $-$0.1223* & ($-$1.78) & 0.1469 & (0.76) \\
                & & & & & & & & \\
-$\delta_1$     & & & & & & & & \\
+$\delta_1$     & 0.4093 & (1.25) & 0.0864 & (0.35) & 0.2942*** & (3.22) & $-$0.0498 & ($-$0.60) \\
                & & & & & & & & \\
-$\delta_2$     & & & & & & & & \\
+$\delta_2$     & $-$0.0782 & ($-$0.29) & 0.0185 & (0.21) & 0.0462 & (0.38) & --- & \\
                & & & & & & & & \\
-$\phi_1$       & & & & & & & & \\
+$\phi_1$       & 1.2524*** & (3.03) & 1.1305*** & (8.15) & 0.4617** & (2.36) & 0.9087** & (2.52) \\
                & & & & & & & & \\
-$\phi_2$       & & & & & & & & \\
+$\phi_2$       & 1.7683*** & (4.37) & --- & & 0.4884*** & (6.10) & --- & \\
                & & & & & & & & \\
-$\lambda$      & & & & & & & & \\
+$\lambda$      & 0.1531 & (0.67) & --- & & $-$0.8728*** & ($-$11.55) & $-$0.0498 & ($-$0.60) \\
                & & & & & & & & \\
+\midrule
+IS $R^2$       & 0.3317 & & 0.3386 & & 0.5220 & & 0.5890 & \\
+IS Adj.\ $R^2$ & 0.2525 & & 0.2724 & & 0.3785 & & 0.2368 & \\
+IS RMSE        & 0.6939 & & 0.3782 & & 0.2850 & & 0.3555 & \\
+$N$            & 109 & & 78 & & 40 & & 14 & \\
 \bottomrule
 \end{tabular}
 }
@@ -938,26 +942,31 @@ y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
 & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
 \midrule
-$\alpha$       & & & & & & & & \\
+$\alpha$       & $-$4.0088** & ($-$2.20) & $-$4.0464** & ($-$2.42) & $-$12.1022*** & ($-$3.61) & 58.8565** & (2.18) \\
                & & & & & & & & \\
-$\beta^{(d)}$  & & & & & & & & \\
+$\beta^{(d)}$  & 0.4628*** & (4.81) & 0.2482*** & (3.13) & 0.3619** & (2.48) & $-$0.0510 & ($-$0.38) \\
                & & & & & & & & \\
-$\beta^{(w)}$  & & & & & & & & \\
+$\beta^{(w)}$  & 0.2290 & (1.48) & 0.5808*** & (3.85) & 0.4460 & (1.15) & $-$3.4818** & ($-$2.10) \\
                & & & & & & & & \\
-$\beta^{(m)}$  & & & & & & & & \\
+$\beta^{(m)}$  & $-$0.0604 & ($-$0.29) & $-$0.2028 & ($-$1.17) & $-$0.8913*** & ($-$2.58) & 11.1183** & (2.44) \\
                & & & & & & & & \\
-$\delta_0$     & & & & & & & & \\
+$\delta_0$     & 0.0827 & (0.37) & 0.3397** & (2.25) & $-$0.1088 & ($-$1.18) & 0.2603 & (0.89) \\
                & & & & & & & & \\
-$\delta_1$     & & & & & & & & \\
+$\delta_1$     & 0.4504 & (1.12) & 0.3014* & (1.79) & 0.3056*** & (3.44) & 0.0000** & (2.19) \\
                & & & & & & & & \\
-$\delta_2$     & & & & & & & & \\
+$\delta_2$     & --- & & 0.2847*** & (4.83) & --- & & --- & \\
                & & & & & & & & \\
-$\phi_1$       & & & & & & & & \\
+$\phi_1$       & 1.2583*** & (3.06) & 1.1703*** & (7.69) & 0.4925** & (2.46) & 0.9435*** & (2.87) \\
                & & & & & & & & \\
-$\phi_2$       & & & & & & & & \\
+$\phi_2$       & 1.7858*** & (4.81) & --- & & 0.4893*** & (5.98) & --- & \\
                & & & & & & & & \\
-$\lambda$      & & & & & & & & \\
+$\lambda$      & 0.2002 & (0.84) & --- & & $-$0.5724*** & ($-$9.88) & $-$0.0955 & ($-$0.63) \\
                & & & & & & & & \\
+\midrule
+IS $R^2$       & 0.3496 & & 0.3776 & & 0.5158 & & 0.6013 & \\
+IS Adj.\ $R^2$ & 0.2975 & & 0.3153 & & 0.3909 & & 0.2595 & \\
+IS RMSE        & 0.6895 & & 0.3669 & & 0.2868 & & 0.3501 & \\
+$N$            & 109 & & 78 & & 40 & & 14 & \\
 \bottomrule
 \end{tabular}
 }
@@ -972,6 +981,7 @@ $\lambda$      & & & & & & & & \\
 \[
 y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} + \sum_{e,k} \gamma_{e,k} D_{e,k,t} + \lambda TARIFF_t + \varepsilon_t
 \]
+\begin{threeparttable}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccc}
 \toprule
@@ -979,31 +989,41 @@ y_t = \alpha + \beta^{(d)} RV_t^{(d)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
 & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
 \midrule
-$\alpha$                & & & & & & & & \\
+$\alpha$                & $-$3.8294** & ($-$2.10) & $-$4.0464** & ($-$2.42) & $-$12.1540*** & ($-$3.60) & 61.6060** & (2.03) \\
                         & & & & & & & & \\
-$\beta^{(d)}$           & & & & & & & & \\
+$\beta^{(d)}$           & 0.4657*** & (4.84) & 0.2482*** & (3.13) & 0.3643** & (2.40) & $-$0.0288 & ($-$0.19) \\
                         & & & & & & & & \\
-$\beta^{(w)}$           & & & & & & & & \\
+$\beta^{(w)}$           & 0.2072 & (1.38) & 0.5808*** & (3.85) & 0.4428 & (1.13) & $-$3.7568* & ($-$1.93) \\
                         & & & & & & & & \\
-$\beta^{(m)}$           & & & & & & & & \\
+$\beta^{(m)}$           & $-$0.0253 & ($-$0.12) & $-$0.2028 & ($-$1.17) & $-$0.8951*** & ($-$2.58) & 11.6797** & (2.24) \\
                         & & & & & & & & \\
-$\gamma_{CPI,0}$        & & & & & & & & \\
+$\gamma_{CPI,0}$        & 0.0887 & (0.26) & --- & & $-$0.1293** & ($-$1.97) & 0.1700 & (0.97) \\
                         & & & & & & & & \\
-$\gamma_{CPI,1}$        & & & & & & & & \\
+$\gamma_{CPI,1}$        & $-$0.1311 & ($-$0.24) & 0.3014* & (1.79) & 0.3050*** & (3.41) & 0.0000** & (2.03) \\
                         & & & & & & & & \\
-$\gamma_{NFP,0}$        & & & & & & & & \\
+$\gamma_{NFP,0}$        & 0.0553 & (0.27) & 0.3397** & (2.25) & $-$0.0985 & ($-$0.77) & 0.3912 & (0.77) \\
                         & & & & & & & & \\
-$\gamma_{NFP,1}$        & & & & & & & & \\
+$\gamma_{NFP,1}$        & 1.0618*** & (6.77) & 0.0000*** & (3.45) & $-$0.0000 & ($-$0.78) & --- & \\
                         & & & & & & & & \\
-$\gamma_{FOMC,0}$       & & & & & & & & \\
+$\gamma_{FOMC,0}$       & 1.2554*** & (3.11) & 1.1703*** & (7.69) & 0.4915** & (2.45) & 0.9951*** & (2.65) \\
                         & & & & & & & & \\
-$\gamma_{FOMC,1}$       & & & & & & & & \\
+$\gamma_{FOMC,1}$       & 1.7658*** & (4.68) & --- & & 0.4894*** & (5.98) & --- & \\
                         & & & & & & & & \\
-$\lambda$               & & & & & & & & \\
+$\lambda$               & 0.1195 & (0.50) & --- & & $-$0.5731*** & ($-$9.94) & $-$0.0935 & ($-$0.58) \\
                         & & & & & & & & \\
+\midrule
+IS $R^2$       & 0.3528 & & 0.3776 & & 0.5159 & & 0.6057 & \\
+IS Adj.\ $R^2$ & 0.2666 & & 0.3153 & & 0.3707 & & 0.1457 & \\
+IS RMSE        & 0.6828 & & 0.3669 & & 0.2868 & & 0.3482 & \\
+$N$            & 109 & & 78 & & 40 & & 14 & \\
 \bottomrule
 \end{tabular}
 }
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item \textit{Notes:} `---' denotes variables dropped due to zero occurrence or not present in the dataset (S\&P 500 2023 excludes TARIFF). Significance: $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$ (HAC standard errors, Newey-West, 5 lags). For S\&P 500 2023, an additional large-surprise NFP dummy ($\hat{\gamma}_{NFP,2} = 0.2847^{***}$, $t = 4.83$) is included but not shown, as this tier is zero-occurrence in all other samples.
+\end{tablenotes}
+\end{threeparttable}
 \end{table}
 
 \subsection{Model 5: Three-Tier with Adjusted RV Lag}
@@ -1015,6 +1035,7 @@ $\lambda$               & & & & & & & & \\
 \[
 y_t = \alpha + \beta^{(d)} RV_t^{(d,adj)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)} RV_t^{(m)} + \sum_{e,k} \gamma_{e,k} D_{e,k,t} + \lambda TARIFF_t + \varepsilon_t
 \]
+\begin{threeparttable}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lcccccccc}
 \toprule
@@ -1022,31 +1043,41 @@ y_t = \alpha + \beta^{(d)} RV_t^{(d,adj)} + \beta^{(w)} RV_t^{(w)} + \beta^{(m)}
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7} \cmidrule(lr){8-9}
 & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) & Coef. & (t-stat) \\
 \midrule
-$\alpha$                & & & & & & & & \\
+$\alpha$                & $-$4.1502** & ($-$2.10) & $-$4.8160*** & ($-$2.58) & $-$12.2670*** & ($-$3.32) & 61.1253** & (1.98) \\
                         & & & & & & & & \\
-$\beta^{(d)}$           & & & & & & & & \\
+$\beta^{(d)}$           & 0.3739*** & (3.42) & $-$0.0420 & ($-$0.39) & 0.2513* & (1.88) & $-$0.0056 & ($-$0.04) \\
                         & & & & & & & & \\
-$\beta^{(w)}$           & & & & & & & & \\
+$\beta^{(w)}$           & 0.2508 & (1.55) & 0.8716*** & (4.62) & 0.5934 & (1.54) & $-$3.7962* & ($-$1.93) \\
                         & & & & & & & & \\
-$\beta^{(m)}$           & & & & & & & & \\
+$\beta^{(m)}$           & $-$0.0113 & ($-$0.05) & $-$0.2760 & ($-$1.43) & $-$0.9428*** & ($-$2.66) & 11.6417** & (2.20) \\
                         & & & & & & & & \\
-$\gamma_{CPI,0}$        & & & & & & & & \\
+$\gamma_{CPI,0}$        & $-$0.0068 & ($-$0.02) & --- & & $-$0.1001 & ($-$1.45) & 0.1609 & (0.89) \\
                         & & & & & & & & \\
-$\gamma_{CPI,1}$        & & & & & & & & \\
+$\gamma_{CPI,1}$        & $-$0.1720 & ($-$0.30) & 0.2775* & (1.80) & 0.3582*** & (4.25) & 0.0000* & (1.99) \\
                         & & & & & & & & \\
-$\gamma_{NFP,0}$        & & & & & & & & \\
+$\gamma_{NFP,0}$        & 0.0067 & (0.03) & 0.2810 & (1.47) & $-$0.1089 & ($-$0.94) & 0.3903 & (0.76) \\
                         & & & & & & & & \\
-$\gamma_{NFP,1}$        & & & & & & & & \\
+$\gamma_{NFP,1}$        & 0.9638*** & (4.53) & 0.0000 & (1.30) & 0.0000 & (1.61) & --- & \\
                         & & & & & & & & \\
-$\gamma_{FOMC,0}$       & & & & & & & & \\
+$\gamma_{FOMC,0}$       & 1.1355*** & (2.72) & 1.1132*** & (7.17) & 0.5435*** & (2.67) & 1.0170*** & (2.66) \\
                         & & & & & & & & \\
-$\gamma_{FOMC,1}$       & & & & & & & & \\
+$\gamma_{FOMC,1}$       & 1.6414*** & (4.11) & --- & & 0.5170*** & (6.33) & --- & \\
                         & & & & & & & & \\
-$\lambda$               & & & & & & & & \\
+$\lambda$               & 0.2434 & (0.88) & --- & & $-$0.5981*** & ($-$8.31) & $-$0.0994 & ($-$0.57) \\
                         & & & & & & & & \\
+\midrule
+IS $R^2$       & 0.2930 & & 0.3390 & & 0.4865 & & 0.6055 & \\
+IS Adj.\ $R^2$ & 0.1987 & & 0.2729 & & 0.3324 & & 0.1452 & \\
+IS RMSE        & 0.7137 & & 0.3781 & & 0.2954 & & 0.3483 & \\
+$N$            & 109 & & 78 & & 40 & & 14 & \\
 \bottomrule
 \end{tabular}
 }
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item \textit{Notes:} `---' denotes variables dropped due to zero occurrence or not present in the dataset (S\&P 500 2023 excludes TARIFF). Significance: $^{*}p<0.10$, $^{**}p<0.05$, $^{***}p<0.01$ (HAC standard errors, Newey-West, 5 lags). For S\&P 500 2023, an additional large-surprise NFP dummy ($\hat{\gamma}_{NFP,2} = 0.2678^{***}$, $t = 3.99$) is included but not shown, as this tier is zero-occurrence in all other samples.
+\end{tablenotes}
+\end{threeparttable}
 \end{table}
 
 \subsection{Model 6: Random Forest Benchmark}
@@ -1062,16 +1093,16 @@ Unlike the OLS-based specifications, the Random Forest does not produce coeffici
 \toprule
 & S\&P 500 & S\&P 500 2023 & GBP/USD & XAU/USD \\
 \midrule
-$RV_t^{(d)}$      & & & & \\
-$RV_t^{(w)}$      & & & & \\
-$RV_t^{(m)}$      & & & & \\
-$\gamma_{FOMC,1}$ & & & & \\
-$\lambda$ ($TARIFF$) & & & & \\
-$\gamma_{FOMC,0}$ & & & & \\
-$\gamma_{NFP,1}$  & & & & \\
-$\gamma_{CPI,1}$  & & & & \\
-$\gamma_{NFP,0}$  & & & & \\
-$\gamma_{CPI,0}$  & & & & \\
+$RV_t^{(d)}$      & 0.3991 & 0.2943 & 0.2955 & 0.1672 \\
+$RV_t^{(w)}$      & 0.2817 & 0.3794 & 0.4706 & 0.3928 \\
+$RV_t^{(m)}$      & 0.2209 & 0.1505 & 0.1802 & 0.4111 \\
+$\gamma_{FOMC,1}$ & 0.0362 & 0.0000 & 0.0169 & 0.0000 \\
+$\lambda$ ($TARIFF$) & 0.0212 & --- & 0.0107 & 0.0022 \\
+$\gamma_{FOMC,0}$ & 0.0205 & 0.1375 & 0.0103 & 0.0179 \\
+$\gamma_{NFP,1}$  & 0.0150 & 0.0000 & 0.0000 & --- \\
+$\gamma_{CPI,1}$  & 0.0041 & 0.0248 & 0.0104 & 0.0000 \\
+$\gamma_{NFP,0}$  & 0.0028 & 0.0133 & 0.0033 & 0.0058 \\
+$\gamma_{CPI,0}$  & 0.0009 & --- & 0.0021 & 0.0030 \\
 \midrule
 Sum               & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \bottomrule
@@ -1080,9 +1111,6 @@ Sum               & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \end{table}
 
 \section{Out-of-Sample Forecast Comparison}
-80:20
-
-% [Caption: Table 2: OOS Forecast Performance]
 \begin{table}[h]
 \centering
 \caption{Model Comparison Across Asset Classes (OOS)}
@@ -1094,17 +1122,49 @@ Sum               & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}
 Model & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ \\
 \midrule
-1       & & & & & & & & & & & & \\
-2       & & & & & & & & & & & & \\
-3a      & & & & & & & & & & & & \\
-3b      & & & & & & & & & & & & \\
-4       & & & & & & & & & & & & \\
-5       & & & & & & & & & & & & \\
-6       & & & & & & & & & & & & \\
+1  & 0.6667 & 0.5661 & $-$0.3390 & 0.5465 & 0.4545 & $-$1.3864 & 0.5366 & 0.4209 & $-$0.1530 & 7.4111 & 6.5409 & $-$60.2395 \\
+2  & 0.7206 & 0.6032 & $-$0.5644 & 0.4812 & 0.3774 & $-$0.8500 & 0.6294 & 0.5001 & $-$0.5866 & 8.8164 & 7.8049 & $-$85.6653 \\
+3a & 0.7035 & 0.5957 & $-$0.4911 & 0.4727 & 0.3836 & $-$0.7853 & 0.6701 & 0.5211 & $-$0.7982 & 7.9215 & 7.0215 & $-$68.9653 \\
+3b & 0.7092 & 0.6014 & $-$0.5153 & 0.4800 & 0.3777 & $-$0.8409 & 0.6537 & 0.5220 & $-$0.7115 & 8.4089 & 7.4510 & $-$77.8397 \\
+4  & 0.7323 & 0.6170 & $-$0.6156 & 0.4800 & 0.3777 & $-$0.8409 & 0.6456 & 0.5153 & $-$0.6691 & 8.8042 & 7.8000 & $-$85.4251 \\
+5  & 0.7426 & 0.6310 & $-$0.6616 & 0.5393 & 0.4382 & $-$1.3238 & 0.6491 & 0.5028 & $-$0.6877 & 8.7599 & 7.7632 & $-$84.5581 \\
+6  & 0.7593 & 0.6178 & $-$0.7369 & 0.7317 & 0.6454 & $-$3.2775 & 0.5307 & 0.4215 & $-$0.1278 & 1.0047 & 0.7521 & $-$0.1256 \\
 \bottomrule
 \end{tabular}
 }
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{SPX_oos_forecast_models_comparison.pdf}
+    \caption{SPX OOS Model Comparsion}
+    \label{fig:SPX OOS Model Comparsion}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hist_SPX_oos_forecast_models_comparison.pdf}
+    \caption{SPX 2023 OOS Model Comparsion}
+    \label{fig:SPX 2023 OOS Model Comparsion}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{GBP_oos_forecast_models_comparison.pdf}
+    \caption{GBP OOS Model Comparsion}
+    \label{fig:GBP OOS Model Comparsion}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{XAU_oos_forecast_models_comparison.pdf}
+    \caption{XAU OOS Model Comparsion}
+    \label{fig:XAU OOS Model Comparsion}
+\end{figure}
+
+
 \chapter{Discussion}
 This chapter interprets the empirical findings presented in Chapter 4 and situates them within the broader literature on volatility forecasting and macroeconomic announcements. It is organised into four sections. Section 5.1 discusses the key findings regarding the role of macroeconomic announcements in volatility dynamics. Section 5.2 examines the cross-asset comparison. Section 5.3 compares the results with the existing literature. Section 5.4 discusses the limitations of the study.
 

@@ -1,12 +1,20 @@
-Should I match these?:
-
-Hist dataset is 9:00-15:55
-
-SPX is 9:00 - 16:00
-
-GitHub Repo with LaTex file and importing?
+References when referencing the FED / Brookings websites???
 
 Results Max 3 sub-headings???
 
-what to include here (Sustainability and Ethical aspects (500 words on each)): 
-Note that in the final chapter, you are asked to comment on sustainability and ethical aspects of your project. This should comprise about 500 words on each topic. The comments on sustainability should assess the impact of your project based on the 3 pillars of sustainability: environmental impact, social impact, and economic impact, with reference to the UN Sustainable Development Goals. The comments on ethics should reflect on your project in light of the professional and ethical responsibilities of engineers. There are no "correct" answers that we are looking for in these sections; rather, the purpose is for you to reflect on these topics. Please see the slides for more details about topics that you might include here.
+
+GitHub Repo with LaTex file and importing?
+
+
+Chapter 3 
+
+Paragraph describing how subsections build into the model (3.1 Data) for RV
+
+Sample of each of the samples to show with the column names to display what is going on
+
+3.1.3 Tying everything together and why relevant to models
+
+Justify/Explain (difference between futures predictions and consensus survey predictions)
+
+
+in "final_report.tex" can you help me to divide up section 4.2 into smaller amount of subsections (try to keep to a  maximum of 3) based on the contents of what the model is and the results of the models and bare in mind that i will  be discussing and intepreting my results within the same section so when interpreting the results if the results are similar, group those models into the one subsection
