@@ -669,43 +669,60 @@ INSERT PLOTS (Full dataset and dashes vertical lines for macro events) \ldots{}
 
 \begin{table}[H]
 \centering
+\caption{S\&P 500 macro event classification (22 Jul 2025 -- 20 Mar 2026)}
+\label{tab:events_spx}
 \begin{tabular}{lcccc}
 \toprule
-Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
 \midrule
-FOMC  & 5  & 3 & 2 & 0 \\
-CPI   & 6  & 3 & 2 & 1 \\
-NFP   & 6  & 2 & 1 & 1 \\
+FOMC  & 6  & 4  & 2  & 0 \\
+CPI   & 7  & 3  & 3  & 1 \\
+NFP   & 7  & 3  & 3  & 1 \\
 \midrule
-Total & 17 & 8 & 5 & 2 \\
+Total & 20 & 10 & 8  & 2 \\
 \bottomrule
 \end{tabular}
-\caption{[Table caption]}
-\label{tab:events}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{S\&P 500 tariff event classification (22 Jul 2025 -- 20 Mar 2026)}
+\label{tab:tariff_spx}
+\begin{tabular}{lc}
+\toprule
+Category & Events \\
+\midrule
+TARIFF $= 1$ (WSS $\geq 5$, escalatory) & 14 \\
+De-escalation (excluded)                & 13 \\
+WSS $< 5$ (excluded)                    & 5  \\
+\midrule
+Total catalogued                        & 32 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{Hist_SPX_RV_macro_events.pdf}
-    \caption{PX 2023 RV over entire sample period}
+    \caption{S\&P 500 (2023) RV over entire sample period}
     \label{fig:SPX 2023 RV over entire sample period}
 \end{figure}
 
 \begin{table}[H]
 \centering
+\caption{S\&P 500 (2023) macro event classification (1 May 2023 -- 31 Oct 2023)}
+\label{tab:events_spx2023}
 \begin{tabular}{lcccc}
 \toprule
-Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
 \midrule
-FOMC  & & & & \\
-CPI   & & & & \\
-NFP   & & & & \\
+FOMC  & 4  & 4  & 0  & 0 \\
+CPI   & 6  & 0  & 6  & 0 \\
+NFP   & 6  & 3  & 1  & 2 \\
 \midrule
-Total & & & & \\
+Total & 16 & 7  & 7  & 2 \\
 \bottomrule
 \end{tabular}
-\caption{[Table caption]}
-\label{tab:events}
 \end{table}
 
 \begin{figure}[H]
@@ -717,47 +734,78 @@ Total & & & & \\
 
 \begin{table}[H]
 \centering
+\caption{GBP/USD macro event classification (29 Oct 2025 -- 20 Mar 2026)}
+\label{tab:events_gbp}
 \begin{tabular}{lcccc}
 \toprule
-Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
 \midrule
-FOMC  & & & & \\
-CPI   & & & & \\
-NFP   & & & & \\
+FOMC  & 4  & 3  & 1  & 0 \\
+CPI   & 4  & 2  & 1  & 1 \\
+NFP   & 5  & 2  & 2  & 1 \\
 \midrule
-Total & & & & \\
+Total & 13 & 7  & 4  & 2 \\
 \bottomrule
 \end{tabular}
-\caption{[Table caption]}
-\label{tab:events}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{GBP/USD tariff event classification (29 Oct 2025 -- 20 Mar 2026)}
+\label{tab:tariff_gbp}
+\begin{tabular}{lc}
+\toprule
+Category & Events \\
+\midrule
+TARIFF $= 1$ (WSS $\geq 5$, escalatory) & 6 \\
+De-escalation (excluded)                & 6 \\
+WSS $< 5$ (excluded)                    & 3 \\
+\midrule
+Total catalogued                        & 15 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{XAU_RV_macro_events.pdf}
-    \caption{XAU RV over entire sample period}
+    \caption{XAU/USD RV over entire sample period}
     \label{fig:XAU RV over entire sample period}
 \end{figure}
 
-## what to do with this table considering the start dates of my different datasets?##
+\begin{table}[H]
+\centering
+\caption{XAU/USD macro event classification (9 Jan 2026 -- 20 Mar 2026)}
+\label{tab:events_xau}
+\begin{tabular}{lcccc}
+\toprule
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
+\midrule
+FOMC  & 2  & 2  & 0  & 0 \\
+CPI   & 3  & 2  & 0  & 1 \\
+NFP   & 3  & 1  & 1  & 1 \\
+\midrule
+Total & 8  & 5  & 1  & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[H]
 \centering
-\begin{tabular}{lcccc}
+\caption{XAU/USD tariff event classification (9 Jan 2026 -- 20 Mar 2026)}
+\label{tab:tariff_xau}
+\begin{tabular}{lc}
 \toprule
-Event & Occurrences & In-line (0) & Marginal Shock (1) & Significant Shock (2) \\
+Category & Events \\
 \midrule
-FOMC  & 5  & 3 & 2 & 0 \\
-CPI   & 6  & 3 & 2 & 1 \\
-NFP   & 6  & 2 & 1 & 1 \\
+TARIFF $= 1$ (WSS $\geq 5$, escalatory) & 5 \\
+De-escalation (excluded)                & 2 \\
+WSS $< 5$ (excluded)                    & 3 \\
 \midrule
-Total & 17 & 8 & 5 & 2 \\
+Total catalogued                        & 10 \\
 \bottomrule
 \end{tabular}
-\caption{[Table caption]}
-\label{tab:events}
 \end{table}
-INSERT TARIFF INFO:
 
 \begin{table}[htbp]
 \centering
