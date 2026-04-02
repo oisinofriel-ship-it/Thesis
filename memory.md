@@ -112,16 +112,18 @@
 ---
 
 ## Chapter 4 Structure (Final_Report.tex, as of 2026-04-02)
-- **4.1** Descriptive Statistics — asset RV plots, macro event tables (per asset), unified tariff table (`tab:tariff_summary`)
-- **4.2** In-Sample Estimation Results (3 subsections)
-  - 4.2.1 Baseline and Binary Macro Augmentation — `\paragraph` for M1, M2
-  - 4.2.2 Surprise-Differentiated Specifications — `\paragraph` for M3a, M3b, M4, M5
-  - 4.2.3 Random Forest Benchmark — M6
-- **4.3** Out-of-Sample Forecast Comparison
+- **4.1** Descriptive Statistics — intro para, raw RV stats table (×10^6, all 4 assets), RV plots, per-asset macro event tables, tariff summary table (`tab:tariff_summary`), cross-asset suitability discussion, supplementary stats recommendations
+- **4.2** In-Sample Estimation Results — section intro + discussion paragraphs after each model table
+  - 4.2.1 Baseline and Binary Macro Augmentation — M1 (daily lag dominant, weekly/monthly NS), M2 (FOMC***, NFP***, CPI NS, negative TARIFF for GBP)
+  - 4.2.2 Surprise-Differentiated Specifications — M3a (FOMC exp≈unexp, MACRO tiers NS), M3b (CPI+NFP only, better adj R²), M4 (best IS linear, NFP_1 dominant, FOMC both tiers ***), M5 (lag adjustment, TARIFF NS still)
+  - 4.2.3 Random Forest Benchmark — HAR components dominate importance (89%), severe OOS overfitting
+- **4.3** Out-of-Sample Forecast Comparison — section intro + OOS discussion: all models negative OOS R², baseline best for SPX/GBP, RF worst for SPX, RF best for XAU
 
-**Table format**: Cross-asset tables (SPX, SPX 2023, GBP, XAU) with Coef. + (t-stat) columns; equation above each. M6 uses feature importance table only. All coefficient cells now filled (GBP, XAU, SPX 2023 populated this session). OOS table (tab:cross_asset) has `\scriptsize` model descriptor labels on each row.
+**Table format**: Cross-asset tables (SPX, SPX 2023, GBP, XAU) with Coef. + (t-stat) columns; N=109/78/40/14 in-sample respectively. M6 uses feature importance table. OOS table (tab:cross_asset) has `\scriptsize` descriptor labels.
 
-**Tariff table** (`tab:tariff_summary`): single unified cross-asset table at end of 4.1 — columns SPX / GBP / XAU, rows: Total / TARIFF=1 / De-esc / WSS<5. Individual per-asset tariff tables removed.
+**Tariff table** (`tab:tariff_summary`): unified cross-asset — SPX=14 days, GBP=6, XAU=5 with WSS≥5.
+
+**Key file**: `C:\Users\oisin\Thesis\Final_Report.tex` is the git/Overleaf canonical version. The OneDrive copy (`...\THESIS\Final Report\Final_Report.tex`) is a divergent older copy — do NOT edit it.
 
 ## Chapter 3 Structure
 - **3.1**: Data (Intraday Price Data, Data Cleaning, Macro Data, Tariff Data, Sample Periods)
@@ -136,8 +138,10 @@
 - **GBP/XAU IS/OOS split dates** not stated in 3.1.5
 - **De-escalation TARIFF**: de-esc events excluded from dummy — acknowledge in limitations
 - **Stationarity**: ADF tests in Ch4 should cross-reference 3.4.1
-- **3b coefficient values**: not yet available — table left blank in Final_Report.tex
-- **Placeholder**: `STAT TO JUSTIFY CROSS ASSET COMPARISON` still in tex before `\section{In-Sample...}`
+- **Log RV descriptive stats for GBP/XAU**: notebooks compute raw RV stats — need to recompute in log space to complete Table tab:summary_stats
+- **JB/ADF values**: placeholders in 4.1 text — `[statistics to be inserted]`
+- **Correlation table placeholder**: `% [PLACEHOLDER: Cross-asset log RV correlation table...]` in 4.1
+- **Chapter 5 (Discussion)** and **Chapter 6 (Conclusion)** not yet drafted
 
 ## Potential Next Steps
 - QLIKE loss function (Patton 2011) — asymmetric, standard in RV literature

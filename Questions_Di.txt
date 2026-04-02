@@ -5,6 +5,8 @@ Results Max 3 sub-headings???
 
 GitHub Repo with LaTex file and importing?
 
+4.1: fix the results have with the time-frame that the model starts training (22 trading days into the dataset)
+
 4.2: less sub-sections and group to do with how the model is made (variables in the model...)
 
 4.3
