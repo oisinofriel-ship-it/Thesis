@@ -5,6 +5,11 @@ Results Max 3 sub-headings???
 
 GitHub Repo with LaTex file and importing?
 
+4.2: less sub-sections and group to do with how the model is made (variables in the model...)
+
+4.3
+add a description of each of the models in the final table for OOS forecast comparison
+
 
 Chapter 3 
 

@@ -789,7 +789,9 @@ STAT TO JUSTIFY CROSS ASSET COMPARSION (correlation table -- pairwise correlatio
 
 \section{In-Sample Estimation Results}
 
-\subsection{Model 1: Baseline HAR-RV}
+\subsection{Baseline and Binary Macro Augmentation}
+
+\paragraph{Model 1: Baseline HAR-RV}\mbox{}\\
 
 \begin{table}[H]
 \centering
@@ -823,7 +825,7 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 }
 \end{table}
 
-\subsection{Model 2: HAR-RV with Individual Macro Dummies}
+\paragraph{Model 2: HAR-RV with Individual Macro Dummies}\mbox{}\\
 
 \begin{table}[H]
 \centering
@@ -868,11 +870,11 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 }
 \end{table}
 
-\subsection{Model 3: Expected versus Surprise Decomposition}
+\subsection{Surprise-Differentiated Specifications}
 
-Two variants of the expected/surprise decomposition are estimated. Model~3a constructs the composite surprise categories ($MACRO\_0$, $MACRO\_1$, $MACRO\_2$) using all non-FOMC macro events, while Model~3b restricts the composite to CPI and NFP releases only.
+Two variants of the expected/surprise decomposition are estimated. Model~3a constructs the composite surprise categories ($MACRO\_0$, $MACRO\_1$, $MACRO\_2$) using all non-FOMC macro events, while Model~3b restricts the composite to CPI and NFP releases only. Models~4 and~5 replace the composite categories with event-specific three-tier dummies; Model~5 additionally adjusts the daily RV lag on days following a macro or tariff event.
 
-\subsubsection{Model 3a: All Macro Events}
+\paragraph{Model 3a: All Macro Events}\mbox{}\\
 
 \begin{table}[H]
 \centering
@@ -922,7 +924,7 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 }
 \end{table}
 
-\subsubsection{Model 3b: CPI and NFP Only}
+\paragraph{Model 3b: CPI and NFP Only}\mbox{}\\
 
 \begin{table}[H]
 \centering
@@ -972,7 +974,7 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 }
 \end{table}
 
-\subsection{Model 4: Three-Tier Individual Dummies}
+\paragraph{Model 4: Three-Tier Individual Dummies}\mbox{}\\
 
 \begin{table}[H]
 \centering
@@ -1026,7 +1028,7 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{threeparttable}
 \end{table}
 
-\subsection{Model 5: Three-Tier with Adjusted RV Lag}
+\paragraph{Model 5: Three-Tier with Adjusted RV Lag}\mbox{}\\
 
 \begin{table}[H]
 \centering
@@ -1080,7 +1082,7 @@ $N$            & 109 & & 78 & & 40 & & 14 & \\
 \end{threeparttable}
 \end{table}
 
-\subsection{Model 6: Random Forest Benchmark}
+\subsection{Random Forest Benchmark}
 
 Unlike the OLS-based specifications, the Random Forest does not produce coefficient estimates. Instead, Gini-based feature importances are reported, which measure the relative contribution of each feature to the reduction in mean squared error across all trees in the ensemble. Importances sum to unity and are not directly comparable to regression coefficients; they indicate relative predictive contribution rather than directional effects.
 
@@ -1122,13 +1124,13 @@ Sum               & 1.0000 & 1.0000 & 1.0000 & 1.0000 \\
 \cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10} \cmidrule(lr){11-13}
 Model & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ & RMSE & MAE & $R^2$ \\
 \midrule
-1  & 0.6667 & 0.5661 & $-$0.3390 & 0.5465 & 0.4545 & $-$1.3864 & 0.5366 & 0.4209 & $-$0.1530 & 7.4111 & 6.5409 & $-$60.2395 \\
-2  & 0.7206 & 0.6032 & $-$0.5644 & 0.4812 & 0.3774 & $-$0.8500 & 0.6294 & 0.5001 & $-$0.5866 & 8.8164 & 7.8049 & $-$85.6653 \\
-3a & 0.7035 & 0.5957 & $-$0.4911 & 0.4727 & 0.3836 & $-$0.7853 & 0.6701 & 0.5211 & $-$0.7982 & 7.9215 & 7.0215 & $-$68.9653 \\
-3b & 0.7092 & 0.6014 & $-$0.5153 & 0.4800 & 0.3777 & $-$0.8409 & 0.6537 & 0.5220 & $-$0.7115 & 8.4089 & 7.4510 & $-$77.8397 \\
-4  & 0.7323 & 0.6170 & $-$0.6156 & 0.4800 & 0.3777 & $-$0.8409 & 0.6456 & 0.5153 & $-$0.6691 & 8.8042 & 7.8000 & $-$85.4251 \\
-5  & 0.7426 & 0.6310 & $-$0.6616 & 0.5393 & 0.4382 & $-$1.3238 & 0.6491 & 0.5028 & $-$0.6877 & 8.7599 & 7.7632 & $-$84.5581 \\
-6  & 0.7593 & 0.6178 & $-$0.7369 & 0.7317 & 0.6454 & $-$3.2775 & 0.5307 & 0.4215 & $-$0.1278 & 1.0047 & 0.7521 & $-$0.1256 \\
+1 \scriptsize{(HAR-RV Baseline)}                       & 0.6667 & 0.5661 & $-$0.3390 & 0.5465 & 0.4545 & $-$1.3864 & 0.5366 & 0.4209 & $-$0.1530 & 7.4111 & 6.5409 & $-$60.2395 \\
+2 \scriptsize{(Binary Macro Dummies)}                  & 0.7206 & 0.6032 & $-$0.5644 & 0.4812 & 0.3774 & $-$0.8500 & 0.6294 & 0.5001 & $-$0.5866 & 8.8164 & 7.8049 & $-$85.6653 \\
+3a \scriptsize{(Surprise: All Events)}                 & 0.7035 & 0.5957 & $-$0.4911 & 0.4727 & 0.3836 & $-$0.7853 & 0.6701 & 0.5211 & $-$0.7982 & 7.9215 & 7.0215 & $-$68.9653 \\
+3b \scriptsize{(Surprise: CPI \& NFP Only)}            & 0.7092 & 0.6014 & $-$0.5153 & 0.4800 & 0.3777 & $-$0.8409 & 0.6537 & 0.5220 & $-$0.7115 & 8.4089 & 7.4510 & $-$77.8397 \\
+4 \scriptsize{(Three-Tier Individual Dummies)}         & 0.7323 & 0.6170 & $-$0.6156 & 0.4800 & 0.3777 & $-$0.8409 & 0.6456 & 0.5153 & $-$0.6691 & 8.8042 & 7.8000 & $-$85.4251 \\
+5 \scriptsize{(Three-Tier + Adjusted RV Lag)}          & 0.7426 & 0.6310 & $-$0.6616 & 0.5393 & 0.4382 & $-$1.3238 & 0.6491 & 0.5028 & $-$0.6877 & 8.7599 & 7.7632 & $-$84.5581 \\
+6 \scriptsize{(Random Forest)}                         & 0.7593 & 0.6178 & $-$0.7369 & 0.7317 & 0.6454 & $-$3.2775 & 0.5307 & 0.4215 & $-$0.1278 & 1.0047 & 0.7521 & $-$0.1256 \\
 \bottomrule
 \end{tabular}
 }
