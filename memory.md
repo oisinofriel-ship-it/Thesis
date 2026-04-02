@@ -111,20 +111,17 @@
 
 ---
 
-## Chapter 4 Structure (Final_Report.tex, as of 2026-03-31)
-- **4.1** Descriptive Statistics
-- **4.2** In-Sample Estimation Results
-  - 4.2.1 Model 1: Baseline HAR-RV
-  - 4.2.2 Model 2: HAR-RV with Individual Macro Dummies
-  - 4.2.3 Model 3: Expected versus Surprise Decomposition
-    - 4.2.3.1 Model 3a: All Macro Events
-    - 4.2.3.2 Model 3b: CPI and NFP Only
-  - 4.2.4 Model 4: Three-Tier Individual Dummies
-  - 4.2.5 Model 5: Three-Tier with Adjusted RV Lag
-  - 4.2.6 Model 6: Random Forest Benchmark
+## Chapter 4 Structure (Final_Report.tex, as of 2026-04-02)
+- **4.1** Descriptive Statistics — asset RV plots, macro event tables (per asset), unified tariff table (`tab:tariff_summary`)
+- **4.2** In-Sample Estimation Results (3 subsections)
+  - 4.2.1 Baseline and Binary Macro Augmentation — `\paragraph` for M1, M2
+  - 4.2.2 Surprise-Differentiated Specifications — `\paragraph` for M3a, M3b, M4, M5
+  - 4.2.3 Random Forest Benchmark — M6
 - **4.3** Out-of-Sample Forecast Comparison
 
-**Table format**: Each subsection (4.2.1–4.2.5) has a cross-asset table (SPX, SPX 2023, GBP, XAU) with Coef. + (t-stat) columns. Equation displayed above each table; left-side symbols match the equation. Section 4.2.6 uses a single-column importance table (no t-stats). All cross-asset cells currently blank except SPX (values above).
+**Table format**: Cross-asset tables (SPX, SPX 2023, GBP, XAU) with Coef. + (t-stat) columns; equation above each. M6 uses feature importance table only. All coefficient cells now filled (GBP, XAU, SPX 2023 populated this session). OOS table (tab:cross_asset) has `\scriptsize` model descriptor labels on each row.
+
+**Tariff table** (`tab:tariff_summary`): single unified cross-asset table at end of 4.1 — columns SPX / GBP / XAU, rows: Total / TARIFF=1 / De-esc / WSS<5. Individual per-asset tariff tables removed.
 
 ## Chapter 3 Structure
 - **3.1**: Data (Intraday Price Data, Data Cleaning, Macro Data, Tariff Data, Sample Periods)
@@ -137,9 +134,10 @@
 
 ## Outstanding Issues
 - **GBP/XAU IS/OOS split dates** not stated in 3.1.5
-- **De-escalation TARIFF**: 9/36 events are de-escalatory; dummy treats all WSS≥5 equally — acknowledge in limitations
-- **Stationarity**: OLS requires stationary regressors; ADF tests in Ch4 should cross-reference 3.4.1
+- **De-escalation TARIFF**: de-esc events excluded from dummy — acknowledge in limitations
+- **Stationarity**: ADF tests in Ch4 should cross-reference 3.4.1
 - **3b coefficient values**: not yet available — table left blank in Final_Report.tex
+- **Placeholder**: `STAT TO JUSTIFY CROSS ASSET COMPARISON` still in tex before `\section{In-Sample...}`
 
 ## Potential Next Steps
 - QLIKE loss function (Patton 2011) — asymmetric, standard in RV literature
