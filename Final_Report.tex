@@ -646,9 +646,11 @@ Min             & \multicolumn{2}{c}{3.58}   & \multicolumn{2}{c}{8.87}   & \mul
 Max             & \multicolumn{2}{c}{182.16} & \multicolumn{2}{c}{135.82} & \multicolumn{2}{c}{53.78}  & \multicolumn{2}{c}{4982.58} \\
 Skewness        & \multicolumn{2}{c}{1.69}   & \multicolumn{2}{c}{1.75}   & \multicolumn{2}{c}{1.49}   & \multicolumn{2}{c}{4.18}    \\
 Excess Kurtosis & \multicolumn{2}{c}{3.65}   & \multicolumn{2}{c}{4.48}   & \multicolumn{2}{c}{1.28}   & \multicolumn{2}{c}{16.68}   \\
+\addlinespace
+ADF test statistic & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} \\
 \bottomrule
 \end{tabular}
-\caption{[Table caption]}
+\caption{[Summary statistics and stationarity tests for realised variance]}
 \label{tab:summary_stats}
 \end{table}
 % Note: All values in Table~
@@ -761,7 +763,6 @@ Total & 8  & 5  & 1  & 2 \\
 \caption{Tariff event classification across asset samples}
 \label{tab:tariff_summary}
 \begin{threeparttable}
-\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
  & S\&P 500 & GBP/USD & XAU/USD \\
@@ -772,18 +773,16 @@ Total tariff events catalogued              & 32 & 15 & 10 \\
 \quad De-escalation events (excluded)       & 13 & 6  & 2  \\
 \quad WSS $< 5$ (excluded)                  & 5  & 3  & 3  \\
 \bottomrule
-\end{tabular}%
-}
-\vspace{0.5em}
-\begin{minipage}{\textwidth}
+\end{tabular}
+\begin{tablenotes}
 \small
-\textit{Notes:} The Weighted Severity Score (WSS) is constructed as WSS $=$ Mag $+$ Brd $+$ Sec,
+\item \textit{Notes:} The Weighted Severity Score (WSS) is constructed as WSS $=$ Mag $+$ Brd $+$ Sec,
 where Mag scores tariff rate magnitude (0--3), Brd scores the breadth of countries affected (0--3), and
 Sec scores the sector scope by SPX index weight (0--3), giving a maximum score of 9. The binary dummy
 $T_t = \mathbf{1}[\text{WSS} \geq 5]$ is set to zero for de-escalation events regardless of WSS. Full
 event-level scores are reported in Appendix~\ref{app:tariff_wss}. The historical S\&P 500 (2023) sample
 is excluded as no material tariff events occurred in that window.
-\end{minipage}
+\end{tablenotes}
 \end{threeparttable}
 \end{table}
 
