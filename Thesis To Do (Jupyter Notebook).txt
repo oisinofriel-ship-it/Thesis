@@ -1,0 +1,5 @@
+Thesis To Do (Jupyter Notebook)
+
+in plot just include year and month
+
+change GBP to include the 20th of March

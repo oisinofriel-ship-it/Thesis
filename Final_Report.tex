@@ -628,7 +628,7 @@ This chapter presents the empirical results of the study. It is organised into s
 
 \section{Descriptive Statistics}
 
-This section presents descriptive statistics for the daily realised variance series across the four samples under study: the S\&P 500 (SPX, July 2025--March 2026), the historical S\&P 500 replication (SPX 2023, May--October 2023), the GBP/USD exchange rate, and gold spot (XAU/USD). The statistics characterise the distributional properties of the target variable prior to model estimation, and are supplemented by per-asset macro announcement event frequencies and a tariff shock summary. Cross-asset differences in sample length, session structure, and distributional shape have direct implications for the identification and interpretation of the model specifications described in Chapter 3.
+This section presents descriptive statistics for the daily realised variance series across the four samples under study: the S\&P 500 (SPX, July 2025--March 2026), the historical S\&P 500 replication (SPX 2023, May--October 2023), GBP/USD, and gold spot (XAU/USD). Table~\ref{tab:summary_stats} reports the distributional properties of the raw RV series and Augmented Dickey--Fuller (ADF) stationarity test results for the log-transformed series. These statistics characterise the target variable prior to model estimation and have direct implications for how each dataset can support the model specifications described in Chapter~3.
 
 % [Caption: Table 1: Log RV per dataset]
 \begin{table}[H]
@@ -655,113 +655,22 @@ ADF statistic       & \multicolumn{2}{c}{-5.6326} & \multicolumn{2}{c}{-2.0369} 
 \caption{Descriptive statistics for the raw RV series ($\times 10^{6}$) and ADF stationarity test results for the log RV series, by asset.}
 \label{tab:summary_stats}
 \end{table}
-% TODO: Run ADF on log RV (not raw RV) for SPX, SPX 2023, GBP, XAU.
-% Use statsmodels adfuller with default lags (AIC selection). Insert test statistic and p-value above.
-% Also update the inline placeholder in the prose below ("ADF tests [statistics to be inserted]").
 
-The raw RV series exhibit strong positive skewness and excess kurtosis across all four samples, confirming that the untransformed series are far from Gaussian. XAU/USD displays the most extreme distributional characteristics, with skewness of 4.18 and excess kurtosis of 16.68, driven by episodic safe-haven demand spikes associated with geopolitical and tariff-related events. The two S\&P 500 samples show substantial skewness (1.69 and 1.75) and leptokurtosis, consistent with the fat-tailed behaviour of equity RV documented in the high-frequency literature \citep{Andersen2003a}. GBP/USD, with skewness of 1.49 and excess kurtosis of 1.28, is the most regularly distributed in levels. The logarithmic transformation applied prior to estimation is therefore essential for normalising the target variable, as described in Section~3.2.2. Stationarity of the log RV series for all assets is confirmed by Augmented Dickey--Fuller tests 	extit{[statistics to be inserted]}, a prerequisite for consistent OLS estimation.
+\noindent\textbf{Level and dispersion.} The mean and standard deviation describe the average level and day-to-day variability of the raw RV series, respectively. Substantial dispersion relative to the mean across all four samples reflects the well-documented volatility clustering property of financial RV: calm periods, where consecutive low-variance days compound, alternate with turbulent episodes in which a small number of high-variance days can dominate the sample. The ratio of standard deviation to mean exceeds 0.85 for SPX (2025) and SPX 2023, indicating that a single large-volatility day meaningfully displaces the sample mean. For XAU/USD, the standard deviation of $852.31 \times 10^{-6}$ is nearly twice the mean of $469.77 \times 10^{-6}$, and the range spans from $66.40$ to $4982.58 \times 10^{-6}$ --- a 75-fold ratio that reflects episodic safe-haven demand spikes driven by geopolitical and tariff-related events during the sample period. The raw RV levels are not directly comparable across assets: as noted in Section~3.1.1, the 24-hour continuous trading sessions of GBP/USD and XAU/USD mechanically accumulate more squared intraday returns per day than the 6.5-hour SPX session, so a higher mean RV for FX and gold is a structural feature of the data construction rather than evidence of greater underlying market stress.
 
-The four samples differ substantially in length and trading session structure. SPX (2025) has the largest sample (165 observations), providing the best-conditioned estimation environment. SPX 2023 (126 observations) serves as a replication across an economically distinct period, notable for higher macro surprise frequency and the absence of tariff events. GBP/USD (96 observations) and XAU/USD (72 observations) have shorter samples due to later data availability start dates; the smaller XAU/USD in-sample window limits identification power for parameterised specifications. As discussed in Section~3.1.1, the longer trading sessions of GBP/USD and XAU/USD produce mechanically higher daily RV than SPX via the squared-return summation in Equation~3.2; direct comparison of RV levels across assets is therefore not meaningful, though cross-asset comparison of model fit and coefficient patterns remains informative.
+\noindent\textbf{Skewness and excess kurtosis.} Skewness measures the asymmetry of a distribution: a positive value indicates that the right tail is longer than the left, meaning that occasional extreme high-variance days occur more frequently than symmetry would imply. Excess kurtosis measures the weight of the tails relative to a normal distribution, with a value of zero corresponding to a Gaussian and positive values indicating heavier tails. All four raw RV series are strongly positively skewed and leptokurtic, confirming that the untransformed series are far from Gaussian \citep{Andersen2003a}. XAU/USD displays the most extreme distributional characteristics, with skewness of 4.18 and excess kurtosis of 16.68, confirming that its distribution is dominated by a small number of outlier events. The two S\&P 500 samples have comparable skewness (1.69 and 1.75), with SPX 2023 exhibiting moderately higher excess kurtosis (4.48 versus 3.65), consistent with the higher macro surprise frequency recorded in that period. GBP/USD, with skewness of 1.49 and excess kurtosis of 1.28, is the most regularly distributed in levels. Taken together, the distributional evidence across all four assets motivates the logarithmic transformation applied prior to estimation, described in Section~3.2.2, which compresses the right tail and brings the target variable closer to the symmetry and homoskedasticity assumptions underlying OLS.
 
-% INSERT PLOTS (Full dataset with vertical dashed lines marking macro and tariff event days)
+\noindent\textbf{Stationarity.} A time series is stationary if its mean and variance do not change systematically over time. Stationarity is a prerequisite for consistent OLS estimation: if the dependent variable contains a unit root --- a stochastic trend --- the regression coefficients are unreliable and standard significance tests are invalid. The ADF test assesses this by testing the null hypothesis that the series has a unit root against the alternative that it is stationary; a small $p$-value leads to rejection of the null and provides evidence of stationarity. ADF tests are applied to the log RV series used in estimation, not the raw RV series.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{SPX_RV_macro_events.pdf}
-    \caption{SPX RV over entire sample period}
-    \label{fig:SPX RV over entire sample period}
-\end{figure}
+For SPX (2025), the ADF statistic of $-5.633$ ($p < 0.001$) strongly rejects the null of a unit root, confirming that the log RV series is stationary over the full sample. Similarly, GBP/USD ($-3.635$, $p = 0.005$) and XAU/USD ($-4.144$, $p < 0.001$) reject the null at the 1\% level. The OLS specifications for these three assets therefore rest on a well-supported stationarity assumption, and the HAR lag structure captures genuine mean-reverting persistence rather than a spurious common trend.
+
+The SPX 2023 result is more nuanced. The ADF statistic of $-2.037$ yields $p = 0.271$, which does not permit rejection of the null hypothesis at any conventional significance level. This does not confirm the presence of a unit root --- the ADF test has limited power in short samples, and the 126-observation window spanning a single low-volatility period (May--October 2023) may not contain sufficient variation to identify mean reversion reliably. Nonetheless, the result introduces uncertainty around the stationarity assumption for that sample, and the coefficient estimates and fit statistics for SPX 2023 should be interpreted with this caveat in mind. The HAR-RV framework has been estimated on short, approximately stationary samples in the prior literature \citep{Corsi2009}, and the replication is retained as a cross-period robustness check rather than a primary inferential sample.
+
+\noindent\textbf{Sample size and identification.} SPX (2025) has the largest sample (165 observations), providing the most reliable estimation environment and supporting the full sequence of model specifications from Models 1 through 6. SPX 2023 (126 observations) and GBP/USD (96 observations) are sufficient to identify the main HAR components and binary macro dummies, though the tier-differentiated models (Models 3--5) are estimated with correspondingly lower precision. XAU/USD, with 72 total observations, presents the most constrained identification environment: the three-tier dummy specifications require sufficient within-category observations to separate coefficients reliably, and the absence of Cat 2 (large surprise) occurrences across several macro event types means certain parameters cannot be estimated and are excluded from the model. The implications of these sample constraints for coefficient significance and model selection are discussed where relevant in Section~4.2.
+
+Table~\ref{tab:tariff_summary} summarises the tariff event classification for the three non-historical samples. The tariff dummy is constructed from the Weighted Severity Score (WSS) described in Section~3.1.4, with $T_t = 1$ assigned only to escalatory events meeting the WSS $\geq 5$ threshold. The number of qualifying tariff days varies substantially across assets due to differing sample start dates: SPX captures 14, GBP/USD captures 6, and XAU/USD captures 5. The historical S\&P 500 (2023) sample predates the tariff escalation entirely, so the dummy is excluded from that dataset.
 
 \begin{table}[H]
-\centering
-\caption{S\&P 500 macro event classification (22 Jul 2025 -- 20 Mar 2026)}
-\label{tab:events_spx}
-\begin{tabular}{lcccc}
-\toprule
-Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
-\midrule
-FOMC  & 6  & 4  & 2  & 0 \\
-CPI   & 7  & 3  & 3  & 1 \\
-NFP   & 7  & 3  & 3  & 1 \\
-\midrule
-Total & 20 & 10 & 8  & 2 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{Hist_SPX_RV_macro_events.pdf}
-    \caption{S\&P 500 (2023) RV over entire sample period}
-    \label{fig:SPX 2023 RV over entire sample period}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\caption{S\&P 500 (2023) macro event classification (1 May 2023 -- 31 Oct 2023)}
-\label{tab:events_spx2023}
-\begin{tabular}{lcccc}
-\toprule
-Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
-\midrule
-FOMC  & 4  & 4  & 0  & 0 \\
-CPI   & 6  & 0  & 6  & 0 \\
-NFP   & 6  & 3  & 1  & 2 \\
-\midrule
-Total & 16 & 7  & 7  & 2 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{GBP_RV_macro_events.pdf}
-    \caption{GBP RV over entire sample period}
-    \label{fig:GBP RV over entire sample period}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\caption{GBP/USD macro event classification (29 Oct 2025 -- 20 Mar 2026)}
-\label{tab:events_gbp}
-\begin{tabular}{lcccc}
-\toprule
-Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
-\midrule
-FOMC  & 4  & 3  & 1  & 0 \\
-CPI   & 4  & 2  & 1  & 1 \\
-NFP   & 5  & 2  & 2  & 1 \\
-\midrule
-Total & 13 & 7  & 4  & 2 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{XAU_RV_macro_events.pdf}
-    \caption{XAU/USD RV over entire sample period}
-    \label{fig:XAU RV over entire sample period}
-\end{figure}
-
-\begin{table}[H]
-\centering
-\caption{XAU/USD macro event classification (9 Jan 2026 -- 20 Mar 2026)}
-\label{tab:events_xau}
-\begin{tabular}{lcccc}
-\toprule
-Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
-\midrule
-FOMC  & 2  & 2  & 0  & 0 \\
-CPI   & 3  & 2  & 0  & 1 \\
-NFP   & 3  & 1  & 1  & 1 \\
-\midrule
-Total & 8  & 5  & 1  & 2 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[htbp]
 \centering
 \caption{Tariff event classification across asset samples}
 \label{tab:tariff_summary}
@@ -789,10 +698,133 @@ is excluded as no material tariff events occurred in that window.
 \end{threeparttable}
 \end{table}
 
+\noindent The remainder of this section discusses each dataset individually. For each asset, a brief discussion of the sample characteristics and macro event composition is followed by the daily RV time series plot and the macro announcement classification table.
 
-The macro announcement event tables reveal important cross-asset differences in event composition. For SPX (2025), the 20 events are broadly balanced across FOMC (6), CPI (7), and NFP (7), with a predominance of in-line and moderate surprise categories. The SPX 2023 sample is distributional distinct: all four FOMC meetings produced in-line readings, all six CPI releases were moderate surprises (Category 1), and NFP produced two large surprises --- a pattern that favours identification of surprise-tier effects relative to the 2025 sample. GBP/USD and XAU/USD have fewer events due to shorter sample windows (13 and 8 macro events respectively), with XAU/USD covering only two FOMC meetings within its in-sample estimation period. The tariff dummy ($T_t = 1$ for WSS $\geq 5$) is applied to all non-2023 samples: 14 qualifying days for SPX, 6 for GBP/USD, and 5 for XAU/USD.
+%% ---- S&P 500 (2025) ----
 
-% [PLACEHOLDER: Cross-asset log RV correlation table --- pairwise Pearson correlations between log RV of SPX, GBP/USD, and XAU/USD over the common overlapping sample.]
+\paragraph{S\&P 500 (July 2025 -- March 2026).}
+The primary SPX sample comprises 165 trading days, of which 109 form the in-sample estimation window and the remaining 56 constitute the out-of-sample evaluation period. This is the largest and best-conditioned estimation environment across the four datasets. The ADF test strongly rejects the unit root null ($-5.633$, $p < 0.001$), confirming stationarity of the log RV series and providing a sound foundation for OLS estimation. The sample spans a period of elevated trade policy uncertainty, with 14 qualifying tariff days (WSS $\geq 5$) --- the highest count of any asset (Table~\ref{tab:tariff_summary}) --- alongside 20 scheduled macro announcements: 6 FOMC decisions, 7 CPI releases, and 7 NFP reports (Table~\ref{tab:events_spx}). The surprise distribution is broadly balanced, with 10 in-line readings (Cat~0), 8 moderate surprises (Cat~1), and 2 large surprises (Cat~2), providing adequate variation across categories for the three-tier specifications (Models 3--5). However, both Cat~2 events occur in CPI and NFP only --- no FOMC decision produced a large surprise during this window --- so the FOMC Cat~2 dummy cannot be identified and is excluded. The clustering of elevated RV around event dates visible in Figure~\ref{fig:SPX RV over entire sample period} motivates the binary and tier-differentiated dummy specifications developed in Chapter~3, and the balanced event composition and large sample make SPX the primary inferential dataset for all six model specifications.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{SPX_RV_macro_events.pdf}
+    \caption{S\&P 500 daily realised variance with macro and tariff event days marked (22 Jul 2025 -- 20 Mar 2026).}
+    \label{fig:SPX RV over entire sample period}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{S\&P 500 macro event classification (22 Jul 2025 -- 20 Mar 2026)}
+\label{tab:events_spx}
+\begin{tabular}{lcccc}
+\toprule
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
+\midrule
+FOMC  & 6  & 4  & 2  & 0 \\
+CPI   & 7  & 3  & 3  & 1 \\
+NFP   & 7  & 3  & 3  & 1 \\
+\midrule
+Total & 20 & 10 & 8  & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ---- S&P 500 Historical (2023) ----
+
+\paragraph{S\&P 500 Historical Replication (May -- October 2023).}
+The historical SPX sample provides a cross-period robustness check, covering 126 trading days (78 in-sample) during a low-volatility regime characterised by the post-pandemic disinflation and the absence of tariff-driven uncertainty. As discussed above, the ADF test does not reject the unit root null for this sample ($-2.037$, $p = 0.271$), likely reflecting the limited statistical power of the test in a short, low-variance window rather than confirmed non-stationarity; results for this dataset should therefore be interpreted with this caveat in mind.
+
+The macro event composition differs substantively from the 2025 sample (Table~\ref{tab:events_spx2023}). All four FOMC decisions were in-line with market expectations (Cat~0), providing no surprise variation and leaving the FOMC tier dummies unidentified. All six CPI releases produced moderate surprises (Cat~1), with no in-line or large-surprise observations, so only a single CPI tier can be estimated. Only NFP exhibits variation across all three categories (3 Cat~0, 1 Cat~1, 2 Cat~2), making it the sole event type for which the full three-tier structure is identified. This concentration means that the surprise-differentiated specifications (Models 3--5) for SPX 2023 are driven almost entirely by NFP variation, and coefficient estimates for the FOMC and CPI tiers should be interpreted accordingly. No tariff events occurred during the May--October 2023 window, so the TARIFF dummy is zero throughout and is excluded from all model specifications for this sample. The 2023 dataset is therefore best understood as a test of the baseline HAR-RV structure and binary macro augmentation in the absence of trade policy shocks.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{Hist_SPX_RV_macro_events.pdf}
+    \caption{S\&P 500 (2023) daily realised variance with macro event days marked (1 May 2023 -- 31 Oct 2023).}
+    \label{fig:SPX 2023 RV over entire sample period}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{S\&P 500 (2023) macro event classification (1 May 2023 -- 31 Oct 2023)}
+\label{tab:events_spx2023}
+\begin{tabular}{lcccc}
+\toprule
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
+\midrule
+FOMC  & 4  & 4  & 0  & 0 \\
+CPI   & 6  & 0  & 6  & 0 \\
+NFP   & 6  & 3  & 1  & 2 \\
+\midrule
+Total & 16 & 7  & 7  & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ---- GBP/USD ----
+
+\paragraph{GBP/USD (October 2025 -- March 2026).}
+The GBP/USD sample contains 96 trading days (40 in-sample), reflecting a later data availability start date than SPX. As reported in Table~\ref{tab:summary_stats}, the raw RV series is the most regularly distributed of the four datasets, with skewness of 1.49 and excess kurtosis of 1.28, indicating fewer extreme outlier days than the equity or gold samples. The ADF test rejects the unit root null at the 1\% level ($-3.635$, $p = 0.005$), confirming stationarity of the log RV series.
+
+Thirteen scheduled macro events fall within the sample window: 4 FOMC decisions, 4 CPI releases, and 5 NFP reports (Table~\ref{tab:events_gbp}). The surprise classification is reasonably spread --- 7 Cat~0, 4 Cat~1, and 2 Cat~2 --- but the small absolute counts per cell mean that each tier coefficient in Models 3--5 is estimated from very few observations, limiting precision. Six qualifying tariff days (WSS $\geq 5$) are captured. GBP/USD responds to U.S. macro and tariff events primarily through the dollar side of the currency pair: an unexpected tightening by the Federal Reserve or a tariff escalation that strengthens the dollar mechanically depresses the GBP/USD rate, generating intraday volatility. This indirect transmission channel, combined with the 24-hour continuous trading session that distributes the price adjustment over a longer window, may attenuate the magnitude of the macro and tariff dummy coefficients relative to the concentrated 6.5-hour SPX session.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{GBP_RV_macro_events.pdf}
+    \caption{GBP/USD daily realised variance with macro and tariff event days marked (29 Oct 2025 -- 20 Mar 2026).}
+    \label{fig:GBP RV over entire sample period}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{GBP/USD macro event classification (29 Oct 2025 -- 20 Mar 2026)}
+\label{tab:events_gbp}
+\begin{tabular}{lcccc}
+\toprule
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
+\midrule
+FOMC  & 4  & 3  & 1  & 0 \\
+CPI   & 4  & 2  & 1  & 1 \\
+NFP   & 5  & 2  & 2  & 1 \\
+\midrule
+Total & 13 & 7  & 4  & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+%% ---- XAU/USD ----
+
+\paragraph{XAU/USD (December 2025 -- March 2026).}
+XAU/USD presents the most challenging estimation environment. The sample contains only 72 trading days (14 in-sample), making it the smallest dataset by a substantial margin. Despite the short window, the ADF test rejects the unit root null ($-4.144$, $p < 0.001$), confirming that the log-transformed series is stationary.
+
+The raw RV series is dominated by a single extreme outlier: the maximum daily RV of $4{,}982.58 \times 10^{-6}$ is approximately ten times the sample mean ($469.77 \times 10^{-6}$) and 75 times the minimum. This spike, visible in Figure~\ref{fig:XAU RV over entire sample period}, occurred in early February 2026 and coincided with a cluster of major tariff escalation announcements --- including the imposition of broad-based tariffs on key U.S. trading partners --- that triggered a surge in safe-haven demand for gold. As investors rapidly reallocated into gold to hedge trade-policy uncertainty, the resulting intraday price swings produced a single-day RV that dominates the entire sample distribution, driving the skewness to 4.18 and excess kurtosis to 16.68.
+
+This outlier creates several difficulties for the HAR-RV framework. In the 14-observation in-sample window, a single extreme day represents approximately 7\% of all observations and exerts disproportionate leverage on the OLS coefficient estimates. The HAR lag structure propagates the shock forward: the extreme day enters the daily lag ($RV^{(d)}$) for the following trading day, the weekly lag ($RV^{(w)}$) for the subsequent five days, and the monthly lag ($RV^{(m)}$) for the next 22 days, causing the models to predict elevated RV well after market conditions have normalised. Furthermore, the binary TARIFF dummy assigns $T_t = 1$ to all qualifying event days regardless of severity, so the model cannot distinguish between a moderate tariff event (WSS $= 5$) and the extreme February episode --- a structural limitation of the binary dummy approach that contributes to the poor out-of-sample forecast accuracy observed for the augmented specifications in Section~4.3.
+
+Only 8 macro events are captured within the sample: 2 FOMC decisions (both Cat~0), 3 CPI releases (2 Cat~0, 1 Cat~2), and 3 NFP reports (1 Cat~0, 1 Cat~1, 1 Cat~2), as shown in Table~\ref{tab:events_xau}. The near-absence of Cat~1 events (only one across all macro types) and the complete absence of FOMC surprises mean that several tier dummies are unidentified and must be excluded from the parameterised specifications, reducing Models 3--5 to simpler forms. Five qualifying tariff days fall within the sample --- a high density relative to the 72-day window --- further underscoring the dominant role of trade policy as a volatility driver for gold during this period.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{XAU_RV_macro_events.pdf}
+    \caption{XAU/USD daily realised variance with macro and tariff event days marked (9 Jan 2026 -- 20 Mar 2026).}
+    \label{fig:XAU RV over entire sample period}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{XAU/USD macro event classification (9 Jan 2026 -- 20 Mar 2026)}
+\label{tab:events_xau}
+\begin{tabular}{lcccc}
+\toprule
+Event & Total & In-line (Cat 0) & Mod.\ Surprise (Cat 1) & Large Surprise (Cat 2) \\
+\midrule
+FOMC  & 2  & 2  & 0  & 0 \\
+CPI   & 3  & 2  & 0  & 1 \\
+NFP   & 3  & 1  & 1  & 1 \\
+\midrule
+Total & 8  & 5  & 1  & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \section{In-Sample Estimation Results}
 
