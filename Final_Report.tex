@@ -646,15 +646,18 @@ Min             & \multicolumn{2}{c}{3.58}   & \multicolumn{2}{c}{8.87}   & \mul
 Max             & \multicolumn{2}{c}{182.16} & \multicolumn{2}{c}{135.82} & \multicolumn{2}{c}{53.78}  & \multicolumn{2}{c}{4982.58} \\
 Skewness        & \multicolumn{2}{c}{1.69}   & \multicolumn{2}{c}{1.75}   & \multicolumn{2}{c}{1.49}   & \multicolumn{2}{c}{4.18}    \\
 Excess Kurtosis & \multicolumn{2}{c}{3.65}   & \multicolumn{2}{c}{4.48}   & \multicolumn{2}{c}{1.28}   & \multicolumn{2}{c}{16.68}   \\
-\addlinespace
-ADF test statistic & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} & \multicolumn{2}{c}{} \\
+\midrule
+\multicolumn{9}{l}{\textit{Log RV stationarity (ADF test, full sample)}} \\
+ADF statistic       & \multicolumn{2}{c}{[INSERT]} & \multicolumn{2}{c}{[INSERT]} & \multicolumn{2}{c}{[INSERT]} & \multicolumn{2}{c}{[INSERT]} \\
+\textit{p}-value    & \multicolumn{2}{c}{[INSERT]} & \multicolumn{2}{c}{[INSERT]} & \multicolumn{2}{c}{[INSERT]} & \multicolumn{2}{c}{[INSERT]} \\
 \bottomrule
 \end{tabular}
-\caption{[Summary statistics and stationarity tests for realised variance]}
+\caption{Descriptive statistics for the raw RV series ($\times 10^{6}$) and ADF stationarity test results for the log RV series, by asset.}
 \label{tab:summary_stats}
 \end{table}
-% Note: All values in Table~
-ef{tab:summary_stats} scaled by $	imes 10^6$. Jarque--Bera and ADF statistics to be inserted once computed for log RV.
+% TODO: Run ADF on log RV (not raw RV) for SPX, SPX 2023, GBP, XAU.
+% Use statsmodels adfuller with default lags (AIC selection). Insert test statistic and p-value above.
+% Also update the inline placeholder in the prose below ("ADF tests [statistics to be inserted]").
 
 The raw RV series exhibit strong positive skewness and excess kurtosis across all four samples, confirming that the untransformed series are far from Gaussian. XAU/USD displays the most extreme distributional characteristics, with skewness of 4.18 and excess kurtosis of 16.68, driven by episodic safe-haven demand spikes associated with geopolitical and tariff-related events. The two S\&P 500 samples show substantial skewness (1.69 and 1.75) and leptokurtosis, consistent with the fat-tailed behaviour of equity RV documented in the high-frequency literature \citep{Andersen2003a}. GBP/USD, with skewness of 1.49 and excess kurtosis of 1.28, is the most regularly distributed in levels. The logarithmic transformation applied prior to estimation is therefore essential for normalising the target variable, as described in Section~3.2.2. Stationarity of the log RV series for all assets is confirmed by Augmented Dickey--Fuller tests 	extit{[statistics to be inserted]}, a prerequisite for consistent OLS estimation.
 
