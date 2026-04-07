@@ -651,7 +651,8 @@ Excess Kurtosis & \multicolumn{2}{c}{3.65}   & \multicolumn{2}{c}{4.48}   & \mul
 \caption{[Table caption]}
 \label{tab:summary_stats}
 \end{table}
-% Note: All values in Table~ef{tab:summary_stats} scaled by $	imes 10^6$. Jarque--Bera and ADF statistics to be inserted once computed for log RV.
+% Note: All values in Table~
+ef{tab:summary_stats} scaled by $	imes 10^6$. Jarque--Bera and ADF statistics to be inserted once computed for log RV.
 
 The raw RV series exhibit strong positive skewness and excess kurtosis across all four samples, confirming that the untransformed series are far from Gaussian. XAU/USD displays the most extreme distributional characteristics, with skewness of 4.18 and excess kurtosis of 16.68, driven by episodic safe-haven demand spikes associated with geopolitical and tariff-related events. The two S\&P 500 samples show substantial skewness (1.69 and 1.75) and leptokurtosis, consistent with the fat-tailed behaviour of equity RV documented in the high-frequency literature \citep{Andersen2003a}. GBP/USD, with skewness of 1.49 and excess kurtosis of 1.28, is the most regularly distributed in levels. The logarithmic transformation applied prior to estimation is therefore essential for normalising the target variable, as described in Section~3.2.2. Stationarity of the log RV series for all assets is confirmed by Augmented Dickey--Fuller tests 	extit{[statistics to be inserted]}, a prerequisite for consistent OLS estimation.
 
@@ -760,6 +761,7 @@ Total & 8  & 5  & 1  & 2 \\
 \caption{Tariff event classification across asset samples}
 \label{tab:tariff_summary}
 \begin{threeparttable}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lccc}
 \toprule
  & S\&P 500 & GBP/USD & XAU/USD \\
@@ -770,16 +772,18 @@ Total tariff events catalogued              & 32 & 15 & 10 \\
 \quad De-escalation events (excluded)       & 13 & 6  & 2  \\
 \quad WSS $< 5$ (excluded)                  & 5  & 3  & 3  \\
 \bottomrule
-\end{tabular}
-\begin{tablenotes}
+\end{tabular}%
+}
+\vspace{0.5em}
+\begin{minipage}{\textwidth}
 \small
-\item \textit{Notes:} The Weighted Severity Score (WSS) is constructed as WSS $=$ Mag $+$ Brd $+$ Sec,
+\textit{Notes:} The Weighted Severity Score (WSS) is constructed as WSS $=$ Mag $+$ Brd $+$ Sec,
 where Mag scores tariff rate magnitude (0--3), Brd scores the breadth of countries affected (0--3), and
 Sec scores the sector scope by SPX index weight (0--3), giving a maximum score of 9. The binary dummy
 $T_t = \mathbf{1}[\text{WSS} \geq 5]$ is set to zero for de-escalation events regardless of WSS. Full
 event-level scores are reported in Appendix~\ref{app:tariff_wss}. The historical S\&P 500 (2023) sample
 is excluded as no material tariff events occurred in that window.
-\end{tablenotes}
+\end{minipage}
 \end{threeparttable}
 \end{table}
 
